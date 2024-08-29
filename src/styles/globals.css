@@ -1,0 +1,97 @@
+html {
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+:root {
+    --max-width: 1100px;
+    --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+        "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+        "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+
+    --text-primary: #0c0c0c;
+    --text-secondary: #424242;
+    --text-accent: #2c47c2;
+    --link-primary: #1b1b1b8a;
+
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #141414;
+
+    --widget-text-primary: #000;
+    --widget-bg-primary: #c5c5c5;
+}
+
+.dark-theme {
+    --text-primary: #ffffff;
+    --text-secondary: #0c0c0c;
+    --link-primary: #c5c5c58a;
+    --bg-primary: #141414;
+    --bg-secondary: #f5f5f5;
+
+    --widget-text-primary: #ffffff;
+    --widget-bg-primary: #5c5c5c;
+}
+
+body {
+    margin: 0;
+    background-color: var(--bg-primary);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 2rem;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+a,
+div {
+    color: var(--text-primary);
+}
+
+input,
+textarea {
+    color: var(--text-secondary);
+    border: 1px solid var(--text-secondary);
+    outline: none;
+    transition: all 0.2s;
+}
