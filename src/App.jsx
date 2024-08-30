@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import { Navbar, Wrapper } from "./layouts";
+import { SideNavbar, Wrapper } from "./layouts";
+import { Builder } from "./pages";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navbar />}>
+      <Route path="/" element={<SideNavbar />}>
         <Route element={<Wrapper />}>
-        <Route index element={<h1>Home</h1>} />
+          <Route index element={<Builder />} />
         </Route>
       </Route>
     </Routes>
