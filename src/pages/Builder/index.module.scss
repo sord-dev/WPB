@@ -12,22 +12,34 @@
     width: 200px;
     text-align: center;
     background: #1c1c1c;
+    margin-top: -1px;
+
+    &:first-child {
+      button.selected {
+        border-left: none;
+      }
+    }
 
     button {
       width: 100%;
       height: 100%;
       padding: 10px 0;
+      display: inline-block;
+      position: relative;
+      bottom: -1px;
 
       &.selected {
         background: #252525;
         border: 1px solid #6f6f6f;
-        border-bottom: 2px solid #252525;
+        border-bottom: none;
+        z-index: 2;
       }
     }
   }
 }
 
 .toolbar {
+  height: 64px;
   padding: var(--padding-v) var(--padding-horizontal--main);
   gap: var(--space-sm);
   background: #252525;
@@ -49,4 +61,29 @@
 
 .actions {
   margin-left: auto;
+}
+
+
+.builder {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+.editor, .components {
+  width: 300px;
+  background: #1c1c1c99;
+}
+
+.constructor {
+  flex: 1;
+  column-count: 12;
+}
+
+.editor {
+  border-right: 3px solid #6f6f6f1a;
+}
+
+.components {
+  border-left: 3px solid #6f6f6f1a;
 }

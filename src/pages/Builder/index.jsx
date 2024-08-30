@@ -42,6 +42,13 @@ export default function Builder() {
           <button>↪️</button>
         </div>
       </div>
+      <div className={styles['builder']}>
+        <div className={styles['editor']}></div>
+        <div className={styles['constructor']}>
+          
+        </div>
+        <div className={styles['components']}></div>
+      </div>
     </section>
   );
 }
