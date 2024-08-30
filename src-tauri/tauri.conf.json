@@ -56,10 +56,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 600,
+        "minWidth": 1280,
+        "minHeight": 768,
         "resizable": true,
-        "title": "WPB",
-        "width": 1200
+        "title": "WPB"
       }
     ]
   }

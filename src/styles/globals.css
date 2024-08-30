@@ -45,7 +45,7 @@ img {
     --text-accent: #2c47c2;
     --link-primary: #1b1b1b8a;
 
-    --bg-primary: #f5f5f5;
+    --bg-primary: #121212;
     --bg-secondary: #141414;
 
     --widget-text-primary: #000;
@@ -66,6 +66,11 @@ img {
 body {
     margin: 0;
     background-color: var(--bg-primary);
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
 }
 
 main {

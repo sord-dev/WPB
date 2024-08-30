@@ -1,13 +1,17 @@
-import { useState } from 'react'
+import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import { Navbar, Wrapper } from "./layouts";
 
 function App() {
-
   return (
-    <div>
-      <h1>Where the fat white bitches at??</h1>
-      <p>Luke <span style={{ textDecoration: "underline" }}>Fat Bitch </span> Rockhold</p>
-    </div>
-  )
+    <Routes>
+      <Route path="/" element={<Navbar />}>
+        <Route element={<Wrapper />}>
+        <Route index element={<h1>Home</h1>} />
+        </Route>
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;
