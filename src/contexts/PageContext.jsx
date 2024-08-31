@@ -9,6 +9,7 @@ const defaultPageContext = {
     setActivePage: () => { },
     pages: {
         home: {
+            name: "Home",
             content: {
                 type: "container",
                 children: [
@@ -26,6 +27,7 @@ const defaultPageContext = {
               }
         },
         services: {
+            name: "Services",
             content: {
                 type: "container",
                 children: [
