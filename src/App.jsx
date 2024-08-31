@@ -1,13 +1,17 @@
-import { useState } from 'react'
+import { Route, Routes } from "react-router-dom";
+import { SideNavbar, Wrapper } from "./layouts";
+import { Builder } from "./pages";
 
 function App() {
-
   return (
-    <div>
-      <h1>Where the fat white bitches at??</h1>
-      <p>Luke <span style={{ textDecoration: "underline" }}>Fat Bitch </span> Rockhold</p>
-    </div>
-  )
+    <Routes>
+      <Route path="/" element={<SideNavbar />}>
+        <Route element={<Wrapper />}>
+          <Route index element={<Builder />} />
+        </Route>
+      </Route>
+    </Routes>
+  );
 }
 
 export default App;

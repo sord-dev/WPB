@@ -1,0 +1,29 @@
+.toolbar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+  height: 64px;
+  padding: var(--padding-v) var(--padding-horizontal--main);
+  gap: var(--space-sm);
+  background: #252525;
+  border-top: 1px solid #6f6f6f;
+}
+
+.screen-size,
+.scale {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+.device-preview,
+.actions {
+  display: flex;
+  gap: var(--space-3xs);
+}
+
+.actions {
+  margin-left: auto;
+}
+
