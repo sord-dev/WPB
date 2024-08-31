@@ -1,7 +1,7 @@
 import React from 'react'
 import styles from './index.module.css'
 
-function BuilderTabs({ tabs = [], activeTab = null, handleTabClick = () => {} }) {
+function BuilderTabs({ tabs = [], activeTab = null, handleTabClick = () => {}, createTab = () => {} }) {
     if(!tabs.length) return null;
 
     return (
@@ -16,6 +16,10 @@ function BuilderTabs({ tabs = [], activeTab = null, handleTabClick = () => {} })
                     </button>
                 </li>
             ))}
+
+            <li className={styles["add-btn"]}>
+                <button onClick={() => createTab("boo")}>+</button>
+            </li>
         </ul>
     )
 }

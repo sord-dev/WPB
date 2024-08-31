@@ -30,3 +30,11 @@
   border-bottom: none;
   z-index: 2;
 }
+
+.tabs .add-btn {
+  width: 30px;
+}
+
+.tabs .add-btn button:hover {
+  text-decoration: underline;
+}
