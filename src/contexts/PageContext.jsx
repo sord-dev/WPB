@@ -53,7 +53,7 @@ export const PageContextProvider = ({ children }) => {
     const [pageData, setPageData] = useState(defaultPageContext);
 
     const createPage = (page) => {
-        setPageData({ ...pageData, pages: { ...pageData.pages, [page]: { content: "" } } });
+        setPageData({ ...pageData, pages: { ...pageData.pages, [page]: { content: {} } } });
     };
 
     const deletePage = (page) => {

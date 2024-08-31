@@ -23,8 +23,7 @@ export default function Builder() {
         <div className={styles['editor']}></div>
 
         <div className={styles['constructor']}>
-          <BuilderEditor template={activePageData}
-          />
+          <BuilderEditor template={activePageData} />
         </div>
 
         <div className={styles['components']}></div>
