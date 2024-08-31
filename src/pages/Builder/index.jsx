@@ -1,13 +1,13 @@
 import React from "react";
 
 import { usePageContext } from "../../contexts/PageContext";
-import { BuilderTabs, BuilderToolBar, Text, Container, BuilderEditor } from "../../components";
+import { BuilderTabs, BuilderToolBar, BuilderEditor } from "../../components";
 
 import styles from "./index.module.css";
 
 export default function Builder() {
   const { pageIndex, activePage, pages, setActivePage } = usePageContext();
-  const activePageData = pages[activePage].content;
+  const activePageData = pages[activePage].content; // will contain the template shown in the BuilderEditor
 
   const handleTabClick = (tab) => {
     setActivePage(tab);
@@ -23,19 +23,8 @@ export default function Builder() {
         <div className={styles['editor']}></div>
 
         <div className={styles['constructor']}>
-          {activePageData}
-
-          <BuilderEditor template={{
-            type: "container",
-            children: [
-              {
-                type: "text",
-                props: {
-                  text: "Hello, world!"
-                }
-              }
-            ]
-          }} />
+          <BuilderEditor template={activePageData}
+          />
         </div>
 
         <div className={styles['components']}></div>

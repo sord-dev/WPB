@@ -9,10 +9,38 @@ const defaultPageContext = {
     setActivePage: () => { },
     pages: {
         home: {
-            content: "Home content"
+            content: {
+                type: "container",
+                children: [
+                  {
+                    type: "text",
+                    props: {
+                      content: "Hello, world!",
+                      style: {
+                        color: "red",
+                        fontSize: "24px"
+                      }
+                    }
+                  }
+                ]
+              }
         },
         services: {
-            content: "Services content"
+            content: {
+                type: "container",
+                children: [
+                  {
+                    type: "text",
+                    props: {
+                      content: "Services!",
+                      style: {
+                        color: "green",
+                        fontSize: "24px"
+                      }
+                    }
+                  }
+                ]
+              }
         }
     }
 }

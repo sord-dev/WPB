@@ -1,7 +1,7 @@
 import React from 'react'
 
 const defaultComponents = {
-    text: ({ content }) => <p>{content}</p>,
+    text: ({ content, style }) => <p style={style} >{content}</p>,
     container: ({ children }) => <div>{children}</div>
 };
 
