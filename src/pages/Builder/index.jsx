@@ -1,7 +1,7 @@
 import React from "react";
 
 import { usePageContext } from "../../contexts/PageContext";
-import { BuilderTabs, BuilderToolBar, Text, Container } from "../../components";
+import { BuilderTabs, BuilderToolBar, Text, Container, BuilderEditor } from "../../components";
 
 import styles from "./index.module.css";
 
@@ -24,6 +24,18 @@ export default function Builder() {
 
         <div className={styles['constructor']}>
           {activePageData}
+
+          <BuilderEditor template={{
+            type: "container",
+            children: [
+              {
+                type: "text",
+                props: {
+                  text: "Hello, world!"
+                }
+              }
+            ]
+          }} />
         </div>
 
         <div className={styles['components']}></div>
