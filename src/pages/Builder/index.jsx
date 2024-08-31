@@ -1,54 +1,35 @@
-import React, { useState } from "react";
+import React from "react";
+
+import { usePageContext } from "../../contexts/PageContext";
+import { BuilderTabs, BuilderToolBar } from "../../components";
+
 import styles from "./index.module.css";
 
 export default function Builder() {
-
-  const [selectedTab, setSelectedTab] = useState("Home");
+  const { pageIndex, activePage, pages, setActivePage } = usePageContext();
+  const activePageData = pages[activePage].content;
 
   const handleTabClick = (tab) => {
-    setSelectedTab(tab);
+    setActivePage(tab);
   };
 
   return (
     <section>
-      <ul className={styles["tabs"]}>
-        {["Home", "Services"].map((tab) => (
-          <li key={tab}>
-            <button
-              className={selectedTab === tab ? styles["selected"] : ""}
-              onClick={() => handleTabClick(tab)}
-            >
-              {tab}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <div className={styles["toolbar"]}>
-        <div className={styles["screen-size"]}>
-          <label for="width">Width:</label>
-          <span id="width">1440px</span>
-        </div>
-        <div className={styles["scale"]}>
-          <label for="scale">Scale:</label>
-          <span id="scale">100%</span>
-        </div>
-        <div className={styles["device-preview"]}>
-          <button>🖥️</button>
-          <button>💻</button>
-          <button>📱</button>
-        </div>
-        <div className={styles["actions"]}>
-          <button>↩️</button>
-          <button>↪️</button>
-        </div>
-      </div>
+      <BuilderTabs tabs={pageIndex} activeTab={activePage} handleTabClick={handleTabClick} />
+      <BuilderToolBar screensize={{ scale: 100, width: 1440 }} />
+
       <div className={styles['builder']}>
+
         <div className={styles['editor']}></div>
+        
         <div className={styles['constructor']}>
-          
+          {activePageData}
         </div>
+
         <div className={styles['components']}></div>
+
       </div>
+
     </section>
   );
 }
