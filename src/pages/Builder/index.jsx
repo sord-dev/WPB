@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { usePageContext } from "../../contexts";
 import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager } from "../../components";
@@ -7,7 +7,13 @@ import styles from "./index.module.css";
 import { convertParamsToObject } from "../../utils";
 
 export default function Builder() {
-  const { pageIndex, activePage, pages, pageControls: { setActivePage, createPage }, templateControls: { addComponent, updateComponent } } = usePageContext();
+  const {
+    pageIndex,
+    activePage,
+    pages,
+    pageControls: { setActivePage, createPage },
+    templateControls: { addComponent, updateComponent }
+  } = usePageContext();
   const activePageData = pages[activePage].content;
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
@@ -28,10 +34,16 @@ export default function Builder() {
     setSelectedComponent(obj);
   }
 
-  const updateElement = (component) => {
-    updateComponent(component);
+  const selectComponent = (component) => {
+    if (component.props.id === selectedComponent.props.id) return;
     setSelectedComponent(component);
   }
+
+  useEffect(() => {
+    if(!selectedComponent) return;
+    console.log(`DEBUG - Selected component:`);
+    console.log(selectedComponent);
+  }, [selectedComponent])
 
   return (
     <section>
@@ -45,15 +57,24 @@ export default function Builder() {
           </div>
           <div className={styles['editor-content']}>
             {selectedComponent && (
-              <pre>
-                {JSON.stringify(selectedComponent, null, 2)}
-              </pre>
+              <>
+                <pre>
+                  {JSON.stringify(selectedComponent, null, 2)}
+                </pre>
+
+                <div>
+
+                  <button onClick={() => updateComponent(selectedComponent, { style: { color: "red" } })}>Update Style</button>
+
+                  <button onClick={() => updateComponent(selectedComponent, { content: "Hello World" })}>Update Component</button>
+                </div>
+              </>
             )}
           </div>
         </div>
 
         <div className={styles['constructor']}>
-          <BuilderEditor template={activePageData} getAllComponents={getAllComponents} />
+          <BuilderEditor template={activePageData} getAllComponents={getAllComponents} setSelectedComponent={selectComponent} />
         </div>
 
         <div className={styles['components']}>

@@ -1,12 +1,36 @@
 import React, { useEffect } from 'react'
-import { extractComponentParameters, generateComponentID } from '../../utils';
+import { extractComponentParameters, generateComponentID } from '../../utils'
 
 const defaultComponents = {
     text: ({ content, style }) => <p style={style} >{content || 'No content'}</p>, // temporary default just so we can see something
     container: ({ children }) => <div >{children}</div>
 };
 
-function BuilderEditor({ registery, template, getAllComponents }) {
+
+const withClickHandler = (WrappedComponent, setSelectedComponent) => ({ ...props }) => {
+    const handleClick = () => {
+        const depth = props.children?.length || "no"; // Get the number of children
+
+        if (depth == "no") { // If the element has no children
+            const element = { type: props.id.split("-")[0], props }
+
+            setSelectedComponent(element); // Set the selected component
+        }
+
+        const grammar = depth == 1 ? { n: depth , c: 'child' } : depth > 1 ? { n: depth, c: 'children' } : { n: 0, c: 'children' };
+        const message = `DEBUG - Element clicked: ${props.id} with ${grammar.n} ${grammar.c}`;
+        console.log(message);
+    };
+
+    return (
+        <span onClick={handleClick} style={{ margin: "inherit", padding:"inherit" }}>
+            <WrappedComponent {...props} />
+        </span>
+    );
+};
+
+
+function BuilderEditor({ registery, template, getAllComponents, setSelectedComponent }) {
     const mergedRegistry = Object.assign({}, registery, { ...defaultComponents });
 
     const renderComponent = (componentData) => {
@@ -14,7 +38,9 @@ function BuilderEditor({ registery, template, getAllComponents }) {
 
         if (ComponentToRender) {
             const children = renderChildren(componentData.props.children);
-            return <ComponentToRender key={generateComponentID(componentData.type)} {...componentData.props}>{children}</ComponentToRender>;
+            const ComponentWithClickHandler = withClickHandler(ComponentToRender, setSelectedComponent);
+            const id = componentData.props?.id || generateComponentID(componentData.type);
+            return <ComponentWithClickHandler key={id} {...componentData.props} id={id}>{children}</ComponentWithClickHandler>;
         }
 
         return null; // Handle invalid components
