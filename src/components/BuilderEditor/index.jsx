@@ -23,7 +23,7 @@ const withClickHandler = (WrappedComponent, setSelectedComponent) => ({ ...props
     };
 
     return (
-        <span onClick={handleClick}>
+        <span onClick={handleClick} style={{ margin: "inherit", padding:"inherit" }}>
             <WrappedComponent {...props} />
         </span>
     );

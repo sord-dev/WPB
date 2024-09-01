@@ -35,7 +35,7 @@ export default function Builder() {
   }
 
   const selectComponent = (component) => {
-    if(component.props.id === selectedComponent.props.id) return;
+    if (component.props.id === selectedComponent.props.id) return;
     setSelectedComponent(component);
   }
 
@@ -56,9 +56,18 @@ export default function Builder() {
           </div>
           <div className={styles['editor-content']}>
             {selectedComponent && (
-              <pre>
-                {JSON.stringify(selectedComponent, null, 2)}
-              </pre>
+              <>
+                <pre>
+                  {JSON.stringify(selectedComponent, null, 2)}
+                </pre>
+
+                <div>
+
+                  <button onClick={() => updateComponent(selectedComponent, { style: { color: "red" } })}>Update Style</button>
+
+                  <button onClick={() => updateComponent(selectedComponent, { content: "Hello World" })}>Update Component</button>
+                </div>
+              </>
             )}
           </div>
         </div>

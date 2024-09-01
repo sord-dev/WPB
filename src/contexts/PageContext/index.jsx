@@ -51,7 +51,7 @@ export const PageContextProvider = ({ children }) => {
   };
 
   const updatePage = (page, content) => {
-    setPageData({ ...pageData, pages: { ...pageData.pages, [page]: { content } } });
+    setPageData({ ...pageData, pages: { ...pageData.pages, [page]: { ...pageData.pages[page], content } } });
   };
 
   const setActivePage = (page) => {
@@ -76,7 +76,7 @@ export const PageContextProvider = ({ children }) => {
   const updateComponent = (component, updatedData) => {
     // navigate component tree and update component
     const tree = pageData.pages[pageData.activePage].content;
-    const newTree = updateElement(tree, component.type, { id: component.props.id }, { ...component.props, ...updatedData });
+    const newTree = updateElement(tree, component.type, { id: component.props.id }, { ...updatedData });
     updatePage(pageData.activePage, newTree);
   };
 
@@ -95,6 +95,7 @@ export const PageContextProvider = ({ children }) => {
 
   useEffect(() => {
     console.log("DEBUG - Selected Template State:", pageData.pages[pageData.activePage]);
+    console.log("DEBUG - Active Page:", pageData.activePage);
   }, [pageData]);
 
   return (
