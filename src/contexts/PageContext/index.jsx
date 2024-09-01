@@ -94,8 +94,7 @@ export const PageContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("DEBUG - Selected Template State:", pageData.pages[pageData.activePage]);
-    console.log("DEBUG - Active Page:", pageData.activePage);
+    console.log("DEBUG - PageContext Template State:", {template: pageData.pages[pageData.activePage], page: pageData.activePage});
   }, [pageData]);
 
   return (

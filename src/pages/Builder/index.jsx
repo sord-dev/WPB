@@ -40,6 +40,7 @@ export default function Builder() {
   }
 
   useEffect(() => {
+    if(!selectedComponent) return;
     console.log(`DEBUG - Selected component:`);
     console.log(selectedComponent);
   }, [selectedComponent])
