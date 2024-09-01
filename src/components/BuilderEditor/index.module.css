@@ -1,0 +1,8 @@
+.component {
+  position: relative;
+  display: block;
+}
+
+.component:hover {
+  border: 1px solid yellow;
+}

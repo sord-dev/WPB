@@ -41,7 +41,19 @@ export const PageContextProvider = ({ children }) => {
 
   const createPage = (pageName) => {
     if (pageData.pages[pageName]) return;
-    setPageData({ ...pageData, pages: { ...pageData.pages, [pageName]: { content: {} } }, pageIndex: [...pageData.pageIndex, pageName] });
+    setPageData({
+      ...pageData,
+      pages: {
+        ...pageData.pages,
+        [pageName]: {
+          content: {
+            type: "container",
+            props: { id: generateComponentID("container"), children: [] },
+          },
+        },
+      },
+      pageIndex: [...pageData.pageIndex, pageName],
+    });
   };
 
   const deletePage = (page) => {

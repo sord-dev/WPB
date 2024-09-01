@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react'
 import { extractComponentParameters, generateComponentID } from '../../utils'
+import styles from './index.module.css'
 
 const defaultComponents = {
-    text: ({ content, style }) => <p style={style} >{content || 'No content'}</p>, // temporary default just so we can see something
+    text: ({ content, style }) => <p className={styles['component']} style={style} >{content || 'No content'}</p>, // temporary default just so we can see something
     container: ({ children }) => <div >{children}</div>
 };
 
