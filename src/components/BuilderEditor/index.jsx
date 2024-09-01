@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react'
-import { extractComponentParameters } from './utils';
+import { extractComponentParameters, generateComponentID } from '../../utils';
 
 const defaultComponents = {
-    text: ({ content, style }) => <p style={style} >{content}</p>,
-    container: ({ children }) => <div>{children}</div>
+    text: ({ content, style }) => <p style={style} >{content || 'No content'}</p>, // temporary default just so we can see something
+    container: ({ children }) => <div >{children}</div>
 };
 
 function BuilderEditor({ registery, template, getAllComponents }) {
@@ -13,7 +13,8 @@ function BuilderEditor({ registery, template, getAllComponents }) {
         const ComponentToRender = mergedRegistry[componentData.type];
 
         if (ComponentToRender) {
-            return <ComponentToRender {...componentData.props}>{renderChildren(componentData.children)}</ComponentToRender>;
+            const children = renderChildren(componentData.props.children);
+            return <ComponentToRender key={generateComponentID(componentData.type)} {...componentData.props}>{children}</ComponentToRender>;
         }
 
         return null; // Handle invalid components
@@ -33,8 +34,11 @@ function BuilderEditor({ registery, template, getAllComponents }) {
             parameters: extractComponentParameters(component),
         }));
 
-        getAllComponents(componentParameters);
-    }, [mergedRegistry]);
+        const tick = () => getAllComponents(componentParameters);
+        tick();
+        const tm = setTimeout(tick, 1000);
+        return () => clearTimeout(tm);
+    }, []);
 
     return (
         <>
