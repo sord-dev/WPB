@@ -4,13 +4,15 @@
   flex-direction: row;
 }
 
-.editor, .components {
+.editor,
+.components {
   width: 300px;
   background: #1c1c1c99;
 }
 
 .constructor {
   flex: 1;
+
 }
 
 .editor {
@@ -19,4 +21,17 @@
 
 .components {
   border-left: 3px solid #6f6f6f1a;
+}
+
+.component {
+  padding: 10px;
+  border-bottom: 1px solid #6f6f6f1a;
+  display: flex;
+  justify-content: space-between;
+
+  cursor: pointer;
+
+  span:last-child {
+    font-size: .7em;
+  }
 }
