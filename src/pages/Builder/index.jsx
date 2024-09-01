@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { usePageContext } from "../../contexts";
 import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager } from "../../components";
@@ -7,7 +7,13 @@ import styles from "./index.module.css";
 import { convertParamsToObject } from "../../utils";
 
 export default function Builder() {
-  const { pageIndex, activePage, pages, pageControls: { setActivePage, createPage }, templateControls: { addComponent, updateComponent } } = usePageContext();
+  const {
+    pageIndex,
+    activePage,
+    pages,
+    pageControls: { setActivePage, createPage },
+    templateControls: { addComponent, updateComponent }
+  } = usePageContext();
   const activePageData = pages[activePage].content;
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
@@ -28,10 +34,15 @@ export default function Builder() {
     setSelectedComponent(obj);
   }
 
-  const updateElement = (component) => {
-    updateComponent(component);
+  const selectComponent = (component) => {
+    if(component.props.id === selectedComponent.props.id) return;
     setSelectedComponent(component);
   }
+
+  useEffect(() => {
+    console.log(`DEBUG - Selected component:`);
+    console.log(selectedComponent);
+  }, [selectedComponent])
 
   return (
     <section>
@@ -53,7 +64,7 @@ export default function Builder() {
         </div>
 
         <div className={styles['constructor']}>
-          <BuilderEditor template={activePageData} getAllComponents={getAllComponents} />
+          <BuilderEditor template={activePageData} getAllComponents={getAllComponents} setSelectedComponent={selectComponent} />
         </div>
 
         <div className={styles['components']}>
