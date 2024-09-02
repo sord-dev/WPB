@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { usePageContext } from "../../contexts";
-import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer } from "../../components";
+import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer, BuilderComponentStateEditor } from "../../components";
 
 import styles from "./index.module.css";
 import { convertParamsToObject } from "../../utils";
@@ -18,7 +18,7 @@ export default function Builder() {
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
   const [selectedComponent, setSelectedComponent] = React.useState(null);
-  const getAllComponents = components => setAvailableComponents(components);
+  const getAllComponents = components => setAvailableComponents(components); // This is a callback function that will be passed to the BuilderEditor component
 
   const handleTabClick = (tab) => {
     setActivePage(tab);
@@ -58,9 +58,7 @@ export default function Builder() {
           <div className={styles['editor-content']}>
             {selectedComponent && (
               <>
-                <pre>
-                  {JSON.stringify(selectedComponent, null, 2)}
-                </pre>
+                <BuilderComponentStateEditor {...{ selectedComponent, updateComponent }}/>
 
                 <div>
                   <button onClick={() => updateComponent(selectedComponent, { style: { color: "red" } })}>Update Style</button>
