@@ -7,12 +7,12 @@ function BuilderToolBar({ screensize = { scale: 100, width: 1440 } }) {
     return (
         <div className={styles["toolbar"]}>
             <div className={styles["screen-size"]}>
-                <label for="width">Width:</label>
+                <label htmlFor="width">Width:</label>
                 <span id="width">{screensize.width}px</span>
             </div>
 
             <div className={styles["scale"]}>
-                <label for="scale">Scale:</label>
+                <label htmlFor="scale">Scale:</label>
                 <span id="scale">{screensize.scale}%</span>
             </div>
 

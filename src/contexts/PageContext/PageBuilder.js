@@ -51,7 +51,9 @@ export const updateElement = (template, elementType, elementProps, newProps) => 
     const elementToUpdate = findElement(newTemplate, elementType, elementProps);
 
     if (elementToUpdate) {
-        elementToUpdate.props = { ...elementToUpdate.props, ...newProps };
+        const merged = Object.assign({}, elementToUpdate.props, newProps);
+
+        elementToUpdate.props = merged;
     }
 
     return newTemplate;

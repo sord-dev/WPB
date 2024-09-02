@@ -89,7 +89,12 @@ export const PageContextProvider = ({ children }) => {
     // navigate component tree and update component
     const tree = pageData.pages[pageData.activePage].content;
     const newTree = updateElement(tree, component.type, { id: component.props.id }, { ...updatedData });
+
+    const updatedElement = { type: component.type, props: { ...component.props, ...updatedData } };
+    console.log("DEBUG - Updated component:", updatedElement.props);
     updatePage(pageData.activePage, newTree);
+
+    return updatedElement;
   };
 
   const pageControls = {
