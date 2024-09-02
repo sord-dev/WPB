@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './index.module.css';
 
-
 function GridContainer({ columns, children }) {
     const gridTemplateColumns = `repeat(${columns}, 1fr)`;
 
