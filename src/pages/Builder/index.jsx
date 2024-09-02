@@ -60,19 +60,20 @@ export default function Builder() {
           <div className={styles['editor-header']}>
             {selectedComponent && <ComponentID id={selectedComponent.props.id} type={selectedComponent.type} />}
           </div>
+
           <div className={styles['editor-content']}>
-            {selectedComponent && (
-              <>
-                <BuilderComponentStateEditor {...{ selectedComponent, updateComponent: updateAndSelectComponent }} />
-              </>
-            )}
+            {selectedComponent && <BuilderComponentStateEditor {...{ selectedComponent, updateComponent: updateAndSelectComponent }} />}
           </div>
         </div>
 
-        <div className={styles['constructor']}>
-          <GridContainer columns={12}>
-            <BuilderEditor template={activePageData} getAllComponents={getAllComponents} setSelectedComponent={selectComponent} />
-          </GridContainer>
+        <div className={styles['constructor-parent']}>
+
+          {/* This should be where we export from */}
+          <div className={styles['constructor']}>
+            <GridContainer columns={12}>
+              <BuilderEditor template={activePageData} getAllComponents={getAllComponents} setSelectedComponent={selectComponent} />
+            </GridContainer>
+          </div>
         </div>
 
         <div className={styles['components']}>
@@ -85,9 +86,12 @@ export default function Builder() {
 }
 
 const ComponentID = ({ id, type }) => (
-  <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
-    <h3>{type} -</h3>
-    <label>ID</label>
-    <p><code>{id}</code></p>
+  <div style={{ display: "flex", gap: "4px", alignItems: "center", justifyContent: "space-between" ,fontSize: ".8em" }}>
+    <h3>{type}</h3>
+
+    <div style={{ display: "flex", alignItems: "center", gap: "4px"}}>
+      <label>ID</label>
+      <p><code>{id}</code></p>
+    </div>
   </div>
 );
