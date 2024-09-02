@@ -2,15 +2,6 @@ import React from 'react';
 import styles from './index.module.css';
 import { TextStylingEditor } from './partials';
 
-const componentStyleConfig = {
-    text: {
-        styleOptions: ['textAlign', 'color', 'fontSize'],
-    },
-    container: {
-        styleOptions: ['backgroundColor', 'padding', 'margin'],
-    },
-};
-
 function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => {} }) {
     if (!selectedComponent) return null;
     if (!selectedComponent.props) throw new Error("Selected component does not have props");
