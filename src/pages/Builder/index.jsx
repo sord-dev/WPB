@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { usePageContext } from "../../contexts";
-import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager } from "../../components";
+import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer } from "../../components";
 
 import styles from "./index.module.css";
 import { convertParamsToObject } from "../../utils";
@@ -40,7 +40,7 @@ export default function Builder() {
   }
 
   useEffect(() => {
-    if(!selectedComponent) return;
+    if (!selectedComponent) return;
     console.log(`DEBUG - Selected component:`);
     console.log(selectedComponent);
   }, [selectedComponent])
@@ -63,9 +63,7 @@ export default function Builder() {
                 </pre>
 
                 <div>
-
                   <button onClick={() => updateComponent(selectedComponent, { style: { color: "red" } })}>Update Style</button>
-
                   <button onClick={() => updateComponent(selectedComponent, { content: "Hello World" })}>Update Component</button>
                 </div>
               </>
@@ -74,7 +72,9 @@ export default function Builder() {
         </div>
 
         <div className={styles['constructor']}>
-          <BuilderEditor template={activePageData} getAllComponents={getAllComponents} setSelectedComponent={selectComponent} />
+          <GridContainer columns={12}>
+            <BuilderEditor template={activePageData} getAllComponents={getAllComponents} setSelectedComponent={selectComponent} />
+          </GridContainer>
         </div>
 
         <div className={styles['components']}>
