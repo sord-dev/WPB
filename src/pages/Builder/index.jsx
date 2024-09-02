@@ -62,7 +62,6 @@ export default function Builder() {
 
                 <div>
                   <button onClick={() => updateComponent(selectedComponent, { style: { color: "red" } })}>Update Style</button>
-                  <button onClick={() => updateComponent(selectedComponent, { content: "Hello World" })}>Update Component</button>
                 </div>
               </>
             )}
