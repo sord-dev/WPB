@@ -58,12 +58,12 @@ export default function Builder() {
       <div className={styles['builder']}>
         <div className={styles['editor']}>
           <div className={styles['editor-header']}>
-            {selectedComponent && <h2>{selectedComponent.type}</h2>}
+            {selectedComponent && <ComponentID id={selectedComponent.props.id} type={selectedComponent.type} />}
           </div>
           <div className={styles['editor-content']}>
             {selectedComponent && (
               <>
-                <BuilderComponentStateEditor {...{ selectedComponent, updateComponent: updateAndSelectComponent }}/>
+                <BuilderComponentStateEditor {...{ selectedComponent, updateComponent: updateAndSelectComponent }} />
               </>
             )}
           </div>
@@ -83,3 +83,11 @@ export default function Builder() {
     </section>
   );
 }
+
+const ComponentID = ({ id, type }) => (
+  <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+    <h3>{type} -</h3>
+    <label>ID</label>
+    <p><code>{id}</code></p>
+  </div>
+);

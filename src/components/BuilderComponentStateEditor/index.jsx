@@ -1,5 +1,9 @@
 import React from 'react';
 import styles from './index.module.css';
+<<<<<<< Updated upstream
+=======
+import { TextState, TextStylingEditor } from './partials';
+>>>>>>> Stashed changes
 
 function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => {} }) {
     if (!selectedComponent) return null;
@@ -17,6 +21,7 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
 
     return (
         <div>
+<<<<<<< Updated upstream
             <div style={{ display: 'flex', justifyContent: "space-between"}}>
                 <button onClick={() => handleAlignmentChange("textAlign", "left")}>Align Left</button>
                 <button onClick={() => handleAlignmentChange("textAlign", "center")}>Align Center</button>
@@ -39,24 +44,29 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
 
                 return <TextState key={index} {...{ propName, propValue, onChange: handlePropChange }} />;
             })}
+=======
+            {componentType == "text" && (<TextStylingEditor handleAlignmentChange={handleAlignmentChange} />)}
+            
+            {entries.map(([propName, propValue], index) => {
+                    if (propName === "children") return null;
+                    if (propName === "id") return null;
+    
+                    if (typeof propValue === "object") {
+                        return (
+                            <div key={index}>
+                                <label>{propName}</label>
+                                <p>
+                                    {JSON.stringify(propValue, null, 2)}
+                                </p>
+                            </div>
+                        );
+                    }
+    
+                    return <TextState key={index} {...{ propName, propValue, onChange: handlePropChange }} />;
+                })}
+>>>>>>> Stashed changes
         </div>
     )
 }
-
-const ComponentID = ({ id }) => (
-    <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
-        <label>id</label>
-        <p><code>{id}</code></p>
-    </div>
-);
-
-const TextState = ({ propName, propValue, onChange }) => {
-    return (
-        <div className={styles["text-state"]}>
-            <label>{propName}</label>
-            <input type="text" defaultValue={propValue} onChange={(e) => onChange(propName, e.target.value)} />
-        </div>
-    )
-};
 
 export default BuilderComponentStateEditor;
