@@ -2,7 +2,7 @@ import styles from '../index.module.css'
 import { useState } from 'react';
 
 export function TextStylingEditor({ handleAlignmentChange }) {
-  const [color, setColor] = useState('#000000');
+  const [color, setColor] = useState("#C0C0C0");
 
   const handleColorChange = (newColor) => {
     setColor(newColor);
@@ -37,6 +37,7 @@ export function TextStylingEditor({ handleAlignmentChange }) {
             value={color} 
             onChange={(e) => handleColorChange(e.target.value)} 
             className={styles['color-input']}
+            readOnly
           />
           <input 
             type="color" 

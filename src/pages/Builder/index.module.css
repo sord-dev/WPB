@@ -16,8 +16,9 @@
   padding: 20px;
 }
 
-.constructor {
+.constructor-parent {
   flex: 1;
+  padding: 20px;
 }
 
 .editor {

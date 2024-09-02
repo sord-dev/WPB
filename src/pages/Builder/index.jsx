@@ -69,10 +69,14 @@ export default function Builder() {
           </div>
         </div>
 
-        <div className={styles['constructor']}>
-          <GridContainer columns={12}>
-            <BuilderEditor template={activePageData} getAllComponents={getAllComponents} setSelectedComponent={selectComponent} />
-          </GridContainer>
+        <div className={styles['constructor-parent']}>
+
+          {/* This should be where we export from */}
+          <div className={styles['constructor']}>
+            <GridContainer columns={12}>
+              <BuilderEditor template={activePageData} getAllComponents={getAllComponents} setSelectedComponent={selectComponent} />
+            </GridContainer>
+          </div>
         </div>
 
         <div className={styles['components']}>

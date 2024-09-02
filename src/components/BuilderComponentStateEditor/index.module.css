@@ -39,3 +39,20 @@
     display: flex;
     justify-content: space-between;
 }
+
+.styling-inputs input {
+    background: none;
+    color: var(--text-primary);
+    height: 36px;
+}
+
+.styling-inputs input[type="text"] {
+    cursor: not-allowed;
+}
+
+.styling-inputs input:not(input[type='color']) {
+    border: 1px solid var(--text-primary);
+    border-radius: 4px;
+    padding: 0 5px;
+    font-size: 16px;
+}

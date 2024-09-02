@@ -4,7 +4,7 @@
 
 .type-tag {
     position: absolute;
-    top: -15px;
+    bottom: 100%;
     left: 0;
     padding: 0.2rem 0.5rem;
     background-color: yellow;
