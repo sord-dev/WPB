@@ -40,20 +40,18 @@ export const PageContextProvider = ({ children }) => {
   const [pageData, setPageData] = useState(defaultPageContext);
 
   const createPage = (pageName) => {
-    if (pageData.pages[pageName]) return;
-    setPageData({
-      ...pageData,
-      pages: {
-        ...pageData.pages,
-        [pageName]: {
-          content: {
-            type: "container",
-            props: { id: generateComponentID("container"), children: [] },
-          },
-        },
-      },
-      pageIndex: [...pageData.pageIndex, pageName],
+    if (pageData.pages[pageName]) return false;
+  
+    setPageData({ 
+      ...pageData, 
+      pages: { 
+        ...pageData.pages, 
+        [pageName]: { content: {} } 
+      }, 
+      pageIndex: [...pageData.pageIndex, pageName] 
     });
+  
+    return true;
   };
 
   const deletePage = (page) => {
