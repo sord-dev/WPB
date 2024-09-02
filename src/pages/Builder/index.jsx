@@ -35,8 +35,13 @@ export default function Builder() {
   }
 
   const selectComponent = (component) => {
-    if (component.props.id === selectedComponent.props.id) return;
     setSelectedComponent(component);
+  }
+
+  const updateAndSelectComponent = (component, updatedProps) => {
+    const updated = updateComponent(component, updatedProps);
+    console.log(`DEBUG - Updated component:`, updated);
+    setSelectedComponent(updated);
   }
 
   useEffect(() => {
@@ -58,11 +63,7 @@ export default function Builder() {
           <div className={styles['editor-content']}>
             {selectedComponent && (
               <>
-                <BuilderComponentStateEditor {...{ selectedComponent, updateComponent }}/>
-
-                <div>
-                  <button onClick={() => updateComponent(selectedComponent, { style: { color: "red" } })}>Update Style</button>
-                </div>
+                <BuilderComponentStateEditor {...{ selectedComponent, updateComponent: updateAndSelectComponent }}/>
               </>
             )}
           </div>
