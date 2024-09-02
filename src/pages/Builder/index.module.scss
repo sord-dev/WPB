@@ -4,10 +4,16 @@
   flex-direction: row;
 }
 
+.editor-header {
+  margin-bottom: 16px;
+  text-transform: capitalize;
+}
+
 .editor,
 .components {
   width: 300px;
   background: #1c1c1c99;
+  padding: 20px;
 }
 
 .constructor {

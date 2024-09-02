@@ -18,3 +18,24 @@
     font-size: 14px;
     color: #333;
 }
+
+.styling-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.styling-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.styling-field span {
+    font-size: 12px;
+}
+
+.styling-inputs {
+    display: flex;
+    justify-content: space-between;
+}

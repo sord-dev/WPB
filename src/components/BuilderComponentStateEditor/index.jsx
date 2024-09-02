@@ -1,9 +1,22 @@
 import React from 'react';
 import styles from './index.module.css';
+import { TextStylingEditor } from './partials';
+
+const componentStyleConfig = {
+    text: {
+        styleOptions: ['textAlign', 'color', 'fontSize'],
+    },
+    container: {
+        styleOptions: ['backgroundColor', 'padding', 'margin'],
+    },
+};
 
 function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => {} }) {
     if (!selectedComponent) return null;
     if (!selectedComponent.props) throw new Error("Selected component does not have props");
+
+    const componentType = selectedComponent.type;
+
     const entries = Object.entries(selectedComponent.props);
 
     const handlePropChange = (propName, propValue) => {
@@ -17,12 +30,9 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: "space-between"}}>
-                <button onClick={() => handleAlignmentChange("textAlign", "left")}>Align Left</button>
-                <button onClick={() => handleAlignmentChange("textAlign", "center")}>Align Center</button>
-                <button onClick={() => handleAlignmentChange("textAlign", "right")}>Align Right</button>
-            </div>
-            {entries.map(([propName, propValue], index) => {
+            {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} />}
+
+            {/* {entries.map(([propName, propValue], index) => {
                 if (propName === "children") return null;
                 if (propName === "id") return <ComponentID key={index} id={propValue} />
 
@@ -38,7 +48,7 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
                 }
 
                 return <TextState key={index} {...{ propName, propValue, onChange: handlePropChange }} />;
-            })}
+            })} */}
         </div>
     )
 }
