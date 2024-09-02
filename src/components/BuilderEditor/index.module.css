@@ -1,6 +1,10 @@
 .component {
   position: relative;
   display: block;
+
+  transition: border 0.3s ease;
+  border: 1px solid transparent;
+  cursor: pointer;
 }
 
 .component:hover {

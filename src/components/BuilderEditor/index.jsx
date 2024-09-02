@@ -1,35 +1,14 @@
 import React, { useEffect } from 'react'
 import { extractComponentParameters, generateComponentID } from '../../utils'
 import styles from './index.module.css'
+import { GridColumn } from '../Grid';
+
+import { withInteractionHandler } from '../HOCs';
 
 const defaultComponents = {
     text: ({ content, style }) => <p className={styles['component']} style={style} >{content || 'No content'}</p>, // temporary default just so we can see something
     container: ({ children }) => <div className={styles['container']} >{children}</div>
 };
-
-
-const withClickHandler = (WrappedComponent, setSelectedComponent) => ({ ...props }) => {
-    const handleClick = () => {
-        const depth = props.children?.length || "no"; // Get the number of children
-
-        if (depth == "no") { // If the element has no children
-            const element = { type: props.id.split("-")[0], props }
-
-            setSelectedComponent(element); // Set the selected component
-        }
-
-        const grammar = depth == 1 ? { n: depth , c: 'child' } : depth > 1 ? { n: depth, c: 'children' } : { n: 0, c: 'children' };
-        const message = `DEBUG - Element clicked: ${props.id} with ${grammar.n} ${grammar.c}`;
-        console.log(message);
-    };
-
-    return (
-        <span onClick={handleClick} style={{ margin: "inherit", padding:"inherit" }}>
-            <WrappedComponent {...props} />
-        </span>
-    );
-};
-
 
 function BuilderEditor({ registery, template, getAllComponents, setSelectedComponent }) {
     const mergedRegistry = Object.assign({}, registery, { ...defaultComponents });
@@ -39,9 +18,14 @@ function BuilderEditor({ registery, template, getAllComponents, setSelectedCompo
 
         if (ComponentToRender) {
             const children = renderChildren(componentData.props.children);
-            const ComponentWithClickHandler = withClickHandler(ComponentToRender, setSelectedComponent);
+            const ComponentWithInteraction = withInteractionHandler(ComponentToRender, setSelectedComponent);
             const id = componentData.props?.id || generateComponentID(componentData.type);
-            return <ComponentWithClickHandler key={id} {...componentData.props} id={id}>{children}</ComponentWithClickHandler>;
+
+            return (
+                <GridColumn start={componentData.props?.span?.start || 12} end={componentData.props?.span?.end || 13} key={id}>
+                    <ComponentWithInteraction {...componentData.props} id={id}>{children}</ComponentWithInteraction>
+                </GridColumn>
+            );
         }
 
         return null; // Handle invalid components
