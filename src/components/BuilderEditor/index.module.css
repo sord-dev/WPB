@@ -10,3 +10,13 @@
 .component:hover {
   border: 1px solid yellow;
 }
+
+.container {
+  position: relative;
+  display: block;
+  padding: 2rem 0;
+}
+
+.container:hover {
+  border: 1px solid red;
+}

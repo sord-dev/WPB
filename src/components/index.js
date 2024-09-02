@@ -8,5 +8,9 @@ export { default as BuilderComponentStateEditor } from './BuilderComponentStateE
 // Custom Grid Span Implementation
 export * from './Grid';
 
+// Modals
+export { default as Overlay} from "./Overlay"
+export { default as CreatePageModal } from "./CreatePageModal"
+
 // All Page Builder Client Components
 export * from './user';

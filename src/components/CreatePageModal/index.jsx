@@ -1,0 +1,56 @@
+import React, { useState } from "react";
+import styles from "./index.module.css";
+
+function CreatePageModal({ createTab, openClose }) {
+  const [tabName, setTabName] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleInputChange = (event) => {
+    setTabName(event.target.value);
+  };
+
+  const handleCreateTab = () => {
+    if (tabName.trim()) {
+      const tabCreated = createTab(tabName);
+  
+      if (!tabCreated) {
+        setErrorMessage("Page already exists");
+  
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 4000);
+      } else {
+        openClose(false);
+      }
+    } else {
+      setErrorMessage("Page name is required");
+  
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 4000);
+    }
+  };
+
+  return (
+    <div className={styles["create-page"]}>
+      <h1>New Page</h1>
+      <div className={styles["input-field"]}>
+        <span>Title</span>
+        <input
+          type="text"
+          placeholder="New page"
+          value={tabName}
+          onChange={handleInputChange}
+        />
+      </div>
+      {errorMessage && (
+        <div className={styles["error-message"]}>
+          <p>{errorMessage}</p>
+        </div>
+      )}
+      <button className={styles['submit']} onClick={handleCreateTab}>Create page</button>
+    </div>
+  );
+}
+
+export default CreatePageModal;
