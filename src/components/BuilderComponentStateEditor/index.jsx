@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { TextStylingEditor, ElementPropsEditor } from './partials';
+import { fontSizeOptions, textAlignmentOptions } from './config';
 
 function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => { } }) {
     if (!selectedComponent) return null;
@@ -19,7 +20,7 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
 
     return (
         <div>
-            {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} />}
+            {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} {...{ fontSizeOptions, textAlignmentOptions}} />}
             {<ElementPropsEditor componentProps={selectedComponent.props} handlePropChange={handlePropChange} />}
         </div>
     )

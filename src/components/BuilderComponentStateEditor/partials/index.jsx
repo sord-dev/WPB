@@ -26,7 +26,13 @@ export const ElementPropsEditor = ({ componentProps = null, handlePropChange }) 
   )
 }
 
-export function TextStylingEditor({ handleAlignmentChange }) {
+const StylingInput = ({ label, value, option, onChange }) => {
+  return (
+    <button onClick={() => onChange(option, value)}>{label}</button>
+  )
+}
+
+export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [] }) {
   const [color, setColor] = useState("#C0C0C0");
 
   const handleColorChange = (newColor) => {
@@ -39,19 +45,13 @@ export function TextStylingEditor({ handleAlignmentChange }) {
       <div className={styles['styling-field']}>
         <span>Align</span>
         <div className={styles['styling-inputs']}>
-          <button onClick={() => handleAlignmentChange("textAlign", "left")}>Align Left</button>
-          <button onClick={() => handleAlignmentChange("textAlign", "center")}>Align Center</button>
-          <button onClick={() => handleAlignmentChange("textAlign", "right")}>Align Right</button>
+          {textAlignmentOptions.map((option, index) => <StylingInput key={index} {...option} onChange={handleAlignmentChange} />)}
         </div>
       </div>
       <div className={styles['styling-field']}>
         <span>Font Size</span>
         <div className={styles['styling-inputs']}>
-          <button onClick={() => handleAlignmentChange("fontSize", 14)}>XS</button>
-          <button onClick={() => handleAlignmentChange("fontSize", 16)}>S</button>
-          <button onClick={() => handleAlignmentChange("fontSize", 18)}>M</button>
-          <button onClick={() => handleAlignmentChange("fontSize", 20)}>L</button>
-          <button onClick={() => handleAlignmentChange("fontSize", 24)}>XL</button>
+          {fontSizeOptions.map((option, index) => <StylingInput key={index} {...option} onChange={handleAlignmentChange} />)}
         </div>
       </div>
       <div className={styles['styling-field']}>
