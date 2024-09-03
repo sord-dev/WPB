@@ -73,6 +73,7 @@ export const PageContextProvider = ({ children }) => {
     // navigate component tree and add component
     const tree = pageData.pages[pageData.activePage].content;
     component.props = { id: generateComponentID(component.type), ...component.props };
+    console.log(component, parentElement)
 
     if (parentElement && parentElement.props.children) {
       const newTree = appendElement(tree, component, parentElement);

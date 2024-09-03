@@ -12,7 +12,7 @@ export default function Builder() {
     activePage,
     pages,
     pageControls: { setActivePage, createPage },
-    templateControls: { addComponent, updateComponent, addContainer}
+    templateControls: { addComponent, updateComponent, addContainer }
   } = usePageContext();
   const activePageData = pages[activePage].content;
 
@@ -32,7 +32,6 @@ export default function Builder() {
       const newHistory = { ...history, [activePage]: history[activePage].slice(1) };
       setHistory(newHistory);
     } else {
-
       setHistory({ ...history, [activePage]: [...history[activePage], activePageData] });
     }
 
@@ -45,16 +44,24 @@ export default function Builder() {
       props: convertParamsToObject(component.parameters)
     };
 
-    if(obj.type.toLowerCase() === "container") {
+    if (obj.type.toLowerCase() === "container") {
       console.log(`DEBUG - Adding container`);
       addContainer(obj);
       historySnapshot();
       return;
     }
-    
-    addComponent(obj, selectedComponent);
-    setSelectedComponent(obj);
-    historySnapshot();
+
+    if (obj.type.toLowerCase() === "container" && selectedComponent.type.toLowerCase() === "wrapper") {
+      addContainer(obj);
+      historySnapshot();
+      return;
+    }
+
+    if (selectedComponent.type.toLowerCase() === "container") {
+      addComponent(obj, selectedComponent);
+      historySnapshot();
+      return;
+    }
   }
 
   const updateAndSelectComponent = (component, updatedProps) => { // We use this function in order to see the changes in the editor
@@ -68,6 +75,10 @@ export default function Builder() {
     console.log(`DEBUG - Selected component:`);
     console.log(selectedComponent);
   }, [selectedComponent])
+
+  useEffect(() => {
+    setSelectedComponent(activePageData);
+  }, [])
 
   return (
     <section>

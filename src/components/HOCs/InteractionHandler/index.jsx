@@ -17,13 +17,14 @@ const withInteractionHandler = (WrappedComponent, setSelectedComponent) => ({ ..
         console.log(message);
 
         if (!depth) { // If the element has no children
-            const element = { type: props.id.split("-")[0], props };  // Create a new element
+            const element = { type, props };  // Create a new element
             setSelectedComponent(element); // Set the selected component
         }
     };
 
     const handleMouseOver = () => {
         const depth = determineDepth(props); // Get the number of children
+        if(type === "wrapper") return; // Prevent the type tag from showing on the wrapper element
         if (!depth) { // If the element has no children
             setHovered(true);
         }
