@@ -25,9 +25,11 @@ export const findParent = (template, elementProps) => {
 
         previousElement = node;
 
-        if (node.props && node.props.children) {
+        if (node.props.children) {
             for (const child of node.props.children) {
+               
                 const result = traverse(child);
+                
                 if (result) {
                     return result;
                 }
