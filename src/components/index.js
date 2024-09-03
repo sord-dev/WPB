@@ -12,5 +12,11 @@ export * from './Grid';
 export { default as Overlay} from "./Overlay"
 export { default as CreatePageModal } from "./CreatePageModal"
 
+// Notifications
+export { default as SystemNotificationPopUp } from "./SystemNotificationPopUp"
+
+// HOCs
+export * from './HOCs';
+
 // All Page Builder Client Components
 export * from './user';

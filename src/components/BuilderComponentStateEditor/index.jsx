@@ -3,7 +3,7 @@ import React from 'react';
 import { TextStylingEditor, ElementPropsEditor } from './partials';
 import { fontSizeOptions, textAlignmentOptions } from './config';
 
-function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => { } }) {
+function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => { }, deleteComponent = (selectedComponent) => { } }) {
     if (!selectedComponent) return null;
     if (!selectedComponent.props) throw new Error("Selected component does not have props");
     const componentType = selectedComponent.type;
@@ -22,7 +22,16 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
         <>
             <ElementPropsEditor {...{componentProps, handlePropChange }} />
             {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} defaultColor={componentProps.style?.color} {...{ fontSizeOptions, textAlignmentOptions}} />}
+            {componentType != "wrapper" && <ComponentGeneralControls deleteComponent={() => deleteComponent(selectedComponent)} />}
         </>
+    )
+}
+
+const ComponentGeneralControls = ({ deleteComponent }) => {
+    return (
+        <div>
+            <button onClick={() => deleteComponent()}>Delete</button>
+        </div>
     )
 }
 

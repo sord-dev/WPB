@@ -1,7 +1,11 @@
 import React, { useState, useContext, createContext, useEffect } from 'react';
 import { usePageContext } from '../PageContext';
 
-const TabContext = createContext();
+const TabContext = createContext({
+  tabs: [],
+  addTab: () => {},
+  removeTab: () => {},
+});
 
 export const TabProvider = ({ children }) => {
   const { pageIndex, pages } = usePageContext()
@@ -14,6 +18,11 @@ export const TabProvider = ({ children }) => {
   const removeTab = (tabName) => {
     setTabs(prevTabs => prevTabs.filter(tab => tab !== tabName));
   };
+
+
+  useEffect(() => {
+   console.log('tabs', tabs)
+  }, [pages])
 
   return (
     <TabContext.Provider value={{ tabs, addTab, removeTab }}>

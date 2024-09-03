@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { appendElement, updateElement } from './PageBuilder';
+import { appendElement, deleteElement, updateElement } from './PageBuilder';
 import { generateComponentID } from '../../utils';
 
 const defaultPageContext = {
@@ -39,6 +39,8 @@ const PageContext = createContext(defaultPageContext);
 
 export const PageContextProvider = ({ children }) => {
   const [pageData, setPageData] = useState(defaultPageContext);
+  
+  const indexPages = () => Object.keys(pageData.pages);
 
   const createPage = (pageName) => {
     if (pageData.pages[pageName]) return false;
@@ -129,6 +131,13 @@ export const PageContextProvider = ({ children }) => {
     return updatedElement;
   };
 
+  const deleteComponent = (component) => {
+    const tree = pageData.pages[pageData.activePage].content;
+    // navigate component tree and delete component
+    const newTree = deleteElement(tree, { id: component.props.id });
+    updatePage(pageData.activePage, newTree);
+  }
+
   const pageControls = {
     createPage,
     deletePage,
@@ -140,7 +149,7 @@ export const PageContextProvider = ({ children }) => {
     addComponent,
     addContainer,
     updateComponent,
-    deleteComponent: () => { },
+    deleteComponent,
   };
 
   useEffect(() => {

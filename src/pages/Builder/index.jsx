@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { usePageContext } from "../../contexts";
-import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer, BuilderComponentStateEditor } from "../../components";
+import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer, BuilderComponentStateEditor, SystemNotificationPopUp } from "../../components";
 
 import styles from "./index.module.css";
 import { convertParamsToObject } from "../../utils";
@@ -12,13 +12,15 @@ export default function Builder() {
     activePage,
     pages,
     pageControls: { setActivePage, createPage },
-    templateControls: { addComponent, updateComponent, addContainer}
+    templateControls: { addComponent, updateComponent, addContainer, deleteComponent }
   } = usePageContext();
   const activePageData = pages[activePage].content;
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
   const [selectedComponent, setSelectedComponent] = React.useState(null);
   const getAllComponents = components => setAvailableComponents(components); // This is a callback function that will be passed to the BuilderEditor component
+
+  const [error, setError] = React.useState(null);
 
   // *** this could be a hook or a context
   const [history, setHistory] = React.useState({ [activePage]: [activePageData] });
@@ -39,10 +41,16 @@ export default function Builder() {
   // *** end of potential hook or context
 
   const appendComponent = (component) => {
+    if(!selectedComponent) return setError({ message: "Please select a container to add the component to" });
+
     const obj = {
       type: component.name,
       props: convertParamsToObject(component.parameters)
     };
+
+    if (obj.type.toLowerCase() === 'text' && selectedComponent.type.toLowerCase() === "wrapper") { // is this a text component being made at the top level?
+      setError({ message: "Text components must be inside a container" });
+    }
 
     if (obj.type.toLowerCase() === "container") { // Is this a container?
       setSelectedComponent(addContainer(obj)); // If so, add it to the active page on the root level
@@ -57,15 +65,22 @@ export default function Builder() {
     }
 
     if (selectedComponent.type.toLowerCase() === "container") { // Is this a component being added to a container?
-      setSelectedComponent(addComponent(obj, selectedComponent)); // If so, add it to the active page inside the container
+      // addComponent(obj, selectedComponent) // If so, add it to the active page inside the container (if you uncomment the line below, comment this line)
+      setSelectedComponent(addComponent(obj, selectedComponent)); // Uncomment this line if you want to select the element after adding it (potential hotkey) 
       historySnapshot();
       return;
     }
   }
 
+  const removeComponent = (component) => {
+    deleteComponent(component);
+    setSelectedComponent(activePageData);
+    historySnapshot();
+  }
+
   const updateAndSelectComponent = (component, updatedProps) => { // We use this function in order to see the changes in the editor
     const updated = updateComponent(component, updatedProps);
-    // historySnapshot(); // slightly broken, due to the fact we're updating inputs onChange rather than onSubmit in a form (max history is 10 snapshots)
+    // historySnapshot(); // slightly broken, due to the fact we're updating inputs onChange rather than onSubmit in a form (max history is 10 snapshots, add debounce?)
     setSelectedComponent(updated);
   }
 
@@ -96,7 +111,7 @@ export default function Builder() {
           </div>
 
           <div className={styles['editor-content']}>
-            {selectedComponent && <BuilderComponentStateEditor {...{ selectedComponent, updateComponent: updateAndSelectComponent }} />}
+            {selectedComponent && <BuilderComponentStateEditor {...{ selectedComponent, updateComponent: updateAndSelectComponent, deleteComponent: removeComponent }} />}
           </div>
         </div>
 
@@ -113,6 +128,8 @@ export default function Builder() {
         <div className={styles['components']}>
           <BuilderComponentManager components={availableComponents} handleComponentClick={appendComponent} />
         </div>
+
+        {error && <SystemNotificationPopUp {...{ ...error, timeout: 1500, onClose: () => setError(null) }} />}
 
       </div>
     </section>

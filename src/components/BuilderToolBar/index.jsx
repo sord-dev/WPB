@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './index.module.css'
 import { FaDesktop, FaMobileAlt, FaRedo, FaTabletAlt, FaUndo } from 'react-icons/fa'
+import { usePageContext } from '../../contexts';
 
 function BuilderToolBar({ screensize = { scale: 100, width: 1440 } }) {
 

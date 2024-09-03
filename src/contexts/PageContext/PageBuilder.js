@@ -16,21 +16,29 @@ export const findElement = (template, elementProps) => {
 };
 
 export const findParent = (template, elementProps) => {
-    const children = template.props.children;
-  
-    for (const child of children) {
-      if (child.props && matchesProps(child.props, elementProps)) {
-        return tree; // Found the parent
-      }
-  
-      const parent = findParent(elementId, child);
-      if (parent) {
-        return parent; // Found the parent in a child
-      }
-    }
-  
-    return null; // No parent found
-  }
+    let previousElement = null;
+
+    const traverse = (node) => {
+        if (node.props && matchesProps(node.props, elementProps)) {
+            return previousElement; // Found the parent
+        }
+
+        previousElement = node;
+
+        if (node.props && node.props.children) {
+            for (const child of node.props.children) {
+                const result = traverse(child);
+                if (result) {
+                    return result;
+                }
+            }
+        }
+
+        return null;
+    };
+
+    return traverse(template);
+};
 
 export const matchesProps = (props1, props2) => {
     return props1.id === props2.id;
@@ -39,7 +47,7 @@ export const matchesProps = (props1, props2) => {
 export const appendElement = (template, newElement, parent) => {
     const newTemplate = JSON.parse(JSON.stringify(template)); // Create a copy
     const parentElement = findElement(newTemplate, parent.props);
-    console.log("DEBUG - Parent element:", parentElement);  
+    console.log("DEBUG - Parent element:", parentElement);
 
     if (parentElement) {
         parentElement.props.children.push(newElement);
@@ -53,11 +61,12 @@ export const appendElement = (template, newElement, parent) => {
 
 export const deleteElement = (template, elementProps) => {
     const newTemplate = JSON.parse(JSON.stringify(template)); // Create a copy
-    const elementToDelete = findElement(newTemplate, elementProps);
+    const parent = findParent(newTemplate, elementProps);
+    console.log("DEBUG - Parent element for deletion:", parent);
 
-    if (elementToDelete) {
-        const parentIndex = elementToDelete.parent.children.indexOf(elementToDelete);
-        elementToDelete.parent.children.splice(parentIndex, 1);
+    if (parent && parent.props.children) {
+        const index = parent.props.children.findIndex(child => matchesProps(child.props, elementProps));
+        parent.props.children.splice(index, 1);
     }
 
     return newTemplate;
