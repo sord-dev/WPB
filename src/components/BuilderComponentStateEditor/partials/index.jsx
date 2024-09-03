@@ -2,12 +2,12 @@ import { marginSizes, paddingSizes } from '../config/container';
 import styles from '../index.module.css'
 import { useEffect, useState } from 'react';
 
-export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [], defaultColor = "#C0C0C0" }) {
-  const [color, setColor] = useState(defaultColor);
+export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [], componentStyles = { color: "#C0C0C0" } }) {
+  const [color, setColor] = useState(componentStyles.color);
 
   useEffect(() => {
-    setColor(defaultColor);
-  }, [defaultColor]);
+    setColor(componentStyles.color);
+  }, [componentStyles]);
 
   const handleColorChange = (newColor) => {
     setColor(newColor);
@@ -19,13 +19,19 @@ export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions 
       <div className={styles['styling-field']}>
         <span>Align</span>
         <div className={styles['styling-inputs']}>
-          {textAlignmentOptions.map((option, index) => <StylingButton key={index} {...option} onChange={handleAlignmentChange} />)}
+          {textAlignmentOptions.map((option, index) => {
+            const active = option.value === componentStyles.textAlign;
+            return <StylingButton key={index} active={active} {...option} onChange={handleAlignmentChange} />
+          })}
         </div>
       </div>
       <div className={styles['styling-field']}>
         <span>Font Size</span>
         <div className={styles['styling-inputs']}>
-          {fontSizeOptions.map((option, index) => <StylingButton key={index} {...option} onChange={handleAlignmentChange} />)}
+          {fontSizeOptions.map((option, index) => {
+            const active = option.value === componentStyles.fontSize;
+            return <StylingButton active={active} key={index} {...option} onChange={handleAlignmentChange} />
+          })}
         </div>
       </div>
       <div className={styles['styling-field']}>

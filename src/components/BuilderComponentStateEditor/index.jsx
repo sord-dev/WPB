@@ -21,7 +21,7 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
     return (
         <>
             <PropertyEditor {...{ componentProps, handlePropChange }} />
-            {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} defaultColor={componentProps.style?.color} {...{ fontSizeOptions, textAlignmentOptions}} />}
+            {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} componentStyles={componentProps.style} {...{ fontSizeOptions, textAlignmentOptions}} />}
             {componentType == "container" && <ContainerStylingEditor containerStyles={componentProps.style || {}} handleAlignmentChange={handleAlignmentChange} />}
             {componentType != "wrapper" && <ComponentGeneralControls deleteComponent={() => deleteComponent(selectedComponent)} />}
         </>
