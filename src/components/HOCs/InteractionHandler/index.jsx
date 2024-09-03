@@ -10,21 +10,23 @@ const withInteractionHandler = (WrappedComponent, setSelectedComponent) => ({ ..
         return depth === 0 ? 0 : depth; // If the element has no children, return 0
     }
 
-    const handleClick = () => {
+    const handleClick = (event) => {
+        event.stopPropagation();
+        const type = props.id.split("-")[0]; // Get the type of the element
+        if (type === "wrapper") return; // Prevent the wrapper element from being selected
+
         const depth = determineDepth(props); // Get the number of children
         const grammar = depth == 1 ? { n: depth, c: 'child' } : depth > 1 ? { n: depth, c: 'children' } : { n: 0, c: 'children' };
         const message = `DEBUG - Element clicked: ${props.id} with ${grammar.n} ${grammar.c}`;
         console.log(message);
 
-        if (!depth) { // If the element has no children
-            const element = { type, props };  // Create a new element
-            setSelectedComponent(element); // Set the selected component
-        }
+        const element = { type, props };  // format the element's data
+        setSelectedComponent(element); // Set the selected component
     };
 
     const handleMouseOver = () => {
         const depth = determineDepth(props); // Get the number of children
-        if(type === "wrapper") return; // Prevent the type tag from showing on the wrapper element
+        if (type === "wrapper") return; // Prevent the type tag from showing on the wrapper element
         if (!depth) { // If the element has no children
             setHovered(true);
         }

@@ -44,21 +44,20 @@ export default function Builder() {
       props: convertParamsToObject(component.parameters)
     };
 
-    if (obj.type.toLowerCase() === "container") {
-      console.log(`DEBUG - Adding container`);
-      addContainer(obj);
+    if (obj.type.toLowerCase() === "container") { // Is this a container?
+      setSelectedComponent(addContainer(obj)); // If so, add it to the active page on the root level
       historySnapshot();
       return;
     }
 
-    if (obj.type.toLowerCase() === "container" && selectedComponent.type.toLowerCase() === "wrapper") {
-      addContainer(obj);
+    if (obj.type.toLowerCase() === "container" && selectedComponent.type.toLowerCase() === "wrapper") { // is this a container being made at the top level?
+      setSelectedComponent(addContainer(obj)); // If so, add it to the active page on the root level
       historySnapshot();
       return;
     }
 
-    if (selectedComponent.type.toLowerCase() === "container") {
-      addComponent(obj, selectedComponent);
+    if (selectedComponent.type.toLowerCase() === "container") { // Is this a component being added to a container?
+      setSelectedComponent(addComponent(obj, selectedComponent)); // If so, add it to the active page inside the container
       historySnapshot();
       return;
     }
