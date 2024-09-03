@@ -6,30 +6,25 @@ const withInteractionHandler = (WrappedComponent, setSelectedComponent) => ({ ..
     const type = props.id.split("-")[0];
 
     const determineDepth = (props) => {
-        const depth = props.children?.length || 0; // Get the number of children
-        return depth === 0 ? 0 : depth; // If the element has no children, return 0
+        const d = props.children?.length || 0; // Get the number of children
+        return d === 0 ? 0 : d; // If the element has no children, return 0
     }
 
     const handleClick = (event) => {
-        event.stopPropagation();
-        const type = props.id.split("-")[0]; // Get the type of the element
+        event.stopPropagation(); // Prevent the event from bubbling up, so that the parent element is not selected simultaneously
         if (type === "wrapper") return; // Prevent the wrapper element from being selected
-
-        const depth = determineDepth(props); // Get the number of children
-        const grammar = depth == 1 ? { n: depth, c: 'child' } : depth > 1 ? { n: depth, c: 'children' } : { n: 0, c: 'children' };
-        const message = `DEBUG - Element clicked: ${props.id} with ${grammar.n} ${grammar.c}`;
-        console.log(message);
 
         const element = { type, props };  // format the element's data
         setSelectedComponent(element); // Set the selected component
     };
 
-    const handleMouseOver = () => {
-        const depth = determineDepth(props); // Get the number of children
+    const handleMouseOver = (event) => {
+        event.stopPropagation(); // Prevent the event from bubbling up, so that the parent element is not selected simultaneously
         if (type === "wrapper") return; // Prevent the type tag from showing on the wrapper element
-        if (!depth) { // If the element has no children
-            setHovered(true);
-        }
+        
+        // if (!depth) setHovered(true); // Add this line if you want to see the type tag ONLY on elements with no children
+        const depth = determineDepth(props); // Get the number of children
+        setHovered(true); // comment this line if you want to see the type tag ONLY on elements with no children
     };
 
     const handleMouseOut = () => {
