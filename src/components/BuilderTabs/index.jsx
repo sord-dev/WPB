@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import styles from "./index.module.css";
 import Overlay from "../Overlay";
 import CreatePageModal from "../CreatePageModal";
+import { IoMdClose } from "react-icons/io";
 
 function BuilderTabs({
   tabs = [],
   activeTab = null,
   handleTabClick = () => {},
   createTab = () => {},
+  deleteTab = () => {},
 }) {
   if (!tabs.length) return null;
 
@@ -23,6 +25,12 @@ function BuilderTabs({
               onClick={() => handleTabClick(tab)}
             >
               {tab}
+              
+              {tabs.length > 1 && <button onClick={(e) => {
+                  e.stopPropagation();
+                  deleteTab(tab);
+              }} className={styles['close']}>{<IoMdClose />}</button>}
+              
             </button>
           </li>
         ))}

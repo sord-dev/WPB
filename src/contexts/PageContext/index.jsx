@@ -58,8 +58,24 @@ export const PageContextProvider = ({ children }) => {
   const deletePage = (page) => {
     const pages = { ...pageData.pages };
     delete pages[page];
-    setPageData({ ...pageData, pages });
+  
+    const newPageIndex = pageData.pageIndex.filter(pageName => pageName !== page);
+  
+    let newActivePage = pageData.activePage;
+    const currentIndex = pageData.pageIndex.indexOf(page);
+    
+    if (currentIndex !== -1) {
+      newActivePage = currentIndex > 0 ? newPageIndex[currentIndex - 1] : newPageIndex[0];
+    }
+  
+    setPageData({ 
+      ...pageData, 
+      pages: pages, 
+      pageIndex: newPageIndex,
+      activePage: newActivePage 
+    });
   };
+  
 
   const updatePage = (page, content) => {
     setPageData({ ...pageData, pages: { ...pageData.pages, [page]: { ...pageData.pages[page], content } } });
