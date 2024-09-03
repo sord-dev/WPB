@@ -1,5 +1,5 @@
 import styles from '../index.module.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const TextState = ({ propName, propValue, onChange }) => {
   return (
@@ -26,9 +26,21 @@ export const ElementPropsEditor = ({ componentProps = null, handlePropChange }) 
   )
 }
 
-const StylingInput = ({ label, value, option, onChange }) => {
+const StylingButton = ({ label, value, option, onChange }) => {
   return (
     <button onClick={() => onChange(option, value)}>{label}</button>
+  )
+}
+
+const StylingInput = ({ value, type, onChange, className, readOnly = false }) => {
+  return (
+    <input
+      type={type}
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      className={styles[{ className }]}
+      readOnly={readOnly}
+    />
   )
 }
 
@@ -45,30 +57,30 @@ export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions 
       <div className={styles['styling-field']}>
         <span>Align</span>
         <div className={styles['styling-inputs']}>
-          {textAlignmentOptions.map((option, index) => <StylingInput key={index} {...option} onChange={handleAlignmentChange} />)}
+          {textAlignmentOptions.map((option, index) => <StylingButton key={index} {...option} onChange={handleAlignmentChange} />)}
         </div>
       </div>
       <div className={styles['styling-field']}>
         <span>Font Size</span>
         <div className={styles['styling-inputs']}>
-          {fontSizeOptions.map((option, index) => <StylingInput key={index} {...option} onChange={handleAlignmentChange} />)}
+          {fontSizeOptions.map((option, index) => <StylingButton key={index} {...option} onChange={handleAlignmentChange} />)}
         </div>
       </div>
       <div className={styles['styling-field']}>
         <span>Color</span>
         <div className={styles['styling-inputs']}>
-          <input
+          <StylingInput
             type="text"
             value={color}
-            onChange={(e) => handleColorChange(e.target.value)}
-            className={styles['color-input']}
+            onChange={handleColorChange}
+            className={'color-input'}
             readOnly
           />
-          <input
+          <StylingInput
             type="color"
             value={color}
-            onChange={(e) => handleColorChange(e.target.value)}
-            className={styles['color-picker']}
+            onChange={handleColorChange}
+            className={'color-picker'}
           />
         </div>
       </div>

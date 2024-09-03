@@ -19,8 +19,9 @@ export default function Builder() {
   const [availableComponents, setAvailableComponents] = React.useState([]);
   const [selectedComponent, setSelectedComponent] = React.useState(null);
   const getAllComponents = components => setAvailableComponents(components); // This is a callback function that will be passed to the BuilderEditor component
-  
-  const [history, setHistory] = React.useState({ [activePage]: [activePageData] }); // this could be a hook or a context
+
+  // *** this could be a hook or a context
+  const [history, setHistory] = React.useState({ [activePage]: [activePageData] });
   const historySnapshot = () => {
     console.log(`DEBUG - History snapshot:`);
     console.log(history);
@@ -29,11 +30,14 @@ export default function Builder() {
 
     if (history[activePage].length > 10) { // We only want to keep the last 10 snapshots, for memory optimization
       const newHistory = { ...history, [activePage]: history[activePage].slice(1) };
-      return setHistory(newHistory);
+      setHistory(newHistory);
+    } else {
+
+      setHistory({ ...history, [activePage]: [...history[activePage], activePageData] });
     }
 
-    return setHistory({ ...history, [activePage]: [...history[activePage], activePageData] });
   }
+  // *** end of potential hook or context
 
   const appendComponent = (component) => {
     const obj = {
@@ -42,14 +46,13 @@ export default function Builder() {
     };
 
     addComponent(obj, selectedComponent);
-    historySnapshot();
     setSelectedComponent(obj);
+    historySnapshot();
   }
 
   const updateAndSelectComponent = (component, updatedProps) => { // We use this function in order to see the changes in the editor
     const updated = updateComponent(component, updatedProps);
     // historySnapshot(); // slightly broken, due to the fact we're updating inputs onChange rather than onSubmit in a form (max history is 10 snapshots)
-    console.log(`DEBUG - Updated component:`, updated);
     setSelectedComponent(updated);
   }
 

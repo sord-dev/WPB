@@ -6,7 +6,6 @@ import { fontSizeOptions, textAlignmentOptions } from './config';
 function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => { } }) {
     if (!selectedComponent) return null;
     if (!selectedComponent.props) throw new Error("Selected component does not have props");
-
     const componentType = selectedComponent.type;
 
     const handlePropChange = (propName, propValue) => {
@@ -20,8 +19,8 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
 
     return (
         <div>
+            <ElementPropsEditor componentProps={selectedComponent.props} handlePropChange={handlePropChange} />
             {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} {...{ fontSizeOptions, textAlignmentOptions}} />}
-            {<ElementPropsEditor componentProps={selectedComponent.props} handlePropChange={handlePropChange} />}
         </div>
     )
 }
