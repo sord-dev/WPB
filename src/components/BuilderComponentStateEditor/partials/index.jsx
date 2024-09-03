@@ -1,4 +1,3 @@
-import { marginSizes, paddingSizes } from '../config/container';
 import styles from '../index.module.css'
 import { useEffect, useState } from 'react';
 
@@ -56,7 +55,7 @@ export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions 
   )
 }
 
-export const ContainerStylingEditor = ({ handleAlignmentChange, containerStyles }) => {
+export const ContainerStylingEditor = ({ handleAlignmentChange, containerStyles, marginSizes = [], paddingSizes = [] }) => {
   const [containerStyle, setContainerStyle] = useState(containerStyles);
 
   useEffect(() => {
