@@ -2,45 +2,12 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { appendElement, deleteElement, updateElement } from './PageBuilder';
 import { generateComponentID } from '../../utils';
 
-const defaultPageContext = {
-  pageIndex: ["home", "services"],
-  activePage: "home",
-  pageControls: {
-    createPage: pageName => { },
-    deletePage: pageName => { },
-    updatePage: (page, content) => { },
-    setActivePage: pageName => { },
-  },
-  templateControls: {
-    addComponent: (component, parentElement) => { },
-    updateComponent: component => { },
-    addContainer: container => { },
-    deleteComponent: (page, component) => { },
-  },
-  pages: {
-    home: {
-      name: "Home",
-      content: {
-        type: "wrapper",
-        props: { id: generateComponentID("wrapper"), children: [] },
-      }
-    },
-    services: {
-      name: "Services",
-      content: {
-        type: "wrapper",
-        props: { id: generateComponentID("wrapper"), children: [] },
-      }
-    }
-  }
-}
+import { defaultPageContext } from './default';
 
 const PageContext = createContext(defaultPageContext);
 
 export const PageContextProvider = ({ children }) => {
   const [pageData, setPageData] = useState(defaultPageContext);
-  
-  const indexPages = () => Object.keys(pageData.pages);
 
   const createPage = (pageName) => {
     if (pageData.pages[pageName]) return false;
@@ -81,7 +48,6 @@ export const PageContextProvider = ({ children }) => {
     });
   };
   
-
   const updatePage = (page, content) => {
     setPageData({ ...pageData, pages: { ...pageData.pages, [page]: { ...pageData.pages[page], content } } });
   };

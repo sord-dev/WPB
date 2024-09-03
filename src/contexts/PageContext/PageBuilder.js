@@ -17,32 +17,34 @@ export const findElement = (template, elementProps) => {
 
 export const findParent = (template, elementProps) => {
     if (!template || !elementProps) {
-      throw new Error('Invalid arguments: template and elementProps must be provided.');
+        throw new Error('Invalid arguments: template and elementProps must be provided.');
     }
-  
+
     const traverse = (node, parent) => {
-      if (!node) {
-        return null; // Handle null or undefined nodes
-      }
-  
-      if (matchesProps(node.props, elementProps)) {
-        return parent;
-      }
-  
-      if (node.props.children) {
-        for (const child of node.props.children) {
-          const result = traverse(child, node);
-          if (result) {
-            return result;
-          }
+        if (!node) {
+            return null; // Handle null or undefined nodes
         }
-      }
-  
-      return null;
+
+        if (matchesProps(node.props, elementProps)) {
+            return parent;
+        }
+
+        if (node.props.children) {
+            for (const child of node.props.children) {
+                const result = traverse(child, node);
+                if (result) {
+                    return result;
+                }
+            }
+        }
+
+        return null;
     };
-  
+
     return traverse(template, null);
-  };
+};
+
+
 export const matchesProps = (props1, props2) => {
     return props1.id === props2.id;
 };
