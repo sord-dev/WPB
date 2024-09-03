@@ -28,8 +28,8 @@ const defaultPageContext = {
     services: {
       name: "Services",
       content: {
-        type: "container",
-        props: { id: generateComponentID("container"), children: [] },
+        type: "wrapper",
+        props: { id: generateComponentID("wrapper"), children: [] },
       }
     }
   }
