@@ -2,10 +2,16 @@ import styles from '../index.module.css'
 import { useEffect, useState } from 'react';
 
 const TextState = ({ propName, propValue, onChange }) => {
+  const [value, setValue] = useState(propValue);
+
+  useEffect(() => {
+    setValue(propValue);
+  }, [propValue]);
+
   return (
     <div className={styles["text-state"]}>
       <span>{propName}</span>
-      <input type="text" defaultValue={propValue} onChange={(e) => onChange(propName, e.target.value)} />
+      <input type="text" value={value} onChange={(e) => onChange(propName, e.target.value)} />
     </div>
   )
 };
@@ -44,8 +50,13 @@ const StylingInput = ({ value, type, onChange, className, readOnly = false }) =>
   )
 }
 
-export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [] }) {
-  const [color, setColor] = useState("#C0C0C0");
+export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [], defaultColor = "#C0C0C0" }) {
+  const [color, setColor] = useState(defaultColor);
+  console.log(`DEBUG - TextStylingEditor - defaultColor: ${defaultColor}`);
+
+  useEffect(() => {
+    setColor(defaultColor);
+  }, [defaultColor]);
 
   const handleColorChange = (newColor) => {
     setColor(newColor);
