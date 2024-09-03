@@ -28,8 +28,8 @@ const defaultPageContext = {
     services: {
       name: "Services",
       content: {
-        type: "container",
-        props: { id: generateComponentID("container"), children: [] },
+        type: "wrapper",
+        props: { id: generateComponentID("wrapper"), children: [] },
       }
     }
   }
@@ -47,7 +47,10 @@ export const PageContextProvider = ({ children }) => {
       ...pageData,
       pages: {
         ...pageData.pages,
-        [pageName]: { content: {} }
+        [pageName]: { content: {
+          type: "wrapper",
+          props: { id: generateComponentID("wrapper"), children: [] },
+        } }
       },
       pageIndex: [...pageData.pageIndex, pageName]
     });

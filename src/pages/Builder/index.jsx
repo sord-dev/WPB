@@ -69,6 +69,11 @@ export default function Builder() {
     setSelectedComponent(updated);
   }
 
+  const handleTabClick = (templateIndex) => {
+    setSelectedComponent(pages[templateIndex].content);
+    setActivePage(templateIndex);
+  }
+
   useEffect(() => {
     if (!selectedComponent) return;
     console.log(`DEBUG - Selected component:`);
@@ -81,7 +86,7 @@ export default function Builder() {
 
   return (
     <section>
-      <BuilderTabs {...{ tabs: pageIndex, activeTab: activePage, handleTabClick: setActivePage, createTab: createPage, deleteTab: deletePage }} />
+      <BuilderTabs {...{ tabs: pageIndex, activeTab: activePage, handleTabClick, createTab: createPage, deleteTab: deletePage }} />
       <BuilderToolBar screensize={{ scale: 100, width: 1440 }} />
 
       <div className={styles['builder']}>
