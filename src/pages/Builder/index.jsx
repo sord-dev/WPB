@@ -11,7 +11,7 @@ export default function Builder() {
     pageIndex,
     activePage,
     pages,
-    pageControls: { setActivePage, createPage, deletePage },
+    pageControls: { setActivePage, createPage },
     templateControls: { addComponent, updateComponent, addContainer}
   } = usePageContext();
   const activePageData = pages[activePage].content;
@@ -86,7 +86,7 @@ export default function Builder() {
 
   return (
     <section>
-      <BuilderTabs {...{ tabs: pageIndex, activeTab: activePage, handleTabClick, createTab: createPage, deleteTab: deletePage }} />
+      <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: createPage }} />
       <BuilderToolBar screensize={{ scale: 100, width: 1440 }} />
 
       <div className={styles['builder']}>

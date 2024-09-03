@@ -56,7 +56,16 @@
   color: rgb(255, 97, 97);
 }
 
+.existing-files span {
+  display: block;
+  font-size: 12px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
 
+.existing-files li {
+  cursor: pointer;
+}
 
 @keyframes fade-in {
   from {

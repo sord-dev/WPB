@@ -3,14 +3,16 @@ import styles from "./index.module.css";
 import Overlay from "../Overlay";
 import CreatePageModal from "../CreatePageModal";
 import { IoMdClose } from "react-icons/io";
+import { useTabContext } from "../../contexts";
 
 function BuilderTabs({
-  tabs = [],
+  pages,
   activeTab = null,
   handleTabClick = () => {},
   createTab = () => {},
-  deleteTab = () => {},
 }) {
+  const { tabs, addTab, removeTab } = useTabContext();
+
   if (!tabs.length) return null;
 
   const [openClose, setOpenClose] = useState(false);
@@ -25,12 +27,21 @@ function BuilderTabs({
               onClick={() => handleTabClick(tab)}
             >
               {tab}
-              
-              {tabs.length > 1 && <button onClick={(e) => {
-                  e.stopPropagation();
-                  deleteTab(tab);
-              }} className={styles['close']}>{<IoMdClose />}</button>}
-              
+
+              {tabs.length > 1 && (
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeTab(tab);
+                  }}
+                  className={styles["close"]}
+                  role="button"
+                  tabIndex={0} // Allows keyboard navigation
+                  aria-label={`Close ${tab}`}
+                >
+                  <IoMdClose />
+                </span>
+              )}
             </button>
           </li>
         ))}
@@ -39,9 +50,16 @@ function BuilderTabs({
           <button onClick={() => setOpenClose(true)}>+</button>
         </li>
       </ul>
+
       {openClose && (
         <Overlay openClose={setOpenClose}>
-          <CreatePageModal createTab={createTab} openClose={setOpenClose} />
+          <CreatePageModal
+            tabs={tabs}
+            createTab={createTab}
+            addTab={addTab}
+            openClose={setOpenClose}
+            pages={pages}
+          />
         </Overlay>
       )}
     </>

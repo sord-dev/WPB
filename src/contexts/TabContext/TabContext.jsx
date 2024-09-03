@@ -1,21 +1,19 @@
 import React, { useState, useContext, createContext, useEffect } from 'react';
+import { usePageContext } from '../PageContext';
 
 const TabContext = createContext();
 
-export const TabProvider = ({ children,}) => {
-  const [tabs, setTabs] = useState();
+export const TabProvider = ({ children }) => {
+  const { pageIndex, pages } = usePageContext()
+  const [tabs, setTabs] = useState(pageIndex);
 
   const addTab = (newTab) => {
     setTabs(prevTabs => [...prevTabs, newTab]);
   };
 
-  const removeTab = (tabId) => {
-    setTabs(prevTabs => prevTabs.filter(tab => tab.id !== tabId));
+  const removeTab = (tabName) => {
+    setTabs(prevTabs => prevTabs.filter(tab => tab !== tabName));
   };
-
-  useEffect(() => {
-    console.log('TabProvider - Tabs:', tabs);
-  }, [tabs]);
 
   return (
     <TabContext.Provider value={{ tabs, addTab, removeTab }}>
