@@ -3,7 +3,6 @@ import { appendElement, deleteElement, updateElement } from './PageBuilder';
 import { generateComponentID } from '../../utils';
 
 import { defaultPageContext } from './default';
-
 const PageContext = createContext(defaultPageContext);
 
 export const PageContextProvider = ({ children }) => {

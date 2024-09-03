@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { TextStylingEditor, ElementPropsEditor } from './partials';
+import { TextStylingEditor, PropertyEditor, ContainerStylingEditor } from './partials';
 import { fontSizeOptions, textAlignmentOptions } from './config';
 
 function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => { }, deleteComponent = (selectedComponent) => { } }) {
@@ -20,8 +20,9 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
 
     return (
         <>
-            <ElementPropsEditor {...{componentProps, handlePropChange }} />
+            <PropertyEditor {...{ componentProps, handlePropChange }} />
             {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} defaultColor={componentProps.style?.color} {...{ fontSizeOptions, textAlignmentOptions}} />}
+            {componentType == "container" && <ContainerStylingEditor containerStyles={componentProps.style || {}} handleAlignmentChange={handleAlignmentChange} />}
             {componentType != "wrapper" && <ComponentGeneralControls deleteComponent={() => deleteComponent(selectedComponent)} />}
         </>
     )
