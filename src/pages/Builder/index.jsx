@@ -19,10 +19,21 @@ export default function Builder() {
   const [availableComponents, setAvailableComponents] = React.useState([]);
   const [selectedComponent, setSelectedComponent] = React.useState(null);
   const getAllComponents = components => setAvailableComponents(components); // This is a callback function that will be passed to the BuilderEditor component
+  
+  const [history, setHistory] = React.useState({ [activePage]: [activePageData] }); // this could be a hook or a context
+  const historySnapshot = () => {
+    console.log(`DEBUG - History snapshot:`);
+    console.log(history);
 
-  const handleTabClick = (tab) => {
-    setActivePage(tab);
-  };
+    if (!history[activePage]) return;
+
+    if (history[activePage].length > 10) { // We only want to keep the last 10 snapshots, for memory optimization
+      const newHistory = { ...history, [activePage]: history[activePage].slice(1) };
+      return setHistory(newHistory);
+    }
+
+    return setHistory({ ...history, [activePage]: [...history[activePage], activePageData] });
+  }
 
   const appendComponent = (component) => {
     const obj = {
@@ -31,15 +42,13 @@ export default function Builder() {
     };
 
     addComponent(obj, selectedComponent);
+    historySnapshot();
     setSelectedComponent(obj);
   }
 
-  const selectComponent = (component) => {
-    setSelectedComponent(component);
-  }
-
-  const updateAndSelectComponent = (component, updatedProps) => {
+  const updateAndSelectComponent = (component, updatedProps) => { // We use this function in order to see the changes in the editor
     const updated = updateComponent(component, updatedProps);
+    // historySnapshot(); // slightly broken, due to the fact we're updating inputs onChange rather than onSubmit in a form (max history is 10 snapshots)
     console.log(`DEBUG - Updated component:`, updated);
     setSelectedComponent(updated);
   }
@@ -52,7 +61,7 @@ export default function Builder() {
 
   return (
     <section>
-      <BuilderTabs {...{ tabs: pageIndex, activeTab: activePage, handleTabClick, createTab: createPage }} />
+      <BuilderTabs {...{ tabs: pageIndex, activeTab: activePage, handleTabClick: setActivePage, createTab: createPage }} />
       <BuilderToolBar screensize={{ scale: 100, width: 1440 }} />
 
       <div className={styles['builder']}>
@@ -71,7 +80,7 @@ export default function Builder() {
           {/* This should be where we export from */}
           <div className={styles['constructor']}>
             <GridContainer columns={12}>
-              <BuilderEditor template={activePageData} getAllComponents={getAllComponents} setSelectedComponent={selectComponent} />
+              <BuilderEditor template={activePageData} {...{ getAllComponents, setSelectedComponent }} />
             </GridContainer>
           </div>
         </div>
@@ -86,8 +95,8 @@ export default function Builder() {
 }
 
 const ComponentID = ({ id, type }) => (
-  <div style={{ display: "flex", gap: "4px", alignItems: "center", justifyContent: "space-between" ,fontSize: ".8em" }}>
+  <div style={{ display: "flex", gap: "4px", alignItems: "center", justifyContent: "space-between", fontSize: ".8em" }}>
     <h3>{type}</h3>
-    <p style={{fontSize: ".9em", opacity: ".7"}}><code>{id}</code></p>
+    <p style={{ fontSize: ".9em", opacity: ".7" }}><code>{id}</code></p>
   </div>
 );
