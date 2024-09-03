@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './index.module.css'
 
 import { TextStylingEditor, ElementPropsEditor } from './partials';
 import { fontSizeOptions, textAlignmentOptions } from './config';
@@ -29,9 +30,7 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
 
 const ComponentGeneralControls = ({ deleteComponent }) => {
     return (
-        <div>
-            <button onClick={() => deleteComponent()}>Delete</button>
-        </div>
+        <button className={styles['delete-btn']} onClick={() => deleteComponent()}>Delete Component</button>
     )
 }
 
