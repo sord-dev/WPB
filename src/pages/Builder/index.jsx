@@ -88,10 +88,6 @@ export default function Builder() {
 const ComponentID = ({ id, type }) => (
   <div style={{ display: "flex", gap: "4px", alignItems: "center", justifyContent: "space-between" ,fontSize: ".8em" }}>
     <h3>{type}</h3>
-
-    <div style={{ display: "flex", alignItems: "center", gap: "4px"}}>
-      <label>ID</label>
-      <p><code>{id}</code></p>
-    </div>
+    <p style={{fontSize: ".9em", opacity: ".7"}}><code>{id}</code></p>
   </div>
 );

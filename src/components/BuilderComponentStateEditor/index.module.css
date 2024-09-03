@@ -1,38 +1,20 @@
-.text-state {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 10px; 
-}
-
-.text-state label {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 5px;
-}
-
-.text-state input {
-    width: 80%;
-    padding: 4px 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-    color: #333;
-}
-
 .styling-editor {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.styling-field {
+.styling-field,
+.text-state {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+.text-state span,
 .styling-field span {
     font-size: 12px;
+    margin-top: 6px;
 }
 
 .styling-inputs {
@@ -40,6 +22,7 @@
     justify-content: space-between;
 }
 
+.text-state input, 
 .styling-inputs input {
     background: none;
     color: var(--text-primary);
@@ -49,7 +32,7 @@
 .styling-inputs input[type="text"] {
     cursor: not-allowed;
 }
-
+.text-state input,
 .styling-inputs input:not(input[type='color']) {
     border: 1px solid var(--text-primary);
     border-radius: 4px;

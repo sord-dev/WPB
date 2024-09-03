@@ -4,7 +4,7 @@ import { useState } from 'react';
 const TextState = ({ propName, propValue, onChange }) => {
   return (
     <div className={styles["text-state"]}>
-      <label>{propName}</label>
+      <span>{propName}</span>
       <input type="text" defaultValue={propValue} onChange={(e) => onChange(propName, e.target.value)} />
     </div>
   )
