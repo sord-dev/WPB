@@ -12,7 +12,7 @@ export default function Builder() {
     activePage,
     pages,
     pageControls: { setActivePage, createPage },
-    templateControls: { addComponent, updateComponent }
+    templateControls: { addComponent, updateComponent, addContainer}
   } = usePageContext();
   const activePageData = pages[activePage].content;
 
@@ -45,6 +45,13 @@ export default function Builder() {
       props: convertParamsToObject(component.parameters)
     };
 
+    if(obj.type.toLowerCase() === "container") {
+      console.log(`DEBUG - Adding container`);
+      addContainer(obj);
+      historySnapshot();
+      return;
+    }
+    
     addComponent(obj, selectedComponent);
     setSelectedComponent(obj);
     historySnapshot();

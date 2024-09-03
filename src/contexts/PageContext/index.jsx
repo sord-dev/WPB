@@ -14,14 +14,15 @@ const defaultPageContext = {
   templateControls: {
     addComponent: (component, id) => { },
     updateComponent: component => { },
+    addContainer: container => { },
     deleteComponent: (page, component) => { },
   },
   pages: {
     home: {
       name: "Home",
       content: {
-        type: "container",
-        props: { id: generateComponentID("container"), children: [] },
+        type: "wrapper",
+        props: { id: generateComponentID("wrapper"), children: [] },
       }
     },
     services: {
@@ -83,6 +84,15 @@ export const PageContextProvider = ({ children }) => {
     }
   };
 
+  const addContainer = (container) => {
+    // navigate component tree and add component
+    const tree = pageData.pages[pageData.activePage].content;
+    container.props = { id: generateComponentID(container.type), ...container.props };
+
+    const newTree = appendElement(tree, container, { type: "", props: { id: generateComponentID(container.type) } });
+    updatePage(pageData.activePage, newTree);
+  }
+
   const updateComponent = (component, updatedData) => {
     // navigate component tree and update component
     const tree = pageData.pages[pageData.activePage].content;
@@ -104,6 +114,7 @@ export const PageContextProvider = ({ children }) => {
 
   const templateControls = {
     addComponent,
+    addContainer,
     updateComponent,
     deleteComponent: () => { },
   };
