@@ -2,6 +2,7 @@
   flex: 1;
   display: flex;
   flex-direction: row;
+  max-height: calc(100vh - 99px);
 }
 
 .editor-header {
@@ -19,6 +20,15 @@
 .constructor-parent {
   flex: 1;
   padding: 20px;
+  overflow-y: auto;
+}
+
+.constructor-parent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.constructor-parent::-webkit-scrollbar-thumb {
+  background: var(--text-primary) 
 }
 
 
