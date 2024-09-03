@@ -52,7 +52,6 @@ const StylingInput = ({ value, type, onChange, className, readOnly = false }) =>
 
 export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [], defaultColor = "#C0C0C0" }) {
   const [color, setColor] = useState(defaultColor);
-  console.log(`DEBUG - TextStylingEditor - defaultColor: ${defaultColor}`);
 
   useEffect(() => {
     setColor(defaultColor);

@@ -12,7 +12,7 @@ const defaultPageContext = {
     setActivePage: pageName => { },
   },
   templateControls: {
-    addComponent: (component, id) => { },
+    addComponent: (component, parentElement) => { },
     updateComponent: component => { },
     addContainer: container => { },
     deleteComponent: (page, component) => { },
@@ -42,16 +42,16 @@ export const PageContextProvider = ({ children }) => {
 
   const createPage = (pageName) => {
     if (pageData.pages[pageName]) return false;
-  
-    setPageData({ 
-      ...pageData, 
-      pages: { 
-        ...pageData.pages, 
-        [pageName]: { content: {} } 
-      }, 
-      pageIndex: [...pageData.pageIndex, pageName] 
+
+    setPageData({
+      ...pageData,
+      pages: {
+        ...pageData.pages,
+        [pageName]: { content: {} }
+      },
+      pageIndex: [...pageData.pageIndex, pageName]
     });
-  
+
     return true;
   };
 
@@ -89,6 +89,7 @@ export const PageContextProvider = ({ children }) => {
     // navigate component tree and add component
     const tree = pageData.pages[pageData.activePage].content;
     component.props = { id: generateComponentID(component.type), ...component.props };
+    console.log(component, parentElement)
 
     if (parentElement && parentElement.props.children) {
       const newTree = appendElement(tree, component, parentElement);
@@ -98,6 +99,8 @@ export const PageContextProvider = ({ children }) => {
       const newTree = appendElement(tree, component, { type: "", props: { id: generateComponentID(component.type) } });
       updatePage(pageData.activePage, newTree);
     }
+
+    return component;
   };
 
   const addContainer = (container) => {
@@ -107,12 +110,14 @@ export const PageContextProvider = ({ children }) => {
 
     const newTree = appendElement(tree, container, { type: "", props: { id: generateComponentID(container.type) } });
     updatePage(pageData.activePage, newTree);
+
+    return container;
   }
 
   const updateComponent = (component, updatedData) => {
     // navigate component tree and update component
     const tree = pageData.pages[pageData.activePage].content;
-    const newTree = updateElement(tree, component.type, { id: component.props.id }, { ...updatedData });
+    const newTree = updateElement(tree, { id: component.props.id }, { ...updatedData });
 
     const updatedElement = { type: component.type, props: { ...component.props, ...updatedData } };
     console.log("DEBUG - Updated component:", updatedElement.props);
@@ -136,7 +141,7 @@ export const PageContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("DEBUG - PageContext Template State:", {template: pageData.pages[pageData.activePage], page: pageData.activePage});
+    console.log("DEBUG - PageContext Template State:", { template: pageData.pages[pageData.activePage], page: pageData.activePage });
   }, [pageData]);
 
   return (
