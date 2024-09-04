@@ -1,6 +1,6 @@
 import { generateComponentID } from "../../utils";
 
-// Temporary default page context, to be replaced with a dynamic context
+// Temporary default page context, 'pages', 'pageIndex' & 'activePage' to be replaced with dynamic content
 export const defaultPageContext = {
     pageIndex: ["home", "services"],
     activePage: "home",

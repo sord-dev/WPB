@@ -6,8 +6,8 @@ import { GridColumn } from '../Grid';
 import { withInteractionHandler } from '../HOCs';
 
 const defaultComponents = {
-    text: ({ content, style }) => <p className={styles['component']} style={{...style}} >{content || 'No content'}</p>, // temporary default just so we can see something
-    container: ({ children }) => <section className={styles['container']} >{children}</section>,
+    text: ({ content, style }) => <p className={styles['component']} style={{ ...style }} >{content || 'No content'}</p>, // temporary default just so we can see something
+    container: ({ children, style }) => <section style={{ ...style }} className={styles['container']} >{children}</section>,
     wrapper: ({ children }) => <main className={styles['wrapper']} >{children}</main>
 };
 

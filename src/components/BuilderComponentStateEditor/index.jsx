@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './index.module.css'
 
-import { TextStylingEditor, ElementPropsEditor } from './partials';
-import { fontSizeOptions, textAlignmentOptions } from './config';
+import { TextStylingEditor, PropertyEditor, ContainerStylingEditor } from './partials';
+import { fontSizeOptions, textAlignmentOptions, marginSizes, paddingSizes } from './config';
 
 function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => { }, deleteComponent = (selectedComponent) => { } }) {
     if (!selectedComponent) return null;
@@ -21,8 +21,9 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
 
     return (
         <>
-            <ElementPropsEditor {...{componentProps, handlePropChange }} />
-            {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} defaultColor={componentProps.style?.color} {...{ fontSizeOptions, textAlignmentOptions}} />}
+            <PropertyEditor {...{ componentProps, handlePropChange }} />
+            {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} componentStyles={componentProps.style} {...{ fontSizeOptions, textAlignmentOptions}} />}
+            {componentType == "container" && <ContainerStylingEditor containerStyles={componentProps.style || {}} handleAlignmentChange={handleAlignmentChange} {...{ marginSizes, paddingSizes }} />}
             {componentType != "wrapper" && <ComponentGeneralControls deleteComponent={() => deleteComponent(selectedComponent)} />}
         </>
     )
