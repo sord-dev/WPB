@@ -7,7 +7,9 @@ export default function SideNavbar() {
   return (
     <>
       <aside className={styles['navigation']}>
-       <SystemContextMenu />
+        <SystemContextMenu />
+        <div className={styles["spacer"]} />
+        
       </aside>
       <Outlet />
     </>

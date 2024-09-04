@@ -1,10 +1,11 @@
 import React from 'react'
 import styles from './index.module.css'
+import { ContextMenu } from './partials'
 
 // these will be overwritten by the functions prop, the actions will be executed within the context custom menu button.
 const defaultFunctions = [
   {
-    name: "Dashboard",
+    name: "All Websites (Dashboard)",
     action: () => console.log("Navigate to Dashboard"),
   },
   {
@@ -41,16 +42,5 @@ function SystemContextMenu({ functions = defaultFunctions }) {
   )
 }
 
-const ContextMenu = ({ functions, handleClickCallback }) => {
-  return (
-    <div className={styles["context-menu"]}>
-      {functions.map(({ name, action }) => (
-        <div key={name} onClick={() => handleClickCallback(action)} className={styles["context-menu-item"]}>
-          {name}
-        </div>
-      ))}
-    </div>
-  )
-}
 
 export default SystemContextMenu
