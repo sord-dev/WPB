@@ -41,7 +41,6 @@ export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions 
         <div className={styles['styling-inputs']}>
           {fontSizeOptions.map((option, index) => {
             const active = option.value === (componentStyles.fontSize ? componentStyles.fontSize + "px" : defaultComponentStyles.fontSize);
-            console.log('fontSizeOptions', fontSizeOptions);
             return <StylingButton active={active} key={index} {...option} onChange={handleAlignmentChange} />
           })}
         </div>
@@ -70,14 +69,19 @@ export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions 
 
 // Container Styling Editor
 
-export const ContainerStylingEditor = ({ handleAlignmentChange, handleAlignmentChanges, containerStyles, marginSizes = [], paddingSizes = [] }) => {
-  const [containerStyle, setContainerStyle] = useState(containerStyles);
+const defaultContainerStyles = {
+  margin: "0px",
+  padding: "0px"
+};
+
+export const ContainerStylingEditor = ({ handleAlignmentChange, handleAlignmentChanges, containerStyles, paddingSizes = [] }) => {
+  const [containerStyle, setContainerStyle] = useState(containerStyles || defaultContainerStyles);
   const [customPadding, setCustomPadding] = useState(false);
 
   useEffect(() => {
-    // setContainerStyle(containerStyles);
-    console.log('containerStyles', containerStyles);
-  }, [containerStyles]);
+    const containerStylesState = containerStyles || defaultContainerStyles;
+    setContainerStyle(containerStylesState);
+  }, []);
 
   const handleStyleChange = (style, value) => {
     const safeValue = value || "0px";
@@ -113,7 +117,7 @@ export const ContainerStylingEditor = ({ handleAlignmentChange, handleAlignmentC
         <span>Padding</span>
         <div className={styles['styling-inputs']}>
           {paddingSizes.map((size, index) => {
-            const active = containerStyle?.padding === size.value;
+            const active = containerStyle?.padding || defaultContainerStyles.padding === size.value;
 
             return (
               <StylingButton
@@ -211,7 +215,7 @@ const StylingButton = ({ label, value, option, onChange, active = false }) => {
   )
 }
 
-const StylingInput = ({ value, type, onChange, className, readOnly = false }) => {
+const StylingInput = ({ value = "", type, onChange, className, readOnly = false }) => {
   return (
     <input
       type={type}

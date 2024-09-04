@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './index.module.css'
 
 import { TextStylingEditor, PropertyEditor, ContainerStylingEditor } from './partials';
-import { fontSizeOptions, textAlignmentOptions, marginSizes, paddingSizes } from './config';
+import { fontSizeOptions, textAlignmentOptions, paddingSizes } from './config';
 
 function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => { }, deleteComponent = (selectedComponent) => { } }) {
     if (!selectedComponent) return null;
@@ -28,7 +28,7 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
         <>
             <PropertyEditor {...{ componentProps, handlePropChange }} />
             {componentType == "text" && <TextStylingEditor {...{ componentStyles: componentProps.style, handleAlignmentChange, fontSizeOptions, textAlignmentOptions }} />}
-            {componentType == "container" && <ContainerStylingEditor {...{ containerStyles: componentProps.style || {}, marginSizes, paddingSizes, handleAlignmentChanges, handleAlignmentChange }} />}
+            {componentType == "container" && <ContainerStylingEditor {...{ containerStyles: componentProps.style, paddingSizes, handleAlignmentChanges, handleAlignmentChange }} />}
             {componentType != "wrapper" && <ComponentGeneralControls {...{ deleteComponent: () => deleteComponent(selectedComponent) }} />}
         </>
     )
