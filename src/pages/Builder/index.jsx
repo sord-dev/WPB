@@ -41,7 +41,7 @@ export default function Builder() {
   // *** end of potential hook or context
 
   const appendComponent = (component) => {
-    if(!selectedComponent) return setError({ message: "Please select a container to add the component to" });
+    if (!selectedComponent) return setError({ message: "Please select a container to add the component to" });
 
     const obj = {
       type: component.name,
@@ -115,6 +115,9 @@ export default function Builder() {
           </div>
         </div>
 
+
+
+        {/* This should be where we export from */}
         <div className={styles['constructor-parent']}>
           <GridContainer columns={12}>
             <BuilderEditor template={activePageData} {...{ getAllComponents, setSelectedComponent, selectedComponent }} />
