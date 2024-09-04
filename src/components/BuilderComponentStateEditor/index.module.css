@@ -4,6 +4,10 @@
     gap: 20px;
 }
 
+.text-state {
+    margin-bottom: 12px;
+}
+
 .styling-field,
 .text-state {
     display: flex;
