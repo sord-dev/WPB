@@ -11,6 +11,7 @@ const defaultComponentStyles = {
   padding: "0px"
 };
 
+// TODO - https://medium.com/@spenceraford/cursed-cursor-fixing-cursor-jump-in-react-inputs-262906d389aa
 export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [], componentStyles }) {
   const [color, setColor] = useState(componentStyles.color);
 
@@ -30,7 +31,7 @@ export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions 
         <span>Align</span>
         <div className={styles['styling-inputs']}>
           {textAlignmentOptions.map((option, index) => {
-            const active = option.value === componentStyles.textAlign;
+            const active = option.value === (componentStyles.textAlign ? componentStyles.textAlign : defaultComponentStyles.textAlign);
             return <StylingButton key={index} active={active} {...option} onChange={handleAlignmentChange} />
           })}
         </div>
@@ -39,7 +40,8 @@ export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions 
         <span>Font Size</span>
         <div className={styles['styling-inputs']}>
           {fontSizeOptions.map((option, index) => {
-            const active = option.value === componentStyles.fontSize;
+            const active = option.value === (componentStyles.fontSize ? componentStyles.fontSize + "px" : defaultComponentStyles.fontSize);
+            console.log('fontSizeOptions', fontSizeOptions);
             return <StylingButton active={active} key={index} {...option} onChange={handleAlignmentChange} />
           })}
         </div>
