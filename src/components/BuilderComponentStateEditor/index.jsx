@@ -15,15 +15,20 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
     };
 
     const handleAlignmentChange = (type, value) => {
+        console.log('handleAlignmentChange', {type, value});
         const newStyle = { ...selectedComponent.props.style, [type]: value };
         handlePropChange('style', newStyle);
     };
+
+    const handleAlignmentChanges = (newStyle) => {
+        handlePropChange('style', newStyle);
+    }
 
     return (
         <>
             <PropertyEditor {...{ componentProps, handlePropChange }} />
             {componentType == "text" && <TextStylingEditor handleAlignmentChange={handleAlignmentChange} componentStyles={componentProps.style} {...{ fontSizeOptions, textAlignmentOptions}} />}
-            {componentType == "container" && <ContainerStylingEditor containerStyles={componentProps.style || {}} handleAlignmentChange={handleAlignmentChange} {...{ marginSizes, paddingSizes }} />}
+            {componentType == "container" && <ContainerStylingEditor containerStyles={componentProps.style || {}} handleAlignmentChange={handleAlignmentChange} handleAlignmentChanges={handleAlignmentChanges} {...{ marginSizes, paddingSizes }} />}
             {componentType != "wrapper" && <ComponentGeneralControls deleteComponent={() => deleteComponent(selectedComponent)} />}
         </>
     )
