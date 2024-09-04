@@ -47,3 +47,8 @@
     margin-top: auto;
     border-radius: 8px;
 }
+
+.column {
+    display: flex;
+    flex-direction: column;
+}
