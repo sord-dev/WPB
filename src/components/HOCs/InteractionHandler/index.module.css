@@ -13,3 +13,8 @@
 
     font-weight: bold;
 }
+
+.selected {
+    display: block;
+    border: 1px solid blue;
+}

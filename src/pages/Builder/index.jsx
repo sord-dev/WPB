@@ -120,7 +120,7 @@ export default function Builder() {
           {/* This should be where we export from */}
           <div className={styles['constructor']}>
             <GridContainer columns={12}>
-              <BuilderEditor template={activePageData} {...{ getAllComponents, setSelectedComponent }} />
+              <BuilderEditor template={activePageData} {...{ getAllComponents, setSelectedComponent, selectedComponent }} />
             </GridContainer>
           </div>
         </div>
