@@ -43,3 +43,16 @@
     padding: 0 5px;
     font-size: 16px;
 }
+
+.delete-btn {
+    width: 100%;
+    background: #ff4545;
+    padding: 10px 20px;
+    margin-top: auto;
+    border-radius: 8px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}

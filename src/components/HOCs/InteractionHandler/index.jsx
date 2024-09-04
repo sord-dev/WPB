@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './index.module.css';
 
-const withInteractionHandler = (WrappedComponent, setSelectedComponent) => ({ ...props }) => {
+const withInteractionHandler = (WrappedComponent, setSelectedComponent, selected) => ({ ...props }) => {
     const [hovered, setHovered] = React.useState(false);
     const type = props.id.split("-")[0];
 
@@ -33,7 +33,7 @@ const withInteractionHandler = (WrappedComponent, setSelectedComponent) => ({ ..
 
     return (
         <span
-            className={styles["component-border"]}
+            className={`${styles["component-border"]} ${selected ? styles["selected"] : null}`}
             onClick={handleClick}
             onMouseOver={handleMouseOver}
             onMouseLeave={handleMouseOut}

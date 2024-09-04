@@ -11,15 +11,18 @@ const defaultComponents = {
     wrapper: ({ children }) => <main className={styles['wrapper']} >{children}</main>
 };
 
-function BuilderEditor({ registery, template, getAllComponents, setSelectedComponent }) {
+function BuilderEditor({ registery, template, getAllComponents, setSelectedComponent, selectedComponent }) {
     const mergedRegistry = Object.assign({}, registery, { ...defaultComponents });
 
     const renderComponent = (componentData) => {
         const ComponentToRender = mergedRegistry[componentData.type];
 
         if (ComponentToRender) {
+
+            const selected = componentData?.props?.id === selectedComponent?.props?.id
+
             const children = renderChildren(componentData.props.children);
-            const ComponentWithInteraction = withInteractionHandler(ComponentToRender, setSelectedComponent);
+            const ComponentWithInteraction = withInteractionHandler(ComponentToRender, setSelectedComponent, selected);
             const id = componentData.props?.id || generateComponentID(componentData.type);
 
             return (
