@@ -1,0 +1,12 @@
+.component {
+  padding: 10px;
+  border-bottom: 1px solid #6f6f6f1a;
+  display: flex;
+  justify-content: space-between;
+
+  cursor: pointer;
+
+  span:last-child {
+    font-size: .7em;
+  }
+}

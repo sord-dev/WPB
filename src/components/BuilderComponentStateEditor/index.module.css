@@ -1,0 +1,58 @@
+.styling-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.text-state {
+    margin-bottom: 12px;
+}
+
+.styling-field,
+.text-state {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.text-state span,
+.styling-field span {
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.styling-inputs {
+    display: flex;
+    justify-content: space-between;
+}
+
+.text-state input, 
+.styling-inputs input {
+    background: none;
+    color: var(--text-primary);
+    height: 36px;
+}
+
+.styling-inputs input[type="text"] {
+    cursor: not-allowed;
+}
+.text-state input,
+.styling-inputs input:not(input[type='color']) {
+    border: 1px solid var(--text-primary);
+    border-radius: 4px;
+    padding: 0 5px;
+    font-size: 16px;
+}
+
+.delete-btn {
+    width: 100%;
+    background: #ff4545;
+    padding: 10px 20px;
+    margin-top: auto;
+    border-radius: 8px;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+}

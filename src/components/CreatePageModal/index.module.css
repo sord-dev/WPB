@@ -1,0 +1,79 @@
+.create-page {
+  padding: 20px;
+  background: white;
+  width: 420px;
+  border-radius: 8px;
+  animation: fade-in 0.25s ease forwards;
+}
+
+.create-page h1 {
+  color: #222222;
+  margin-bottom: 16px;
+  font-weight: 700;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field span {
+  color: #000000;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.input-field input {
+  padding: 0 12px;
+  font-size: 16px;
+  height: 48px;
+  color: #222222;
+  font-weight: 500;
+}
+
+.input-field input:focus {
+  border: 1px solid black !important;
+  border-radius: 8px;
+}
+
+.submit {
+  width: 100%;
+  background: #222222;
+  margin-top: 24px;
+  padding: 0 24px;
+  font-size: 16px;
+  height: 48px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: background 0.1s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+.submit:hover {
+  background: black;
+}
+
+.error-message p {
+  color: rgb(255, 97, 97);
+}
+
+.existing-files span {
+  display: block;
+  font-size: 12px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+
+.existing-files li {
+  cursor: pointer;
+}
+
+@keyframes fade-in {
+  from {
+    scale: 0.8;
+    opacity: 0;
+  }
+  to {
+    scale: 1;
+    opacity: 1;
+  }
+}

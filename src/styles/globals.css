@@ -148,3 +148,15 @@ section {
   display: flex;
   flex-direction: column;
 }
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.text-align-end {
+  text-align: end;
+}
