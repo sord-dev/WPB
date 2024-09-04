@@ -8,6 +8,8 @@ const defaultComponentStyles = {
   padding: "0px"
 };
 
+// Text Styling Editor
+
 export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [], componentStyles }) {
   const [color, setColor] = useState(componentStyles.color);
 
@@ -63,8 +65,11 @@ export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions 
   )
 }
 
-export const ContainerStylingEditor = ({ handleAlignmentChange, containerStyles, marginSizes = [], paddingSizes = [] }) => {
+// Container Styling Editor
+
+export const ContainerStylingEditor = ({ handleAlignmentChange, handleAlignmentChanges, containerStyles, marginSizes = [], paddingSizes = [] }) => {
   const [containerStyle, setContainerStyle] = useState(containerStyles);
+  const [customPadding, setCustomPadding] = useState(false);
 
   useEffect(() => {
     // setContainerStyle(containerStyles);
@@ -72,24 +77,32 @@ export const ContainerStylingEditor = ({ handleAlignmentChange, containerStyles,
   }, [containerStyles]);
 
   const handleStyleChange = (style, value) => {
-    const newStyle = { ...containerStyle, [style]: value };
-    
-    if (style === "padding") {
-      newStyle.paddingTop = value;
-      newStyle.paddingRight = value;
-      newStyle.paddingBottom = value;
-      newStyle.paddingLeft = value;
+    const safeValue = value || "0px";
+    const newStyle = { ...containerStyle, [style]: safeValue };
+
+    if (style === 'padding') {
+      const clearedStyles = clearPadding(newStyle);
+      setContainerStyle(clearedStyles);
+      return handleAlignmentChanges(clearedStyles);
     }
 
-    console.log(newStyle)
-
     setContainerStyle(newStyle);
-    handleAlignmentChange(style, value);
+    handleAlignmentChange(style, safeValue);
+  };
+
+  const clearPadding = (obj) => {
+    delete obj.paddingTop;
+    delete obj.paddingBottom;
+    delete obj.paddingLeft;
+    delete obj.paddingRight;
+
+    return obj;
   };
 
   const getEffectivePaddingValue = (side) => {
     return containerStyle[side] !== undefined ? parseInt(containerStyle[side]) : parseInt(containerStyle.padding) || 0;
   };
+
 
   return (
     <div className={styles['styling-editor']}>
@@ -111,37 +124,48 @@ export const ContainerStylingEditor = ({ handleAlignmentChange, containerStyles,
             );
           })}
         </div>
-        <div className={`${styles['styling-inputs']} ${styles["column"]}`}>
-          <span>Top</span>
-          <StylingInput
-            type="number"
-            value={getEffectivePaddingValue('paddingTop')}
-            onChange={(value) => handleStyleChange('paddingTop', `${value}px`)}
-          />
-          <span>Bottom</span>
-          <StylingInput
-            type="number"
-            value={getEffectivePaddingValue('paddingBottom')}
-            onChange={(value) => handleStyleChange('paddingBottom', `${value}px`)}
-          />
-          <span>Left</span>
-          <StylingInput
-            type="number"
-            value={getEffectivePaddingValue('paddingLeft')}
-            onChange={(value) => handleStyleChange('paddingLeft', `${value}px`)}
-          />
-          <span>Right</span>
-          <StylingInput
-            type="number"
-            value={getEffectivePaddingValue('paddingRight')}
-            onChange={(value) => handleStyleChange('paddingRight', `${value}px`)}
-          />
-        </div>
+
+        <button onClick={() => setCustomPadding(prev => !prev)}>More options</button>
+        {customPadding && (<CustomPaddingEditor getEffectivePaddingValue={getEffectivePaddingValue} handleStyleChange={handleStyleChange} />)}
       </div>
 
     </div>
   );
 };
+
+const CustomPaddingEditor = ({ getEffectivePaddingValue, handleStyleChange }) => {
+  return (
+    <div className={`${styles['styling-inputs']} ${styles["column"]}`}>
+      <span>Top</span>
+      <StylingInput
+        type="number"
+        value={getEffectivePaddingValue('paddingTop')}
+        onChange={(value) => handleStyleChange('paddingTop', `${value}px`)}
+      />
+      <span>Bottom</span>
+      <StylingInput
+        type="number"
+        value={getEffectivePaddingValue('paddingBottom')}
+        onChange={(value) => handleStyleChange('paddingBottom', `${value}px`)}
+      />
+      <span>Left</span>
+      <StylingInput
+        type="number"
+        value={getEffectivePaddingValue('paddingLeft')}
+        onChange={(value) => handleStyleChange('paddingLeft', `${value}px`)}
+      />
+      <span>Right</span>
+      <StylingInput
+        type="number"
+        value={getEffectivePaddingValue('paddingRight')}
+        onChange={(value) => handleStyleChange('paddingRight', `${value}px`)}
+      />
+    </div>
+
+  )
+};
+
+// Universal Props Editor
 
 export const PropertyEditor = ({ componentProps = null, handlePropChange }) => {
   if (!componentProps) return null;
@@ -173,6 +197,8 @@ const TextState = ({ propName, propValue, onChange }) => {
     </div>
   )
 };
+
+// Universal Styling Component Partials
 
 const StylingButton = ({ label, value, option, onChange, active = false }) => {
   const highlightStyles = { backgroundColor: "#f0f0f0", color: "#333", border: "1px solid #ccc" };
