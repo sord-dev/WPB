@@ -1,11 +1,19 @@
 import styles from '../index.module.css'
 import { useEffect, useState } from 'react';
 
-export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [], componentStyles = { color: "#C0C0C0" } }) {
+const defaultComponentStyles = {
+  color: "#C0C0C0",
+  fontSize: "16px",
+  textAlign: "left",
+  padding: "0px"
+};
+
+export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [], componentStyles }) {
   const [color, setColor] = useState(componentStyles.color);
 
   useEffect(() => {
-    setColor(componentStyles.color);
+    setColor(componentStyles.color || defaultComponentStyles.color);
+    console.log('componentStyles', componentStyles);
   }, [componentStyles]);
 
   const handleColorChange = (newColor) => {
@@ -131,29 +139,9 @@ export const ContainerStylingEditor = ({ handleAlignmentChange, containerStyles,
         </div>
       </div>
 
-      <div className={styles['styling-field']}>
-        <span>Margin</span>
-        <div className={styles['styling-inputs']}>
-          {marginSizes.map((size, index) => {
-            const active = containerStyle?.margin === size.value;
-
-            return (
-              <StylingButton
-                active={active}
-                key={index}
-                label={size.label}
-                value={size.value}
-                option="margin"
-                onChange={handleStyleChange}
-              />
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 };
-
 
 export const PropertyEditor = ({ componentProps = null, handlePropChange }) => {
   if (!componentProps) return null;
