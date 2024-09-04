@@ -1,14 +1,15 @@
 import styles from '../index.module.css'
 import { useEffect, useState } from 'react';
 
+
+// Text Styling Editor
+
 const defaultComponentStyles = {
   color: "#C0C0C0",
   fontSize: "16px",
   textAlign: "left",
   padding: "0px"
 };
-
-// Text Styling Editor
 
 export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions = [], fontSizeOptions = [], componentStyles }) {
   const [color, setColor] = useState(componentStyles.color);
