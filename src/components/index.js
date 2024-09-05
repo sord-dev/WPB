@@ -8,6 +8,7 @@ export { default as BuilderComponentStateEditor } from './BuilderComponentStateE
 // Modals
 export { default as Overlay} from "./Overlay"
 export { default as CreatePageModal } from "./CreatePageModal"
+export { default as CreateProjectModal } from "./CreateProjectModal"
 
 // System-Wide Components
 export { default as SystemNotificationPopUp } from "./SystemNotificationPopUp"

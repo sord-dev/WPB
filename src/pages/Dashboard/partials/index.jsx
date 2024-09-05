@@ -1,8 +1,8 @@
 import styles from '../index.module.css'
 
-export const Card = ({ icon, title, subTitle }) => {
+export const Card = ({ icon, title, subTitle, action }) => {
   return (
-    <button className={styles["card"]}>
+    <button onClick={action} className={styles["card"]}>
       <div className={styles["card-icon"]}>{icon}</div>
       <div className={styles["card-content"]}>
         <div className={styles["card-title"]}>{title}</div>
