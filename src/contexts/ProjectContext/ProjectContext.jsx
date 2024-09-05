@@ -1,18 +1,22 @@
 import React, { useState, useContext, createContext } from "react";
 import { generateComponentID } from "../../utils";
 import { useNavigate } from "react-router-dom";
+import { usePageContext } from "../PageContext";
 
 const ProjectContext = createContext();
 
 export const ProjectProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
   const [currentProject, setCurrentProject] = useState({});
+  const { setPageData } = usePageContext()
   const navigate = useNavigate();
 
   const createProject = (projectName, pageName) => {
-    if (projects.some((project) => project.name === projectName)) {
+    if (projects.some((project) => project.projectName === projectName)) {
       return false;
     }
+
+    console.log(projectName, pageName)
 
     const newProject = {
       projectName: projectName,
@@ -25,10 +29,13 @@ export const ProjectProvider = ({ children }) => {
         },
       },
       pageIndex: [pageName],
+      activePage: pageName
     };
 
     setProjects([...projects, newProject]);
     setCurrentProject(newProject);
+
+    setPageData(newProject)
 
     navigate("/builder");
 

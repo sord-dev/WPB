@@ -15,7 +15,7 @@ function CreateProjectModal({ createProject, openClose, addTab }) {
   };
 
   const openProject = (projectName) => {
-    addTab(projectName);
+    addTab(pageName);
     openClose(false);
   };
 

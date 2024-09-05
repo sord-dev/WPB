@@ -14,6 +14,9 @@ export default function Builder() {
     pageControls: { setActivePage, createPage },
     templateControls: { addComponent, updateComponent, addContainer, deleteComponent }
   } = usePageContext();
+
+  console.log(pages, activePage)
+
   const activePageData = pages[activePage].content;
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
@@ -88,6 +91,7 @@ export default function Builder() {
   }
 
   const handleTabClick = (templateIndex) => {
+    console.log(pages)
     setSelectedComponent(pages[templateIndex].content);
     setActivePage(templateIndex);
   }

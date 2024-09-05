@@ -121,7 +121,7 @@ export const PageContextProvider = ({ children }) => {
   }, [pageData]);
 
   return (
-    <PageContext.Provider value={{ ...pageData, pageControls, templateControls }}>
+    <PageContext.Provider value={{ ...pageData, pageControls, templateControls, setPageData }}>
       {children}
     </PageContext.Provider>
   );
