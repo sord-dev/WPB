@@ -22,23 +22,26 @@ export default function Builder() {
 
   const [error, setError] = React.useState(null);
 
-  // *** this could be a hook or a context
+
   const [history, setHistory] = React.useState({ [activePage]: [activePageData] });
   const historySnapshot = () => {
-    console.log(`DEBUG - History snapshot:`);
-    console.log(history);
+    const pageHistory = history[activePage]; // TODO - Fix this: 
+    // page history is an array of snapshots
+    // currently, our activePage updates on every tab click, so we're only storing history for the active page
+    // but the first conditional isnt' working as expected, so this is unused at the moment
 
-    if (!history[activePage]) return;
-
-    if (history[activePage].length > 10) { // We only want to keep the last 10 snapshots, for memory optimization
-      const newHistory = { ...history, [activePage]: history[activePage].slice(1) };
+    if (!pageHistory) { // If there's no history for the active page, add an initial snapshot
+      setHistory({ ...history, [activePage]: [activePageData] });
+    } else if (pageHistory?.length > 10) { // We only want to keep the last 10 snapshots, for memory optimization
+      const newHistory = { ...history, [activePage]: pageHistory.slice(1) };
       setHistory(newHistory);
-    } else {
+    } else { // If we have less than 10 snapshots, add a new one
       setHistory({ ...history, [activePage]: [...history[activePage], activePageData] });
     }
 
+    console.log(`DEBUG - History snapshot:`);
+    console.log(history);
   }
-  // *** end of potential hook or context
 
   const appendComponent = (component) => {
     if (!selectedComponent) return setError({ message: "Please select a container to add the component to" });
