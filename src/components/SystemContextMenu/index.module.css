@@ -1,0 +1,32 @@
+.context-menu-wrapper {
+    position: relative;
+}
+
+.context-menu {
+    position: absolute;
+    top: 35px;
+    left: 15px;
+
+    width: max-content;
+    min-width: 160px;
+
+    background: #111111;
+    color: white;
+
+    border: 1px solid #6f6f6f;
+    font-size: small;
+}
+
+.context-menu-item {
+    width: 100%;
+    padding: 3px 6px;
+    text-align: left;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.context-menu-item:hover {
+    background: #6f6f6f;
+}

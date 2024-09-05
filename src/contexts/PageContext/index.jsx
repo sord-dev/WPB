@@ -59,18 +59,17 @@ export const PageContextProvider = ({ children }) => {
     // navigate component tree and add component
     const tree = pageData.pages[pageData.activePage].content;
     component.props = { id: generateComponentID(component.type), ...component.props };
-    console.log(component, parentElement)
 
-    if (parentElement && parentElement.props.children) {
+    if (parentElement && parentElement.props.children) { // if parentElement is provided, add component to parent
       const newTree = appendElement(tree, component, parentElement);
       console.log("DEBUG - Adding component with parent:", parentElement);
       updatePage(pageData.activePage, newTree);
-    } else {
+    } else { // if parentElement is not provided, add component to root level
       const newTree = appendElement(tree, component, { type: "", props: { id: generateComponentID(component.type) } });
       updatePage(pageData.activePage, newTree);
     }
 
-    return component;
+    return component; // return the component with the generated ID
   };
 
   const addContainer = (container) => {
