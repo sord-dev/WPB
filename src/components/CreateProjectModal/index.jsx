@@ -65,6 +65,7 @@ function CreateProjectModal({ createProject, openClose, addTab }) {
               placeholder="Project Name"
               value={projectName}
               onChange={handleProjectNameChange}
+              autoFocus
             />
           </div>
           <div className={styles["input-field"]}>

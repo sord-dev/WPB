@@ -65,6 +65,7 @@ function CreatePageModal({ tabs, pages, createTab, openClose, addTab }) {
             placeholder="New page"
             value={tabName}
             onChange={handleInputChange}
+            autoFocus
           />
         </div>
         {errorMessage && (
