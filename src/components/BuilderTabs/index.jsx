@@ -18,16 +18,27 @@ function BuilderTabs({
   const [openClose, setOpenClose] = useState(false);
 
   useEffect(() => {
-    const handleKeyDown = (event) => {
+    const handleCreateTabShortcut = (event) => {
       if (event.ctrlKey && event.key == "t") {
         setOpenClose(true);
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
+    const handleQuickSwitchShortcut = (event) => {
+      for (let i = 0; i < tabs.length; i++) {
+        if (event.ctrlKey && event.key == i + 1) {
+          handleTabClick(tabs[i])
+        }
+      }
+    }
+
+
+    window.addEventListener("keydown", handleQuickSwitchShortcut);
+    window.addEventListener("keydown", handleCreateTabShortcut);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keydown", handleQuickSwitchShortcut);
+      window.removeEventListener("keydown", handleCreateTabShortcut);
     };
   }, []);
 
