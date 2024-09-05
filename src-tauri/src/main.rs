@@ -5,9 +5,9 @@ use tauri::Runtime;
 mod files;
 
 #[tauri::command]
-async fn scan_for_projects<R: Runtime>(app: tauri::AppHandle<R>, window: tauri::Window<R>) -> Result<String, String> {
+async fn scan_for_projects<R: Runtime>(_app: tauri::AppHandle<R>, _window: tauri::Window<R>) -> Result<String, String> {
   let projects = files::scan_documents_directory("wpb-projects").map_err(|e| e.to_string())?;
-  Ok((serde_json::json!(&projects).to_string()))
+  Ok(serde_json::json!(&projects).to_string())
 }
 
 fn main() {
