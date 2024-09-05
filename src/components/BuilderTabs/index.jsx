@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
 import Overlay from "../Overlay";
 import CreatePageModal from "../CreatePageModal";
@@ -16,6 +16,20 @@ function BuilderTabs({
   if (!tabs.length) return null;
 
   const [openClose, setOpenClose] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey && event.key == "t") {
+        setOpenClose(true);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
 
   return (
     <>
