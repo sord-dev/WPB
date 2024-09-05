@@ -89,7 +89,7 @@ export default function Builder() {
   }
 
   const handleTabClick = (templateIndex) => {
-    setSelectedComponent(pages[templateIndex].content);
+    setSelectedComponent(pages[templateIndex]?.content);
     setActivePage(templateIndex);
   }
 

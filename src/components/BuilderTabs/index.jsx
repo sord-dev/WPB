@@ -40,7 +40,7 @@ function BuilderTabs({
       window.removeEventListener("keydown", handleQuickSwitchShortcut);
       window.removeEventListener("keydown", handleCreateTabShortcut);
     };
-  }, []);
+  }, [tabs]);
 
   return (
     <>
