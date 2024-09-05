@@ -3,8 +3,9 @@ import { usePageContext } from '../PageContext';
 
 const TabContext = createContext({
   tabs: [],
-  addTab: () => {},
-  removeTab: () => {},
+  addTab: (tabName) => {},
+  removeTab: (tabName) => {},
+  clearTabs: () => {}
 });
 
 export const TabProvider = ({ children }) => {
@@ -19,13 +20,18 @@ export const TabProvider = ({ children }) => {
     setTabs(prevTabs => prevTabs.filter(tab => tab !== tabName));
   };
 
+  const clearTabs = () => {
+    console.log('clearing tabs')
+    setTabs([]);
+  };
 
   useEffect(() => {
     console.log('tabs', tabs)
-  }, [pages])
+    console.log('pages', pages)
+  }, [pages, tabs])
 
   return (
-    <TabContext.Provider value={{ tabs, addTab, removeTab }}>
+    <TabContext.Provider value={{ tabs, addTab, removeTab, clearTabs }}>
       {children}
     </TabContext.Provider>
   );

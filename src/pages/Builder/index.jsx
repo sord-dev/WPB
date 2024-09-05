@@ -119,8 +119,6 @@ export default function Builder() {
           </div>
         </div>
 
-
-
         {/* This should be where we export from */}
         <div className={styles['constructor-parent']}>
           <GridContainer columns={12}>

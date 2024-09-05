@@ -9,13 +9,13 @@ import { ProjectProvider } from "./contexts/ProjectContext/ProjectContext.jsx";
 createRoot(document.getElementById("root")).render(
   <HashRouter>
     <PageContextProvider>
-      <ProjectProvider>
-        <TabProvider>
+      <TabProvider>
+        <ProjectProvider>
           <StrictMode>
             <App />
           </StrictMode>
-        </TabProvider>
-      </ProjectProvider>
+        </ProjectProvider>
+      </TabProvider>
     </PageContextProvider>
   </HashRouter>
 );
