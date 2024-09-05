@@ -14,7 +14,7 @@ function CreateProjectModal({ createProject, openClose, addTab }) {
     setPageName(event.target.value);
   };
 
-  const openProject = (projectName) => {
+  const openProject = () => {
     addTab(pageName);
     openClose(false);
   };
@@ -29,7 +29,7 @@ function CreateProjectModal({ createProject, openClose, addTab }) {
           setErrorMessage("");
         }, 4000);
       } else {
-        openProject(projectName);
+        openProject();
       }
     } else {
       setErrorMessage("Both project name and page name are required");

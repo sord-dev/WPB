@@ -3,10 +3,18 @@ import { appendElement, deleteElement, updateElement } from './PageBuilder';
 import { generateComponentID } from '../../utils';
 
 import { defaultPageContext } from './default';
-const PageContext = createContext(defaultPageContext);
+import { useNavigate } from 'react-router-dom';
+const PageContext = createContext();
 
 export const PageContextProvider = ({ children }) => {
-  const [pageData, setPageData] = useState(defaultPageContext);
+  const [pageData, setPageData] = useState({ pages: {}, pageIndex: [], activePage: null });
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (Object.keys(pageData.pages).length === 0) {
+      navigate('/');
+    }
+  }, [pageData, navigate]);
 
   const createPage = (pageName) => {
     if (pageData.pages[pageName]) return false;

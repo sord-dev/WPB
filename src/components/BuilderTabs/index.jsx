@@ -36,7 +36,7 @@ function BuilderTabs({
                   }}
                   className={styles["close"]}
                   role="button"
-                  tabIndex={0} // Allows keyboard navigation
+                  tabIndex={0}
                   aria-label={`Close ${tab}`}
                 >
                   <IoMdClose />

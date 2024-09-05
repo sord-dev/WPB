@@ -16,8 +16,6 @@ export const ProjectProvider = ({ children }) => {
       return false;
     }
 
-    console.log(projectName, pageName)
-
     const newProject = {
       projectName: projectName,
       pages: {

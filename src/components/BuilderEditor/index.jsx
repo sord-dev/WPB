@@ -15,7 +15,7 @@ function BuilderEditor({ registery, template, getAllComponents, setSelectedCompo
     const mergedRegistry = Object.assign({}, registery, { ...defaultComponents });
 
     const renderComponent = (componentData) => {
-        const ComponentToRender = mergedRegistry[componentData.type];
+        const ComponentToRender = mergedRegistry[componentData?.type];
 
         if (ComponentToRender) {
 

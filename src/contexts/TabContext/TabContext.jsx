@@ -21,7 +21,7 @@ export const TabProvider = ({ children }) => {
 
 
   useEffect(() => {
-   console.log('tabs', tabs)
+    console.log('tabs', tabs)
   }, [pages])
 
   return (
