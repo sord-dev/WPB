@@ -104,17 +104,20 @@ export function TextStylingEditor({ handleAlignmentChange, textAlignmentOptions 
 
 const defaultContainerStyles = {
   margin: "0px",
-  padding: "0px"
+  padding: "0px",
+  backgroundColor: "transparent"
 };
 
 export const ContainerStylingEditor = ({ handleAlignmentChange, handleAlignmentChanges, containerStyles, paddingSizes = [] }) => {
   const [containerStyle, setContainerStyle] = useState(containerStyles || defaultContainerStyles);
   const [customPadding, setCustomPadding] = useState(false);
+  const [backgroundColor, setBackgroundColor] = useState(containerStyles?.backgroundColor || defaultContainerStyles.backgroundColor);
 
   useEffect(() => {
     const containerStylesState = containerStyles || defaultContainerStyles;
     setContainerStyle(containerStylesState);
-  }, []);
+    setBackgroundColor(containerStylesState.backgroundColor);
+  }, [containerStyles]);
 
   const handleStyleChange = (style, value) => {
     const safeValue = value || "0px";
@@ -128,6 +131,11 @@ export const ContainerStylingEditor = ({ handleAlignmentChange, handleAlignmentC
 
     setContainerStyle(newStyle);
     handleAlignmentChange(style, safeValue);
+  };
+
+  const handleBackgroundColorChange = (newColor) => {
+    setBackgroundColor(newColor);
+    handleStyleChange("backgroundColor", newColor);
   };
 
   const clearPadding = (obj) => {
@@ -167,8 +175,25 @@ export const ContainerStylingEditor = ({ handleAlignmentChange, handleAlignmentC
 
         <button className={styles['padding-more-btn']} onClick={() => setCustomPadding(prev => !prev)}>More options</button>
         {customPadding && (<CustomPaddingEditor getEffectivePaddingValue={getEffectivePaddingValue} handleStyleChange={handleStyleChange} />)}
+        <div className={styles['styling-field']}>
+          <span>Background Color</span>
+          <div className={styles['styling-inputs']}>
+            <StylingInput
+              type="text"
+              value={backgroundColor}
+              onChange={handleBackgroundColorChange}
+              className={'color-input'}
+              readOnly
+            />
+            <StylingInput
+              type="color"
+              value={backgroundColor}
+              onChange={handleBackgroundColorChange}
+              className={'color-picker'}
+            />
+          </div>
+        </div>
       </div>
-
     </div>
   );
 };
