@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { usePageContext } from "../../contexts";
+import { usePageContext, useProjectContext } from "../../contexts";
 import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer, BuilderComponentStateEditor, SystemNotificationPopUp } from "../../components";
 
 import styles from "./index.module.css";
@@ -11,10 +11,12 @@ export default function Builder() {
     pageIndex,
     activePage,
     pages,
+    file_path,
     pageControls: { setActivePage, createPage },
     templateControls: { addComponent, updateComponent, addContainer, deleteComponent }
   } = usePageContext();
-  
+
+  const { updateProjectFile, activeProject } = useProjectContext();
   const activePageData = pages[activePage]?.content;
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
@@ -102,6 +104,24 @@ export default function Builder() {
   useEffect(() => {
     setSelectedComponent(activePageData);
   }, [])
+
+  // debounce function to commit changes to file system
+
+  useEffect(() => {
+    let previousPage = null;
+    const debounce = setTimeout(() => {
+      if (activePage === null) return;
+      if (previousPage !== activePage && file_path) {
+        previousPage = activePage;
+        // save pageData to file system
+        console.log("DEBUG - Saving page data to file system:", pages[activePage]);
+        updateProjectFile(file_path, pages[activePage]);
+      }
+    }, 1000);
+
+    return () => clearTimeout(debounce);
+  }, [activePageData]);
+
 
   return (
     <section>
