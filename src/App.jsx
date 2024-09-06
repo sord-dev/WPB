@@ -2,15 +2,14 @@ import { Route, Routes } from "react-router-dom";
 import { SideNavbar, Wrapper } from "./layouts";
 import { Builder, Dashboard } from "./pages";
 
-import { invoke } from "@tauri-apps/api";
 import { useEffect } from "react";
+import { useProjectContext } from "./contexts";
 
 function App() {
+  const { loadProjects } = useProjectContext();
 
   useEffect(() => {
-    invoke("scan_for_projects").then((data) => {
-      console.log(data);
-    });
+    loadProjects();
   }, []);
 
 

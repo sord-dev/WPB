@@ -2,15 +2,11 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { appendElement, deleteElement, updateElement } from './PageBuilder';
 import { generateComponentID } from '../../utils';
 
-import { defaultPageContext } from './default';
 import { useNavigate } from 'react-router-dom';
-import { useProjectContext } from '../ProjectContext';
-
 const PageContext = createContext();
 
 export const PageContextProvider = ({ children }) => {
-  const { projects, activeProject } = useProjectContext();
-  const [pageData, setPageData] = useState(projects[activeProject] ||{ pages: {}, pageIndex: [], activePage: null }); // TODO - we need to make this connect to the project context, so that we can have multiple projects
+  const [pageData, setPageData] = useState({ pages: {}, pageIndex: [], activePage: null }); // TODO - we need to make this connect to the project context, so that we can have multiple projects
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -19,10 +15,6 @@ export const PageContextProvider = ({ children }) => {
     }
   }, [pageData, navigate]);
 
-  useEffect(() => {
-    if(!activeProject) return;
-    setPageData(projects[activeProject] || { pages: {}, pageIndex: [], activePage: null });
-  }, [activeProject]);
 
   const createPage = (pageName) => {
     if (pageData.pages[pageName]) return false;
