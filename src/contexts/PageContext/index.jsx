@@ -5,6 +5,7 @@ import { generateComponentID } from '../../utils';
 import { defaultPageContext } from './default';
 import { useNavigate } from 'react-router-dom';
 import { useProjectContext } from '../ProjectContext';
+
 const PageContext = createContext();
 
 export const PageContextProvider = ({ children }) => {

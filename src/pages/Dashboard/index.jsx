@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
 import { FaPlus } from "react-icons/fa6";
 import { Card } from './partials';
 import { CreateProjectModal, Overlay } from '../../components';
 import { useProjectContext, useTabContext } from '../../contexts';
+import useShortcut from '../../hooks/useShortcut';
 
 export default function Dashboard() {
 
@@ -11,6 +12,10 @@ export default function Dashboard() {
 
   const { addTab } = useTabContext()
   const { createProject, projects, selectProject } = useProjectContext()
+
+  useShortcut([
+    { keyCombo: { ctrlKey: true, key: "n" }, action: () => setOpenClose(true) },
+  ]);
 
   return (
     <>
