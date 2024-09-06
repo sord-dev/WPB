@@ -48,6 +48,7 @@ export const ProjectProvider = ({ children }) => {
 
   const selectProject = (projectName) => {
     const project = projects.find((project) => project.projectName === projectName);
+    
     clearTabs();
     addTab(project.activePage);
     setPageData(project)
