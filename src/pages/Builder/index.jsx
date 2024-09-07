@@ -115,7 +115,7 @@ export default function Builder() {
         previousPage = activePage;
         // save pageData to file system
         console.log("DEBUG - Saving page data to file system:", pages[activePage]);
-        updateProjectFile(file_path, pages[activePage]);
+        updateProjectFile(file_path, JSON.stringify(pages[activePage], null, 2));
       }
     }, 1000);
 

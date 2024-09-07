@@ -1,11 +1,51 @@
 // I'm so sorry rust devs...
 
+use std::collections::HashMap;
 use std::error::Error;
 use std::fs::{self, OpenOptions};
-use std::io::{Read, Write};
+use std::io::Read;
 
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+#[derive(Serialize, Deserialize)]
+struct Project {
+    project_name: String,
+    pages: HashMap<String, Page>,
+    page_index: Vec<String>,
+    active_page: String,
+    file_path: String,
+}
+
+impl Project {
+    fn new(
+        project_name: String,
+        file_path: String,
+        pages: HashMap<String, Page>,
+        page_index: Vec<String>,
+        active_page: String,
+    ) -> Project {
+        Project {
+            project_name,
+            pages,
+            page_index,
+            active_page,
+            file_path,
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+struct Page {
+    name: String,
+    content: HashMap<String, Component>,
+}
+
+#[derive(Serialize, Deserialize)]
+struct Component {
+    item_type: String,
+    props: serde_json::Value,
+}
 
 fn create_app_dir(folder_name: &str) -> Result<(), Box<dyn Error>> {
     // Get the user's documents directory path
@@ -19,14 +59,10 @@ fn create_app_dir(folder_name: &str) -> Result<(), Box<dyn Error>> {
     }
 
     Ok(())
-
 }
 
-
 /// Scans a user's documents directory for a specific folder, validates each file within to be of the JSON type, and returns the contents of the folder as an array of JSON objects.
-pub fn scan_documents_directory(
-    folder_name: &str,
-) -> Result<Vec<Value>, Box<dyn Error>> {
+pub fn scan_documents_directory(folder_name: &str) -> Result<Vec<Value>, Box<dyn Error>> {
     // Get the user's documents directory path
     let documents_dir = dirs::document_dir().ok_or("Unable to find user's documents directory")?;
     let folder_path = documents_dir.join(folder_name);
@@ -66,7 +102,10 @@ pub fn scan_documents_directory(
             };
 
             let mut modified_template = json_value.clone();
-            modified_template.as_object_mut().unwrap().insert("file_path".to_string(), serde_json::Value::String(path.display().to_string()));
+            modified_template.as_object_mut().unwrap().insert(
+                "file_path".to_string(),
+                serde_json::Value::String(path.display().to_string()),
+            );
 
             json_objects.push(modified_template);
         }
@@ -75,9 +114,7 @@ pub fn scan_documents_directory(
     Ok(json_objects)
 }
 
-
 // update a JSON object in a file
-
 
 pub fn update_json_in_file(
     folder_name: &str,
@@ -99,7 +136,11 @@ pub fn update_json_in_file(
         .open(&file_path)
         .map_err(|e| format!("Failed to open file: {}", e))?;
 
-    // Write the JSON object to the file
+    println!("Writing to file: {}", file_path.display());
+    println!("{:?}", json_object);
+
+    // clear the file
+    file.set_len(0)?;
     serde_json::to_writer_pretty(&file, json_object)?;
 
     // Read the updated contents
