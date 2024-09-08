@@ -1,8 +1,10 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use files::{Page, Project};
 use tauri::Runtime;
 mod files;
+
 
 #[tauri::command]
 async fn scan_for_projects<R: Runtime>(_app: tauri::AppHandle<R>, _window: tauri::Window<R>) -> Result<String, String> {
@@ -12,9 +14,13 @@ async fn scan_for_projects<R: Runtime>(_app: tauri::AppHandle<R>, _window: tauri
 }
 
 #[tauri::command]
-async fn update_project<R: Runtime>(_app: tauri::AppHandle<R>, _window: tauri::Window<R>, project_path: String, updated_project_data: String) -> Result<String, String> {
+async fn update_project<R: Runtime>(_app: tauri::AppHandle<R>, _window: tauri::Window<R>, project_path: String, updated_project_data: serde_json::Value) -> Result<Project, String> {
   let project_file: &str = project_path.split("/").last().unwrap();
-  let project = files::update_json_in_file("wpb-projects", project_file, &serde_json::json!(&updated_project_data)).map_err(|e| e.to_string())?;
+  println!("Updating project: {}", project_file);
+
+
+
+  let project = files::update_json_in_file("wpb-projects", project_file, &updated_project_data).map_err(|e| e.to_string())?;
 
   Ok(project)
 }

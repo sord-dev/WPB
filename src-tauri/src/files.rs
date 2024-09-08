@@ -3,49 +3,33 @@
 use std::collections::HashMap;
 use std::error::Error;
 use std::fs::{self, OpenOptions};
-use std::io::Read;
+use std::io::{Read, Write};
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-#[derive(Serialize, Deserialize)]
-struct Project {
-    project_name: String,
-    pages: HashMap<String, Page>,
-    page_index: Vec<String>,
-    active_page: String,
-    file_path: String,
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Project {
+    pub project_name: String,
+    pub pages: HashMap<String, Page>,
+    pub page_index: Vec<String>,
+    pub active_page: String,
+    pub file_path: String,
 }
 
-impl Project {
-    fn new(
-        project_name: String,
-        file_path: String,
-        pages: HashMap<String, Page>,
-        page_index: Vec<String>,
-        active_page: String,
-    ) -> Project {
-        Project {
-            project_name,
-            pages,
-            page_index,
-            active_page,
-            file_path,
-        }
-    }
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Page {
+    pub name: String,
+    pub content: HashMap<String, Component>,
 }
 
-#[derive(Serialize, Deserialize)]
-struct Page {
-    name: String,
-    content: HashMap<String, Component>,
+#[derive(Serialize, Deserialize, Debug)]
+pub struct Component {
+    pub item_type: String,
+    pub props: serde_json::Value,
 }
 
-#[derive(Serialize, Deserialize)]
-struct Component {
-    item_type: String,
-    props: serde_json::Value,
-}
 
 fn create_app_dir(folder_name: &str) -> Result<(), Box<dyn Error>> {
     // Get the user's documents directory path
@@ -59,6 +43,17 @@ fn create_app_dir(folder_name: &str) -> Result<(), Box<dyn Error>> {
     }
 
     Ok(())
+}
+
+fn open_file_with_read_write_permissions(file_path: &str) -> Result<fs::File, Box<dyn Error>> {
+    // Open the file for reading and writing with explicit permissions
+    let file = OpenOptions::new()
+        .read(true)
+        .write(true)
+        .open(file_path)
+        .map_err(|e| format!("Failed to open file: {}", e))?;
+
+    Ok(file)
 }
 
 /// Scans a user's documents directory for a specific folder, validates each file within to be of the JSON type, and returns the contents of the folder as an array of JSON objects.
@@ -101,13 +96,9 @@ pub fn scan_documents_directory(folder_name: &str) -> Result<Vec<Value>, Box<dyn
                 }
             };
 
-            let mut modified_template = json_value.clone();
-            modified_template.as_object_mut().unwrap().insert(
-                "file_path".to_string(),
-                serde_json::Value::String(path.display().to_string()),
-            );
+            println!("Parsed JSON: {:?}", json_value.as_object());
 
-            json_objects.push(modified_template);
+            json_objects.push(json_value);
         }
     }
 
@@ -115,12 +106,11 @@ pub fn scan_documents_directory(folder_name: &str) -> Result<Vec<Value>, Box<dyn
 }
 
 // update a JSON object in a file
-
 pub fn update_json_in_file(
     folder_name: &str,
     file_name: &str,
-    json_object: &serde_json::Value,
-) -> Result<String, Box<dyn Error>> {
+    project: &serde_json::Value,
+) -> Result<Project, Box<dyn Error>> {
     // Get the user's documents directory path
     let documents_dir = dirs::document_dir().ok_or("Unable to find user's documents directory")?;
     let folder_path = documents_dir.join(folder_name);
@@ -130,22 +120,49 @@ pub fn update_json_in_file(
     let file_path = folder_path.join(file_name);
 
     // Open the file for writing with explicit permissions
-    let mut file = OpenOptions::new()
-        .write(true)
-        .create(true) // Create the file if it doesn't exist
-        .open(&file_path)
-        .map_err(|e| format!("Failed to open file: {}", e))?;
+    let file = open_file_with_read_write_permissions(&file_path.to_str().unwrap())?;
 
     println!("Writing to file: {}", file_path.display());
-    println!("{:?}", json_object);
+    // clear the file
+    file.set_len(0)?;
+    serde_json::to_writer(&file, project)?;
+    println!("successfully wrote to file");
+
+   // Read the updated contents directly as a serde_json::Value
+   let updated_project: Project = serde_json::from_reader(&file)?;
+   print!("Updated project: {:?}", serde_json::to_string(&updated_project));
+
+   Ok(updated_project)
+}
+
+pub fn create_new_json_file(
+    folder_name: &str,
+    project: &serde_json::Value,
+) -> Result<Project, Box<dyn Error>> {
+
+    // Get the user's documents directory path and create the folder
+    let documents_dir = dirs::document_dir().ok_or("Unable to find user's documents directory")?;
+    let folder_path = documents_dir.join(folder_name);
+    let name = project["project_name"].as_str().unwrap();
+
+    // Create the file path
+    create_app_dir(folder_name)?;
+    let file_path = folder_path.join(name);
+
+    // Open the file for writing with explicit permissions
+    let file = open_file_with_read_write_permissions(&file_path.to_str().unwrap())?;
+
+    println!("Writing to file: {}", file_path.display());
+    println!("{:?}", project);
 
     // clear the file
     file.set_len(0)?;
-    serde_json::to_writer_pretty(&file, json_object)?;
+    serde_json::to_writer(&file, project)?;
 
-    // Read the updated contents
-    let mut contents = String::new();
-    file.read_to_string(&mut contents)?;
+   // Read the updated contents directly as a serde_json::Value
+   let updated_project: Project = serde_json::from_reader(&file)?;
 
-    Ok(contents)
+   print!("Updated project: {:?}", serde_json::to_string(&updated_project));
+
+   Ok(updated_project)
 }
