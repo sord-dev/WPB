@@ -18,8 +18,6 @@ async fn update_project<R: Runtime>(_app: tauri::AppHandle<R>, _window: tauri::W
   let project_file: &str = project_path.split("/").last().unwrap();
   println!("Updating project: {}", project_file);
 
-
-
   let project = files::update_json_in_file("wpb-projects", project_file, &updated_project_data).map_err(|e| e.to_string())?;
 
   Ok(project)
