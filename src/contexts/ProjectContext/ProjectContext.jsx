@@ -62,7 +62,7 @@ export const ProjectProvider = ({ children }) => {
     try {
       const loadedProjects = await invoke("scan_for_projects")
       console.log("DEBUG - Loaded Projects: ", loadedProjects)
-      const parsed = JSON.parse(loadedProjects).map((project) => JSON.parse(project));
+      const parsed = JSON.parse(loadedProjects);
       setProjects(parsed)
     } catch (error) {
       console.error("Error loading projects: ", error)

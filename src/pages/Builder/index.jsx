@@ -116,7 +116,7 @@ export default function Builder() {
         previousPage = activePage;
         // save pageData to file system
         console.log("DEBUG - Saving page data to file system:", pages[activePage]);
-        updateProjectFile(file_path, activePageData);
+        // updateProjectFile(file_path, activePageData); 
       }
 
       if(previousPage !== activePage && !file_path) {
