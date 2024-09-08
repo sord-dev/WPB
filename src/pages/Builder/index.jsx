@@ -8,6 +8,7 @@ import { convertParamsToObject } from "../../utils";
 
 export default function Builder() {
   const {
+    projectName,
     pageIndex,
     activePage,
     pages,
@@ -132,7 +133,7 @@ export default function Builder() {
   return (
     <section>
       <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: createPage }} />
-      <BuilderToolBar screensize={{ scale: 100, width: 1440 }} />
+      <BuilderToolBar screensize={{ scale: 100, width: 1440 }} projectTitle={projectName} tabName={activePage} />
 
       <div className={styles['builder']}>
         <div className={styles['editor']}>

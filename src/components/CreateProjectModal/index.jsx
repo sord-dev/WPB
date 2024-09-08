@@ -1,24 +1,15 @@
 import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
+import useShortcut from "../../hooks/useShortcut";
 
 function CreateProjectModal({ createProject, openClose, addTab }) {
   const [projectName, setProjectName] = useState("");
   const [pageName, setPageName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Enter') {
-        handleCreateProject();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [projectName, pageName]);
+  useShortcut([
+    { keyCombo: { key: "Enter" }, action: () => handleCreateProject() },
+  ]);
 
   const handleProjectNameChange = (event) => {
     setProjectName(event.target.value);

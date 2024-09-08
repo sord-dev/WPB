@@ -9,16 +9,30 @@ const TabContext = createContext({
 });
 
 export const TabProvider = ({ children }) => {
-  const { pageIndex, pages } = usePageContext()
+  const { pageIndex, pages, pageControls: { setActivePage }, } = usePageContext()
   const [tabs, setTabs] = useState(pageIndex);
 
   const addTab = (newTab) => {
     setTabs(prevTabs => [...prevTabs, newTab]);
+
+    setActivePage(newTab);
   };
 
   const removeTab = (tabName) => {
+    if (tabs.length <= 1) return;
+  
+    const index = tabs.indexOf(tabName);
+
+    const newActiveTab = index > 0  ? tabs[index - 1]  : tabs[index + 1] || null;
+    
     setTabs(prevTabs => prevTabs.filter(tab => tab !== tabName));
+  
+    if (newActiveTab) {
+      setActivePage(newActiveTab);
+    }
+
   };
+  
 
   const clearTabs = () => {
     console.log('clearing tabs')

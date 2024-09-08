@@ -1,5 +1,7 @@
 .context-menu-wrapper {
     position: relative;
+    z-index: 999;
+
 }
 
 .context-menu {
@@ -15,6 +17,7 @@
 
     border: 1px solid #6f6f6f;
     font-size: small;
+    z-index: 999;
 }
 
 .context-menu-item {

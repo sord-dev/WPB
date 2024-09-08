@@ -4,6 +4,7 @@ import Overlay from "../Overlay";
 import CreatePageModal from "../CreatePageModal";
 import { IoMdClose } from "react-icons/io";
 import { useTabContext } from "../../contexts";
+import useShortcut from "../../hooks/useShortcut";
 
 function BuilderTabs({
   pages,
@@ -17,30 +18,16 @@ function BuilderTabs({
 
   const [openClose, setOpenClose] = useState(false);
 
-  useEffect(() => {
-    const handleCreateTabShortcut = (event) => {
-      if (event.ctrlKey && event.key == "t") {
-        setOpenClose(true);
-      }
-    };
+  const tabShortcuts = tabs.map((tab, index) => ({
+    keyCombo: { ctrlKey: true, key: `${index + 1}` },
+    action: () => handleTabClick(tab),
+  }));
 
-    const handleQuickSwitchShortcut = (event) => {
-      for (let i = 0; i < tabs.length; i++) {
-        if (event.ctrlKey && event.key == i + 1) {
-          handleTabClick(tabs[i])
-        }
-      }
-    }
-
-
-    window.addEventListener("keydown", handleQuickSwitchShortcut);
-    window.addEventListener("keydown", handleCreateTabShortcut);
-
-    return () => {
-      window.removeEventListener("keydown", handleQuickSwitchShortcut);
-      window.removeEventListener("keydown", handleCreateTabShortcut);
-    };
-  }, [tabs]);
+  useShortcut([
+    ...tabShortcuts,
+    { keyCombo: { ctrlKey: true, key: "t" }, action: () => setOpenClose(true) },
+    { keyCombo: { ctrlKey: true, key: "w" }, action: () => removeTab(activeTab) }
+  ]);
 
   return (
     <>
@@ -52,7 +39,6 @@ function BuilderTabs({
               onClick={() => handleTabClick(tab)}
             >
               {tab}
-
               {tabs.length > 1 && (
                 <span
                   onClick={(e) => {

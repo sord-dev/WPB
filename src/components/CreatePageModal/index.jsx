@@ -1,56 +1,45 @@
 import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
+import useShortcut from "../../hooks/useShortcut";
 
 function CreatePageModal({ tabs, pages, createTab, openClose, addTab }) {
   const [tabName, setTabName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === 'Enter') {
-        handleCreateTab();
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [tabName]);
+  useShortcut([
+    { keyCombo: { key: "Enter" }, action: () => handleCreateTab() },
+  ]);
 
   const handleInputChange = (event) => {
     setTabName(event.target.value);
   };
 
   const openPage = (pageName) => {
-    addTab(pageName)
+    addTab(pageName);
     openClose(false);
-  }
+  };
 
   const handleCreateTab = () => {
     if (tabName.trim()) {
       const tabCreated = createTab(tabName);
-  
+
       if (!tabCreated) {
         setErrorMessage("Page already exists");
-  
+
         setTimeout(() => {
           setErrorMessage("");
         }, 4000);
       } else {
-        openPage(tabName)
+        openPage(tabName);
       }
     } else {
       setErrorMessage("Page name is required");
-  
+
       setTimeout(() => {
         setErrorMessage("");
       }, 4000);
     }
   };
-
-  
 
   const availablePages = pages.filter((page) => !tabs.includes(page));
 
@@ -73,7 +62,9 @@ function CreatePageModal({ tabs, pages, createTab, openClose, addTab }) {
             <p>{errorMessage}</p>
           </div>
         )}
-        <button className={styles['submit']} onClick={handleCreateTab}>Create page</button>
+        <button className={styles["submit"]} onClick={handleCreateTab}>
+          Create page
+        </button>
       </div>
       {availablePages.length > 0 && (
         <div className={styles["existing-files"]}>
