@@ -29,7 +29,8 @@ export const PageContextProvider = ({ children }) => {
           props: { id: generateComponentID("wrapper"), children: [] },
         } }
       },
-      pageIndex: [...pageData.pageIndex, pageName]
+      pageIndex: [...pageData.pageIndex, pageName],
+      activePage: pageName
     });
 
     return true;
