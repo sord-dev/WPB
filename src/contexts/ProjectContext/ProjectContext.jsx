@@ -16,7 +16,7 @@ const ProjectContext = createContext({
 
 export const ProjectProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
-  const { setPageData } = usePageContext()
+  const { setPageData, activePage } = usePageContext()
   const { clearTabs, addTab } = useTabContext()
   const navigate = useNavigate();
   const [activeProject, setActiveProject] = useState("");
@@ -61,18 +61,23 @@ export const ProjectProvider = ({ children }) => {
   const loadProjects = async () => {
     try {
       const loadedProjects = await invoke("scan_for_projects")
-      setProjects(JSON.parse(loadedProjects))
+      console.log("DEBUG - Loaded Projects: ", loadedProjects)
+      const parsed = JSON.parse(loadedProjects).map((project) => JSON.parse(project));
+      setProjects(parsed)
     } catch (error) {
       console.error("Error loading projects: ", error)
     }
   }
 
   const updateProjectPage = async (filePath, updatedPageData) => {
+    if(!activePage) return;
     try {
       console.log("DEBUG - Updating Project Data for: ", filePath, updatedPageData);
       const active = projects.find((project) => project.projectName === activeProject);
-      const updatedProjectData = {...active, pages: { ...active.pages, [updatedPageData.activePage]: updatedPageData.activePageData }};
+      const updatedProjectData = {...active, pages: { ...active.pages, [activePage]: { ...active.pages[activePage], ...updatedPageData} }};
+      console.log({updatedPageData , updatedProjectData})
       const str = JSON.stringify(updatedProjectData);
+      console.log("DEBUG - Updated Project Data: ", str);
       const updated = await invoke("update_project", { projectPath: filePath, updatedProjectData: str });
       
       const parsed = JSON.parse(updated);
