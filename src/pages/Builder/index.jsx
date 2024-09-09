@@ -12,12 +12,12 @@ export default function Builder() {
     pageIndex,
     activePage,
     pages,
-    file_path,
+    filePath,
     pageControls: { setActivePage, createPage },
     templateControls: { addComponent, updateComponent, addContainer, deleteComponent }
   } = usePageContext();
 
-  const { updateProjectFile, activeProject } = useProjectContext();
+  const { updateProjectPage, activeProject } = useProjectContext();
   const activePageData = pages[activePage]?.content;
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
@@ -112,14 +112,15 @@ export default function Builder() {
     let previousPage = null;
     const debounce = setTimeout(() => {
       if (activePage === null) return;
-      if (previousPage !== activePage && file_path) { // if the active page has changed, and there is a file path save to file system
+
+      if (previousPage !== activePage && filePath) { // if the active page has changed, and there is a file path save to file system
         previousPage = activePage;
         // save pageData to file system
         console.log("DEBUG - Saving page data to file system:", pages[activePage]);
-        // updateProjectFile(file_path, activePageData); 
+        updateProjectPage(filePath, activePageData);
       }
 
-      if(previousPage !== activePage && !file_path) {
+      if (previousPage !== activePage && !filePath) {
         previousPage = activePage;
         console.error("Save to new file");
       }

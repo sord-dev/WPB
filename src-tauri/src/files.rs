@@ -1,6 +1,5 @@
-// I'm so sorry rust devs...
+// I'm so sorry rust devs... I'm so sorry...
 
-use std::collections::HashMap;
 use std::error::Error;
 use std::fs::{self, OpenOptions};
 use std::io::{Read, Write};
@@ -8,28 +7,21 @@ use std::io::{Read, Write};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+const PROJECT_FOLDER_NAME: &str = "wpb-projects";
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Project {
     pub project_name: String,
-    pub pages: HashMap<String, Page>,
-    pub page_index: Vec<String>,
+    pub pages: serde_json::Map<std::string::String, Value>,
+    pub page_index: Vec<Value>,
     pub active_page: String,
     pub file_path: String,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Page {
-    pub name: String,
-    pub content: HashMap<String, Component>,
+fn log_error(error: &serde_json::Error) {
+    // Log the error using your preferred logging library
+    println!("Failed to parse JSON object: {}", error);
 }
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct Component {
-    pub item_type: String,
-    pub props: serde_json::Value,
-}
-
 
 fn create_app_dir(folder_name: &str) -> Result<(), Box<dyn Error>> {
     // Get the user's documents directory path
@@ -56,18 +48,29 @@ fn open_file_with_read_write_permissions(file_path: &str) -> Result<fs::File, Bo
     Ok(file)
 }
 
-/// Scans a user's documents directory for a specific folder, validates each file within to be of the JSON type, and returns the contents of the folder as an array of JSON objects.
-pub fn scan_documents_directory(folder_name: &str) -> Result<Vec<Value>, Box<dyn Error>> {
+fn open_file_with_read_permissions(file_path: &str) -> Result<fs::File, Box<dyn Error>> {
+    // Open the file for reading with explicit permissions
+    let file = OpenOptions::new()
+        .read(true)
+        .open(file_path)
+        .map_err(|e| format!("Failed to open file: {}", e))?;
+
+    Ok(file)
+}
+
+/// Scans a user's documents directory for a specific folder, validates each file within to be of the JSON type
+/// Then, returns the contents of the folder as an array of Project structs.
+pub fn scan_documents_directory() -> Result<Vec<Project>, Box<dyn Error>> {
     // Get the user's documents directory path
     let documents_dir = dirs::document_dir().ok_or("Unable to find user's documents directory")?;
-    let folder_path = documents_dir.join(folder_name);
-    create_app_dir(folder_name)?;
+    let folder_path = documents_dir.join(PROJECT_FOLDER_NAME);
+    create_app_dir(PROJECT_FOLDER_NAME)?;
 
     // Read the contents of the folder
     let entries = fs::read_dir(&folder_path)?;
 
     // Iterate over the entries and validate/process JSON files
-    let mut json_objects = Vec::new();
+    let mut json_objects: Vec<Project> = Vec::new();
     for entry in entries {
         let entry = entry?;
         let path = entry.path();
@@ -96,25 +99,61 @@ pub fn scan_documents_directory(folder_name: &str) -> Result<Vec<Value>, Box<dyn
                 }
             };
 
-            println!("Parsed JSON: {:?}", json_value.as_object());
+            // Convert the JSON value to a Project struct
+            let project = Project {
+                pages: json_value["pages"].as_object().unwrap().clone(),
+                page_index: json_value["page_index"].as_array().unwrap().clone(),
+                active_page: json_value["active_page"].as_str().unwrap().to_string(),
+                project_name: json_value["project_name"].as_str().unwrap().to_string(),
+                file_path: json_value["file_path"]
+                    .as_str()
+                    .unwrap_or(&path.display().to_string())
+                    .to_string(),
+            };
 
-            json_objects.push(json_value);
+            json_objects.push(project);
         }
     }
 
     Ok(json_objects)
 }
 
-// update a JSON object in a file
-pub fn update_json_in_file(
-    folder_name: &str,
-    file_name: &str,
-    project: &serde_json::Value,
-) -> Result<Project, Box<dyn Error>> {
+pub fn read_project_file(file_name: &str) -> Result<Project, Box<dyn Error>> {
     // Get the user's documents directory path
     let documents_dir = dirs::document_dir().ok_or("Unable to find user's documents directory")?;
-    let folder_path = documents_dir.join(folder_name);
-    create_app_dir(folder_name)?;
+    let folder_path = documents_dir.join(PROJECT_FOLDER_NAME);
+    create_app_dir(PROJECT_FOLDER_NAME)?;
+
+    // Create the file path
+    let file_path = folder_path.join(file_name);
+
+    // Open the file for reading with explicit permissions
+    let file = open_file_with_read_permissions(&file_path.to_str().unwrap())?;
+
+    // Read the contents of the file
+    let contents: Value = serde_json::from_reader(&file)?;
+
+    // Convert the JSON value to a Project struct
+    let project = Project {
+        pages: contents["pages"].as_object().unwrap().clone(),
+        page_index: contents["page_index"].as_array().unwrap().clone(),
+        active_page: contents["active_page"].as_str().unwrap().to_string(),
+        project_name: contents["project_name"].as_str().unwrap().to_string(),
+        file_path: contents["file_path"]
+            .as_str()
+            .unwrap_or(&file_path.display().to_string())
+            .to_string(),
+    };
+
+    Ok(project)
+}
+
+// update a JSON object in a file (BROKEN ATM)
+pub fn update_json_in_file(file_name: &str, project: &String) -> Result<Project, Box<dyn Error>> {
+    // Get the user's documents directory path
+    let documents_dir = dirs::document_dir().ok_or("Unable to find user's documents directory")?;
+    let folder_path = documents_dir.join(PROJECT_FOLDER_NAME);
+    create_app_dir(PROJECT_FOLDER_NAME)?;
 
     // Create the file path
     let file_path = folder_path.join(file_name);
@@ -123,23 +162,36 @@ pub fn update_json_in_file(
     let file = open_file_with_read_write_permissions(&file_path.to_str().unwrap())?;
 
     println!("Writing to file: {}", file_path.display());
+
     // clear the file
     file.set_len(0)?;
-    serde_json::to_writer(&file, project)?;
-    println!("successfully wrote to file");
+    println!("Clearing file");
 
-   // Read the updated contents directly as a serde_json::Value
-   let updated_project: Project = serde_json::from_reader(&file)?;
-   print!("Updated project: {:?}", serde_json::to_string(&updated_project));
+    // Parse the JSON object into a usable object
+    let parsed_project: Result<Project, _> = serde_json::from_str(&project);
 
-   Ok(updated_project)
+    if let Err(e) = parsed_project {
+        log_error(&e);
+        return Err(Box::from(e));
+    }
+
+    serde_json::to_writer(&file, &parsed_project.unwrap())?;
+    println!("Successfully wrote to file");
+
+    // Read the updated contents directly as a serde_json::Value
+    let updated_project: Project = serde_json::from_reader(&file)?;
+    print!(
+        "Updated project: {:?}",
+        serde_json::to_string(&updated_project)
+    );
+
+    Ok(updated_project)
 }
 
 pub fn create_new_json_file(
     folder_name: &str,
     project: &serde_json::Value,
 ) -> Result<Project, Box<dyn Error>> {
-
     // Get the user's documents directory path and create the folder
     let documents_dir = dirs::document_dir().ok_or("Unable to find user's documents directory")?;
     let folder_path = documents_dir.join(folder_name);
@@ -159,10 +211,13 @@ pub fn create_new_json_file(
     file.set_len(0)?;
     serde_json::to_writer(&file, project)?;
 
-   // Read the updated contents directly as a serde_json::Value
-   let updated_project: Project = serde_json::from_reader(&file)?;
+    // Read the updated contents directly as a serde_json::Value
+    let updated_project: Project = serde_json::from_reader(&file)?;
 
-   print!("Updated project: {:?}", serde_json::to_string(&updated_project));
+    print!(
+        "Updated project: {:?}",
+        serde_json::to_string(&updated_project)
+    );
 
-   Ok(updated_project)
+    Ok(updated_project)
 }

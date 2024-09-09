@@ -1,15 +1,15 @@
 import React, { useState, useContext, createContext, useEffect } from "react";
-import { generateComponentID } from "../../utils";
+import { convertObjectKeysToCamelCase, convertObjectKeysToSnakeCase, generateComponentID } from "../../utils";
 import { useNavigate } from "react-router-dom";
 import { usePageContext } from "../PageContext";
 import { useTabContext } from "../TabContext";
 import { invoke } from "@tauri-apps/api";
 
 const ProjectContext = createContext({
-  createProject: (projectName, pageName) => {},
-  selectProject: (projectName) => {},
-  loadProjects: () => {},
-  updateProjectPage: (filePath, updatedPage)=> {},
+  createProject: (projectName, pageName) => { },
+  selectProject: (projectName) => { },
+  updateProjectPage: (filePath, updatedPage) => { },
+  retrieveProjects: () => { },
   projects: [],  // will be gained from the users file system
   activeProject: ""
 });
@@ -48,38 +48,46 @@ export const ProjectProvider = ({ children }) => {
     return true;
   };
 
-  const selectProject = (projectName) => {
-    const project = projects.find((project) => project.projectName === projectName);
+  const selectProject = async (filePath) => {
+    console.log("DEBUG - Selecting Project: ", filePath);
+    try {
+      const raw = await invoke("get_project", { projectPath: filePath });
+      let project = convertObjectKeysToCamelCase(raw);
+      console.log("DEBUG - Selected Project: ", project);
+      clearTabs();
 
-    clearTabs();
-    addTab(project.activePage);
-    setActiveProject(projectName);
-    setPageData(project)
-    navigate("/builder");
+      addTab(project.activePage);
+      setActiveProject(project.projectName);
+      setPageData(project)
+      navigate("/builder");
+    } catch (error) {
+      console.error("Error loading project: ", error)
+    }
   };
 
-  const loadProjects = async () => {
-    try {
-      const loadedProjects = await invoke("scan_for_projects")
-      console.log("DEBUG - Loaded Projects: ", loadedProjects)
-      const parsed = JSON.parse(loadedProjects);
-      setProjects(parsed)
-    } catch (error) {
-      console.error("Error loading projects: ", error)
-    }
-  }
-
   const updateProjectPage = async (filePath, updatedPageData) => {
-    if(!activePage) return;
+    if (!activePage) return;
+
     try {
       console.log("DEBUG - Updating Project Data for: ", filePath, updatedPageData);
       const active = projects.find((project) => project.projectName === activeProject);
-      const updatedProjectData = {...active, pages: { ...active.pages, [activePage]: { ...active.pages[activePage], ...updatedPageData} }};
-      console.log({updatedPageData , updatedProjectData})
-      const str = JSON.stringify(updatedProjectData);
+      console.log("DEBUG - Active Project: ", active);
+
+      const updatedProjectData = {
+        ...active,
+        pages: {
+          ...active.pages,
+          [active.activePage]: {
+            content: updatedPageData
+          }
+        }
+      };
+
+      console.log({ updatedPageData, updatedProjectData })
+      const str = JSON.stringify(convertObjectKeysToSnakeCase(updatedProjectData));
       console.log("DEBUG - Updated Project Data: ", str);
       const updated = await invoke("update_project", { projectPath: filePath, updatedProjectData: str });
-      
+
       const parsed = JSON.parse(updated);
       const newProjects = projects.map((project) => {
         if (project.projectName === parsed.projectName) {
@@ -95,12 +103,26 @@ export const ProjectProvider = ({ children }) => {
     }
   }
 
+  const retrieveProjects = async () => {
+    try {
+      const loadedProjects = await invoke("scan_for_projects");
+      const parsed = JSON.parse(loadedProjects);
+      const cammeled = parsed.map((project) => convertObjectKeysToCamelCase(project));
+      setProjects(cammeled);
+
+      return { projects: cammeled, error: null };
+    } catch (error) {
+      console.error("Error loading projects: ", error);
+      return { projects: [], error: error };
+    }
+  }
+
   useEffect(() => {
     console.log("DEBUG - Project State: ", projects);
   }, [projects]);
 
   return (
-    <ProjectContext.Provider value={{ createProject, projects, selectProject, loadProjects, updateProjectFile: updateProjectPage }}>
+    <ProjectContext.Provider value={{ createProject, projects, setProjects, selectProject, updateProjectPage, retrieveProjects }}>
       {children}
     </ProjectContext.Provider>
   );

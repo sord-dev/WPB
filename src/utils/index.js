@@ -27,3 +27,24 @@ export const convertParamsToObject = (params) => {
 export const generateComponentID = (componentName) => {
     return `${componentName}-${nanoid(8)}`;
 };
+
+export const convertObjectKeysToCamelCase = (obj) => {
+    const newObj = {};
+    for (let key in obj) {
+        const newKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+        newObj[newKey] = obj[key];
+    }
+
+    return newObj;
+};
+
+export const convertObjectKeysToSnakeCase = (obj) => {
+    const newObj = {};
+    for (let key in obj) {
+        const newKey = key.replace(/([A-Z])/g, (g) => `_${g.toLowerCase()}`);
+        newObj[newKey] = obj[key];
+    }
+
+    return newObj;
+};
+

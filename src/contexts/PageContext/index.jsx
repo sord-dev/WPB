@@ -7,7 +7,7 @@ import { defaultPageContext } from './default';
 const PageContext = createContext(defaultPageContext);
 
 export const PageContextProvider = ({ children }) => {
-  const [pageData, setPageData] = useState({ pages: {}, pageIndex: [], activePage: null, projectName: null, file_path: "" }); // TODO - we need to make this connect to the project context, so that we can have multiple projects
+  const [pageData, setPageData] = useState({ pages: {}, pageIndex: [], activePage: null, projectName: null, filePath: "" }); // TODO - we need to make this connect to the project context, so that we can have multiple projects
   const navigate = useNavigate()
 
   useEffect(() => {
