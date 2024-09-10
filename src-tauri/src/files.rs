@@ -2,7 +2,8 @@
 
 use std::error::Error;
 use std::fs::{self, OpenOptions};
-use std::io::{Read, Write};
+use std::io::Read;
+use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
@@ -151,13 +152,13 @@ pub fn read_project_file(file_name: &str) -> Result<Project, Box<dyn Error>> {
 // update a JSON object in a file (BROKEN ATM)
 pub fn update_json_in_file(file_name: &str, project: &String) -> Result<Project, Box<dyn Error>> {
     // Get the user's documents directory path
-    let documents_dir = dirs::document_dir().ok_or("Unable to find user's documents directory")?;
-    let folder_path = documents_dir.join(PROJECT_FOLDER_NAME);
+    let documents_dir: PathBuf = dirs::document_dir().ok_or("Unable to find user's documents directory")?;
+    let folder_path: PathBuf = documents_dir.join(PROJECT_FOLDER_NAME);
     create_app_dir(PROJECT_FOLDER_NAME)?;
 
     // Create the file path & Open the file for writing with explicit permissions
-    let file_path = folder_path.join(file_name);
-    let file = open_file_with_read_write_permissions(&file_path.to_str().unwrap())?;
+    let file_path: PathBuf = folder_path.join(file_name);
+    let file: fs::File = open_file_with_read_write_permissions(&file_path.to_str().unwrap())?;
     
     // clear the file
     file.set_len(0)?;

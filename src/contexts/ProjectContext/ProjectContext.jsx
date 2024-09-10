@@ -65,27 +65,28 @@ export const ProjectProvider = ({ children }) => {
     }
   };
 
-  const updateProjectPage = async (filePath, updatedPageData) => {
+  const updateProjectPage = async (filePath, updatedPageData, activePage) => {
     if (!activePage) return;
-
+    
     try {
       const active = projects.find((project) => project.projectName === activeProject);
-
+      if(active.pages[activePage] === undefined) return console.error("Page not found in project data: ", activePage);
+      
       const updatedProjectData = {
         ...active,
         pages: {
           ...active.pages,
-          [active.activePage]: {
-            ...active.pages[active.activePage],
+          [activePage]: {
+            ...active.pages[activePage],
             content: updatedPageData.content
           }
         },
-        activePage: active.activePage,
+        activePage,
         pageIndex: active.pageIndex
       };
 
       const str = JSON.stringify(convertObjectKeysToSnakeCase(updatedProjectData));
-      console.log({ message: "DEBUG - Updating Page: ", prevPage: active, updatedPageData, payload: str });
+      console.log({ message: "DEBUG - Updating Page: ", activePage, prevPage: active, updatedPageData, payload: str });
       const updated = await invoke("update_project", { projectPath: filePath, updatedProjectData: str });
       
       const parsed = JSON.parse(updated);

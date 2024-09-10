@@ -117,7 +117,7 @@ export default function Builder() {
         previousPage = JSON.stringify(pages[activePage]);
         // save pageData to file system
         console.log("DEBUG - Saving page data to file system:", pages[activePage]);
-        updateProjectPage(filePath, pages[activePage]);
+        updateProjectPage(filePath, pages[activePage], activePage);
       }
 
       if (previousPage !== JSON.stringify(activePageData) && !filePath) {

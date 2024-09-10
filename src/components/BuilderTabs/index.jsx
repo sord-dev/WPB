@@ -23,6 +23,13 @@ function BuilderTabs({
     action: () => handleTabClick(tab),
   }));
 
+  const handleAddExistingPage = (page) => {
+    console.log("HANDLING EXISTING PAGE", page);
+    addTab(page);
+    handleTabClick(page);
+    setOpenClose(false);
+  }
+
   useShortcut([
     ...tabShortcuts,
     { keyCombo: { ctrlKey: true, key: "t" }, action: () => setOpenClose(true) },
@@ -67,7 +74,7 @@ function BuilderTabs({
           <CreatePageModal
             tabs={tabs}
             createTab={createTab}
-            addTab={addTab}
+            addTab={handleAddExistingPage}
             openClose={setOpenClose}
             pages={pages}
           />
