@@ -155,37 +155,28 @@ pub fn update_json_in_file(file_name: &str, project: &String) -> Result<Project,
     let folder_path = documents_dir.join(PROJECT_FOLDER_NAME);
     create_app_dir(PROJECT_FOLDER_NAME)?;
 
-    // Create the file path
+    // Create the file path & Open the file for writing with explicit permissions
     let file_path = folder_path.join(file_name);
-
-    // Open the file for writing with explicit permissions
     let file = open_file_with_read_write_permissions(&file_path.to_str().unwrap())?;
-
-    println!("Writing to file: {}", file_path.display());
-
+    
     // clear the file
     file.set_len(0)?;
     println!("Clearing file");
-
-    // Parse the JSON object into a usable object
+    
+    // Parse the JSON object into a Project struct, log any errors
     let parsed_project: Result<Project, _> = serde_json::from_str(&project);
-
     if let Err(e) = parsed_project {
         log_error(&e);
         return Err(Box::from(e));
     }
-
-    serde_json::to_writer(&file, &parsed_project.unwrap())?;
+    
+    // Write the parsed JSON object to the file
+    println!("Writing to file: {}", file_path.display());
+    serde_json::to_writer_pretty(&file, &parsed_project.unwrap())?;
     println!("Successfully wrote to file");
 
-    // Read the updated contents directly as a serde_json::Value
-    let updated_project: Project = serde_json::from_reader(&file)?;
-    print!(
-        "Updated project: {:?}",
-        serde_json::to_string(&updated_project)
-    );
-
-    Ok(updated_project)
+    // Return the updated project
+    Ok(serde_json::from_str(&project).unwrap())
 }
 
 pub fn create_new_json_file(

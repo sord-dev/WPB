@@ -113,15 +113,15 @@ export default function Builder() {
     const debounce = setTimeout(() => {
       if (activePage === null) return;
 
-      if (previousPage !== activePage && filePath) { // if the active page has changed, and there is a file path save to file system
-        previousPage = activePage;
+      if (previousPage !== JSON.stringify(activePageData) && filePath) { // if the active page has changed, and there is a file path save to file system
+        previousPage = JSON.stringify(pages[activePage]);
         // save pageData to file system
         console.log("DEBUG - Saving page data to file system:", pages[activePage]);
-        updateProjectPage(filePath, activePageData);
+        updateProjectPage(filePath, pages[activePage]);
       }
 
-      if (previousPage !== activePage && !filePath) {
-        previousPage = activePage;
+      if (previousPage !== JSON.stringify(activePageData) && !filePath) {
+        previousPage = JSON.stringify(pages[activePage]);
         console.error("Save to new file");
       }
 

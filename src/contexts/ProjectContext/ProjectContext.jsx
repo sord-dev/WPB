@@ -69,26 +69,28 @@ export const ProjectProvider = ({ children }) => {
     if (!activePage) return;
 
     try {
-      console.log("DEBUG - Updating Project Data for: ", filePath, updatedPageData);
       const active = projects.find((project) => project.projectName === activeProject);
-      console.log("DEBUG - Active Project: ", active);
 
       const updatedProjectData = {
         ...active,
         pages: {
           ...active.pages,
           [active.activePage]: {
-            content: updatedPageData
+            ...active.pages[active.activePage],
+            content: updatedPageData.content
           }
-        }
+        },
+        activePage: active.activePage,
+        pageIndex: active.pageIndex
       };
 
-      console.log({ updatedPageData, updatedProjectData })
       const str = JSON.stringify(convertObjectKeysToSnakeCase(updatedProjectData));
-      console.log("DEBUG - Updated Project Data: ", str);
+      console.log({ message: "DEBUG - Updating Page: ", prevPage: active, updatedPageData, payload: str });
       const updated = await invoke("update_project", { projectPath: filePath, updatedProjectData: str });
-
+      
       const parsed = JSON.parse(updated);
+      console.log("DEBUG - Updated Project: ", parsed);
+      
       const newProjects = projects.map((project) => {
         if (project.projectName === parsed.projectName) {
           return parsed;
