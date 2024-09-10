@@ -96,6 +96,16 @@ export default function Builder() {
     setActivePage(templateIndex);
   }
 
+  const handleCreatePage = (name) => {
+    const success = createPage(name);
+
+    if (success) {
+      
+    } else {
+      setError({ message: "Page creation error: Page already exists" });
+    }
+  }
+
   useEffect(() => {
     if (!selectedComponent) return;
     console.log(`DEBUG - Selected component:`);
@@ -133,7 +143,7 @@ export default function Builder() {
 
   return (
     <section>
-      <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: createPage }} />
+      <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: handleCreatePage }} />
       <BuilderToolBar screensize={{ scale: 100, width: 1440 }} projectTitle={projectName} tabName={activePage} />
 
       <div className={styles['builder']}>

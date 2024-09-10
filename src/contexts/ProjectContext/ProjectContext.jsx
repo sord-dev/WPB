@@ -67,31 +67,48 @@ export const ProjectProvider = ({ children }) => {
 
   const updateProjectPage = async (filePath, updatedPageData, activePage) => {
     if (!activePage) return;
-    
+
     try {
       const active = projects.find((project) => project.projectName === activeProject);
-      if(active.pages[activePage] === undefined) return console.error("Page not found in project data: ", activePage);
-      
-      const updatedProjectData = {
-        ...active,
-        pages: {
-          ...active.pages,
-          [activePage]: {
-            ...active.pages[activePage],
-            content: updatedPageData.content
-          }
-        },
-        activePage,
-        pageIndex: active.pageIndex
-      };
+
+      let updatedProjectData = {};
+      if (active.pages[activePage] === undefined) {
+        console.log("Creating new page, ", activePage);
+        updatedProjectData = {
+          ...active,
+          pages: {
+            ...active.pages,
+            [activePage]: {
+              content: updatedPageData.content
+            }
+          },
+          activePage,
+          pageIndex: [...active.pageIndex, activePage]
+        }
+      }
+      else {
+        updatedProjectData = {
+          ...active,
+          pages: {
+            ...active.pages,
+            [activePage]: {
+              ...active.pages[activePage],
+              content: updatedPageData.content
+            }
+          },
+          activePage,
+          pageIndex: active.pageIndex
+        };
+
+      }
 
       const str = JSON.stringify(convertObjectKeysToSnakeCase(updatedProjectData));
       console.log({ message: "DEBUG - Updating Page: ", activePage, prevPage: active, updatedPageData, payload: str });
       const updated = await invoke("update_project", { projectPath: filePath, updatedProjectData: str });
-      
+
       const parsed = JSON.parse(updated);
       console.log("DEBUG - Updated Project: ", parsed);
-      
+
       const newProjects = projects.map((project) => {
         if (project.projectName === parsed.projectName) {
           return parsed;
