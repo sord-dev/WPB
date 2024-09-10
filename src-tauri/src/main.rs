@@ -32,9 +32,17 @@ async fn get_project(project_path: String) -> Result<Project, String> {
   Ok(project)
 }
 
+#[tauri::command]
+fn get_projects_directory() -> Result<String, String> {
+    let documents_dir = dirs::document_dir().ok_or("Documents directory not found")?;
+    let project_folder_name = "wpb-projects"; // Replace with your actual folder name
+    let path = documents_dir.join(project_folder_name);
+    Ok(path.to_string_lossy().to_string())
+}
+
 fn main() {
   tauri::Builder::default()
-  .invoke_handler(tauri::generate_handler![scan_for_projects, update_project, get_project])
+  .invoke_handler(tauri::generate_handler![scan_for_projects, update_project, get_project, get_projects_directory])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }

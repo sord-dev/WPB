@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { usePageContext } from "../PageContext";
 import { useTabContext } from "../TabContext";
 import { invoke } from "@tauri-apps/api";
+import { BaseDirectory, writeTextFile } from "@tauri-apps/api/fs";
 
 const ProjectContext = createContext({
   createProject: (projectName, pageName) => { },
@@ -21,7 +22,7 @@ export const ProjectProvider = ({ children }) => {
   const navigate = useNavigate();
   const [activeProject, setActiveProject] = useState("");
 
-  const createProject = (projectName, pageName) => {
+  const createProject = async (projectName, pageName) => {
     if (projects.some((project) => project.projectName === projectName)) {
       return false;
     }
@@ -43,6 +44,13 @@ export const ProjectProvider = ({ children }) => {
     clearTabs();
     setProjects([...projects, newProject]);
     setPageData(newProject)
+
+
+    const projectDir = await invoke("get_projects_directory");
+    const filePath = `${projectDir}/${projectName}.json`;
+    
+    await writeTextFile(filePath, JSON.stringify(convertObjectKeysToSnakeCase(newProject)));
+    
     navigate("/builder");
 
     return true;
