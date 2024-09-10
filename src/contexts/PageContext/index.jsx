@@ -7,7 +7,7 @@ import { defaultPageContext } from './default';
 const PageContext = createContext(defaultPageContext);
 
 export const PageContextProvider = ({ children }) => {
-  const [pageData, setPageData] = useState({ pages: {}, pageIndex: [], activePage: null, projectName: null, file_path: "" }); // TODO - we need to make this connect to the project context, so that we can have multiple projects
+  const [pageData, setPageData] = useState({ pages: {}, pageIndex: [], activePage: null, projectName: null, filePath: "" }); // TODO - we need to make this connect to the project context, so that we can have multiple projects
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -24,10 +24,12 @@ export const PageContextProvider = ({ children }) => {
       ...pageData,
       pages: {
         ...pageData.pages,
-        [pageName]: { content: {
-          type: "wrapper",
-          props: { id: generateComponentID("wrapper"), children: [] },
-        } }
+        [pageName]: {
+          content: {
+            type: "wrapper",
+            props: { id: generateComponentID("wrapper"), children: [] },
+          }
+        }
       },
       pageIndex: [...pageData.pageIndex, pageName],
       activePage: pageName
@@ -39,24 +41,24 @@ export const PageContextProvider = ({ children }) => {
   const deletePage = (page) => {
     const pages = { ...pageData.pages };
     delete pages[page];
-  
+
     const newPageIndex = pageData.pageIndex.filter(pageName => pageName !== page);
-  
+
     let newActivePage = pageData.activePage;
     const currentIndex = pageData.pageIndex.indexOf(page);
-    
+
     if (currentIndex !== -1) {
       newActivePage = currentIndex > 0 ? newPageIndex[currentIndex - 1] : newPageIndex[0];
     }
-  
-    setPageData({ 
-      ...pageData, 
-      pages: pages, 
+
+    setPageData({
+      ...pageData,
+      pages: pages,
       pageIndex: newPageIndex,
-      activePage: newActivePage 
+      activePage: newActivePage
     });
   };
-  
+
   const updatePage = (page, content) => {
     setPageData({ ...pageData, pages: { ...pageData.pages, [page]: { ...pageData.pages[page], content } } });
   };

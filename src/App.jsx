@@ -6,12 +6,6 @@ import { useEffect } from "react";
 import { useProjectContext } from "./contexts";
 
 function App() {
-  const { loadProjects } = useProjectContext();
-
-  useEffect(() => {
-    loadProjects();
-  }, []);
-
 
   return (
     <Routes>

@@ -12,12 +12,12 @@ export default function Builder() {
     pageIndex,
     activePage,
     pages,
-    file_path,
+    filePath,
     pageControls: { setActivePage, createPage },
     templateControls: { addComponent, updateComponent, addContainer, deleteComponent }
   } = usePageContext();
 
-  const { updateProjectFile, activeProject } = useProjectContext();
+  const { updateProjectPage, activeProject } = useProjectContext();
   const activePageData = pages[activePage]?.content;
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
@@ -96,6 +96,16 @@ export default function Builder() {
     setActivePage(templateIndex);
   }
 
+  const handleCreatePage = (name) => {
+    const success = createPage(name);
+
+    if (success) {
+      
+    } else {
+      setError({ message: "Page creation error: Page already exists" });
+    }
+  }
+
   useEffect(() => {
     if (!selectedComponent) return;
     console.log(`DEBUG - Selected component:`);
@@ -112,15 +122,16 @@ export default function Builder() {
     let previousPage = null;
     const debounce = setTimeout(() => {
       if (activePage === null) return;
-      if (previousPage !== activePage && file_path) { // if the active page has changed, and there is a file path save to file system
-        previousPage = activePage;
+
+      if (previousPage !== JSON.stringify(activePageData) && filePath) { // if the active page has changed, and there is a file path save to file system
+        previousPage = JSON.stringify(pages[activePage]);
         // save pageData to file system
         console.log("DEBUG - Saving page data to file system:", pages[activePage]);
-        // updateProjectFile(file_path, activePageData); 
+        updateProjectPage(filePath, pages[activePage], activePage);
       }
 
-      if(previousPage !== activePage && !file_path) {
-        previousPage = activePage;
+      if (previousPage !== JSON.stringify(activePageData) && !filePath) {
+        previousPage = JSON.stringify(pages[activePage]);
         console.error("Save to new file");
       }
 
@@ -132,7 +143,7 @@ export default function Builder() {
 
   return (
     <section>
-      <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: createPage }} />
+      <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: handleCreatePage }} />
       <BuilderToolBar screensize={{ scale: 100, width: 1440 }} projectTitle={projectName} tabName={activePage} />
 
       <div className={styles['builder']}>
