@@ -1,9 +1,6 @@
-import { generateComponentID } from "../../utils";
-
-// Temporary default page context, 'pages', 'pageIndex' & 'activePage' to be replaced with dynamic content
 export const defaultPageContext = {
-    pageIndex: ["home", "services"],
-    activePage: "home",
+    pageIndex: [],
+    activePage: "",
     pageControls: {
       createPage: pageName => { },
       deletePage: pageName => { },
@@ -16,20 +13,5 @@ export const defaultPageContext = {
       addContainer: container => { },
       deleteComponent: (page, component) => { },
     },
-    pages: {
-      home: {
-        name: "Home",
-        content: {
-          type: "wrapper",
-          props: { id: generateComponentID("wrapper"), children: [] },
-        }
-      },
-      services: {
-        name: "Services",
-        content: {
-          type: "wrapper",
-          props: { id: generateComponentID("wrapper"), children: [] },
-        }
-      }
-    }
+    pages: {}
   }

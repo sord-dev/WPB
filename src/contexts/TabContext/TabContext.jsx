@@ -3,29 +3,49 @@ import { usePageContext } from '../PageContext';
 
 const TabContext = createContext({
   tabs: [],
-  addTab: () => {},
-  removeTab: () => {},
+  addTab: (tabName) => {},
+  removeTab: (tabName) => {},
+  clearTabs: () => {}
 });
 
 export const TabProvider = ({ children }) => {
-  const { pageIndex, pages } = usePageContext()
+  const { pageIndex, pages, pageControls: { setActivePage }, } = usePageContext()
   const [tabs, setTabs] = useState(pageIndex);
 
   const addTab = (newTab) => {
     setTabs(prevTabs => [...prevTabs, newTab]);
+
+    console.log("Adding Tab: ", newTab)
   };
 
   const removeTab = (tabName) => {
+    if (tabs.length <= 1) return;
+  
+    const index = tabs.indexOf(tabName);
+
+    const newActiveTab = index > 0  ? tabs[index - 1]  : tabs[index + 1] || null;
+    
     setTabs(prevTabs => prevTabs.filter(tab => tab !== tabName));
+  
+    if (newActiveTab) {
+      setActivePage(newActiveTab);
+    }
+
+  };
+  
+
+  const clearTabs = () => {
+    console.log('clearing tabs')
+    setTabs([]);
   };
 
-
   useEffect(() => {
-   console.log('tabs', tabs)
-  }, [pages])
+    console.log('tabs', tabs)
+    console.log('pages', pages)
+  }, [pages, tabs])
 
   return (
-    <TabContext.Provider value={{ tabs, addTab, removeTab }}>
+    <TabContext.Provider value={{ tabs, addTab, removeTab, clearTabs }}>
       {children}
     </TabContext.Provider>
   );

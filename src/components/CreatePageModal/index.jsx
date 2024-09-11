@@ -1,42 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
+import useShortcut from "../../hooks/useShortcut";
 
-function CreatePageModal({ tabs, pages, createTab, openClose, addTab }) {
+function CreatePageModal({ tabs, pages, createTab, addTab }) {
   const [tabName, setTabName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
+  useShortcut([
+    { keyCombo: { key: "Enter" }, action: () => handleCreateTab() },
+  ]);
 
   const handleInputChange = (event) => {
     setTabName(event.target.value);
   };
 
   const openPage = (pageName) => {
-    addTab(pageName)
-    openClose(false);
-  }
+    addTab(pageName);
+  };
 
   const handleCreateTab = () => {
+
     if (tabName.trim()) {
       const tabCreated = createTab(tabName);
-  
+
       if (!tabCreated) {
         setErrorMessage("Page already exists");
-  
+        
         setTimeout(() => {
           setErrorMessage("");
         }, 4000);
       } else {
-        openPage(tabName)
+        openPage(tabName);
       }
     } else {
       setErrorMessage("Page name is required");
-  
+
       setTimeout(() => {
         setErrorMessage("");
       }, 4000);
     }
   };
-
-  
 
   const availablePages = pages.filter((page) => !tabs.includes(page));
 
@@ -51,6 +54,7 @@ function CreatePageModal({ tabs, pages, createTab, openClose, addTab }) {
             placeholder="New page"
             value={tabName}
             onChange={handleInputChange}
+            autoFocus
           />
         </div>
         {errorMessage && (
@@ -58,7 +62,9 @@ function CreatePageModal({ tabs, pages, createTab, openClose, addTab }) {
             <p>{errorMessage}</p>
           </div>
         )}
-        <button className={styles['submit']} onClick={handleCreateTab}>Create page</button>
+        <button className={styles["submit"]} onClick={handleCreateTab}>
+          Create page
+        </button>
       </div>
       {availablePages.length > 0 && (
         <div className={styles["existing-files"]}>

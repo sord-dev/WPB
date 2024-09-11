@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { usePageContext } from "../../contexts";
+import { usePageContext, useProjectContext, useTabContext } from "../../contexts";
 import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer, BuilderComponentStateEditor, SystemNotificationPopUp } from "../../components";
 
 import styles from "./index.module.css";
@@ -8,13 +8,19 @@ import { convertParamsToObject } from "../../utils";
 
 export default function Builder() {
   const {
+    projectName,
     pageIndex,
     activePage,
     pages,
+    filePath,
     pageControls: { setActivePage, createPage },
-    templateControls: { addComponent, updateComponent, addContainer, deleteComponent }
+    templateControls: { addComponent, updateComponent, addContainer, deleteComponent },
+    getPageData
   } = usePageContext();
-  const activePageData = pages[activePage].content;
+  
+  const { tabs } = useTabContext()
+  const { updateProjectPage, activeProject } = useProjectContext();
+  const activePageData = pages[activePage]?.content;
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
   const [selectedComponent, setSelectedComponent] = React.useState(null);
@@ -22,26 +28,29 @@ export default function Builder() {
 
   const [error, setError] = React.useState(null);
 
-  // *** this could be a hook or a context
+
   const [history, setHistory] = React.useState({ [activePage]: [activePageData] });
   const historySnapshot = () => {
-    console.log(`DEBUG - History snapshot:`);
-    console.log(history);
+    const pageHistory = history[activePage]; // TODO - Fix this: 
+    // page history is an array of snapshots
+    // currently, our activePage updates on every tab click, so we're only storing history for the active page
+    // but the first conditional isnt' working as expected, so this is unused at the moment
 
-    if (!history[activePage]) return;
-
-    if (history[activePage].length > 10) { // We only want to keep the last 10 snapshots, for memory optimization
-      const newHistory = { ...history, [activePage]: history[activePage].slice(1) };
+    if (!pageHistory) { // If there's no history for the active page, add an initial snapshot
+      setHistory({ ...history, [activePage]: [activePageData] });
+    } else if (pageHistory?.length > 10) { // We only want to keep the last 10 snapshots, for memory optimization
+      const newHistory = { ...history, [activePage]: pageHistory.slice(1) };
       setHistory(newHistory);
-    } else {
+    } else { // If we have less than 10 snapshots, add a new one
       setHistory({ ...history, [activePage]: [...history[activePage], activePageData] });
     }
 
+    console.log(`DEBUG - History snapshot:`);
+    console.log(history);
   }
-  // *** end of potential hook or context
 
   const appendComponent = (component) => {
-    if(!selectedComponent) return setError({ message: "Please select a container to add the component to" });
+    if (!selectedComponent) return setError({ message: "Please select a container to add the component to" });
 
     const obj = {
       type: component.name,
@@ -85,8 +94,27 @@ export default function Builder() {
   }
 
   const handleTabClick = (templateIndex) => {
-    setSelectedComponent(pages[templateIndex].content);
+    setSelectedComponent(pages[templateIndex]?.content);
     setActivePage(templateIndex);
+  };
+
+  useEffect(() => {
+    if (getPageData().activePage !== null) {
+      const updatedPageData = getPageData();
+      setSelectedComponent(updatedPageData.pages[getPageData().activePage]?.content);
+    }
+  }, [getPageData().activePage]);
+
+  const handleCreatePage = (name) => {
+    const success = createPage(name);
+
+    console.log(success)
+
+    if (success) {
+      return true
+    } else {
+      setError({ message: "Page creation error: Page already exists" });
+    }
   }
 
   useEffect(() => {
@@ -99,10 +127,36 @@ export default function Builder() {
     setSelectedComponent(activePageData);
   }, [])
 
+  // debounce function to commit changes to file system
+
+  useEffect(() => {
+    let previousPage = null;
+    const debounce = setTimeout(() => {
+      if (activePage === null) return;
+
+      if (previousPage !== JSON.stringify(activePageData) && filePath) { // if the active page has changed, and there is a file path save to file system
+        previousPage = JSON.stringify(pages[activePage]);
+        // save pageData to file system
+        console.log("DEBUG - Saving page data to file system:", pages[activePage]);
+        updateProjectPage(filePath, pages[activePage], activePage);
+      }
+
+      if (previousPage !== JSON.stringify(activePageData) && !filePath) {
+        previousPage = JSON.stringify(pages[activePage]);
+        console.log(filePath)
+        console.error("Save to new file");
+      }
+
+    }, 500);
+
+    return () => clearTimeout(debounce);
+  }, [activePageData, activePage, filePath, pages, tabs]);
+
+
   return (
     <section>
-      <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: createPage }} />
-      <BuilderToolBar screensize={{ scale: 100, width: 1440 }} />
+      <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: handleCreatePage }} />
+      <BuilderToolBar screensize={{ scale: 100, width: 1440 }} projectTitle={projectName} tabName={activePage} />
 
       <div className={styles['builder']}>
         <div className={styles['editor']}>
@@ -115,14 +169,11 @@ export default function Builder() {
           </div>
         </div>
 
+        {/* This should be where we export from */}
         <div className={styles['constructor-parent']}>
-
-          {/* This should be where we export from */}
-          <div className={styles['constructor']}>
-            <GridContainer columns={12}>
-              <BuilderEditor template={activePageData} {...{ getAllComponents, setSelectedComponent, selectedComponent }} />
-            </GridContainer>
-          </div>
+          <GridContainer columns={12}>
+            <BuilderEditor template={activePageData} {...{ getAllComponents, setSelectedComponent, selectedComponent }} />
+          </GridContainer>
         </div>
 
         <div className={styles['components']}>

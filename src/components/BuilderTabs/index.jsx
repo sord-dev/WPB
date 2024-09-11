@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
 import Overlay from "../Overlay";
 import CreatePageModal from "../CreatePageModal";
 import { IoMdClose } from "react-icons/io";
 import { useTabContext } from "../../contexts";
+import useShortcut from "../../hooks/useShortcut";
 
 function BuilderTabs({
   pages,
@@ -17,6 +18,24 @@ function BuilderTabs({
 
   const [openClose, setOpenClose] = useState(false);
 
+  const tabShortcuts = tabs.map((tab, index) => ({
+    keyCombo: { ctrlKey: true, key: `${index + 1}` },
+    action: () => handleTabClick(tab),
+  }));
+
+  const handleAddExistingPage = (page) => {
+    console.log("HANDLING EXISTING PAGE", page);
+    addTab(page);
+    handleTabClick(page);
+    setOpenClose(false);
+  }
+
+  useShortcut([
+    ...tabShortcuts,
+    { keyCombo: { ctrlKey: true, key: "t" }, action: () => setOpenClose(true) },
+    { keyCombo: { ctrlKey: true, key: "w" }, action: () => removeTab(activeTab) }
+  ]);
+
   return (
     <>
       <ul className={styles["tabs"]}>
@@ -27,7 +46,6 @@ function BuilderTabs({
               onClick={() => handleTabClick(tab)}
             >
               {tab}
-
               {tabs.length > 1 && (
                 <span
                   onClick={(e) => {
@@ -36,7 +54,7 @@ function BuilderTabs({
                   }}
                   className={styles["close"]}
                   role="button"
-                  tabIndex={0} // Allows keyboard navigation
+                  tabIndex={0}
                   aria-label={`Close ${tab}`}
                 >
                   <IoMdClose />
@@ -56,8 +74,7 @@ function BuilderTabs({
           <CreatePageModal
             tabs={tabs}
             createTab={createTab}
-            addTab={addTab}
-            openClose={setOpenClose}
+            addTab={handleAddExistingPage}
             pages={pages}
           />
         </Overlay>

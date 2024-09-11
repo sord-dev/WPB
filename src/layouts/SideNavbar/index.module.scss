@@ -6,4 +6,22 @@
   height: 100vh;
   background: #1C1C1C;
   border-right: 1px solid #6F6F6F;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 6px 0;
+}
+
+.navigation img {
+  width: 42px;
+  cursor: pointer;
+}
+
+.spacer {
+  width: 70%;
+  height: 1px;
+
+  background: #6F6F6F;
 }
