@@ -18,8 +18,6 @@ export const PageContextProvider = ({ children }) => {
 
 
   const createPage = (pageName) => {
-    console.log("PageData Before: ", pageData);
-
     if (pageData.pages[pageName]) return false;
 
     setPageData((prevPageData) => {
@@ -37,8 +35,6 @@ export const PageContextProvider = ({ children }) => {
         pageIndex: [...prevPageData.pageIndex, pageName],
         activePage: pageName,
       };
-
-      console.log("PageData After: ", newPageData);
       return newPageData;
     });
 

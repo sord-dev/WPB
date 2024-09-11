@@ -26,6 +26,7 @@ export const ProjectProvider = ({ children }) => {
     if (projects.some((project) => project.projectName === projectName)) {
       return false;
     }
+    clearTabs();
 
     const projectDir = await invoke("get_projects_directory");
     const filePath = `${projectDir}\\${projectName}.json`;
@@ -42,13 +43,13 @@ export const ProjectProvider = ({ children }) => {
       },
       pageIndex: [pageName],
       activePage: pageName,
-      // filePath: filePath,
+      filePath: filePath,
       tabs: [pageName]
     };
 
-    clearTabs();
     setProjects([...projects, newProject]);
     setPageData(newProject)
+    setActiveProject(projectName);
 
     await writeTextFile(filePath, JSON.stringify(convertObjectKeysToSnakeCase(newProject)));
     
@@ -79,9 +80,10 @@ export const ProjectProvider = ({ children }) => {
 
     try {
       const active = projects.find((project) => project.projectName === activeProject);
+      if(!active) throw new Error("No active project found");
 
       let updatedProjectData = {};
-      if (active.pages[activePage] === undefined) {
+      if (!active.pages[activePage]) {
         console.log("Creating new page, ", activePage);
 
         updatedProjectData = {
@@ -113,7 +115,7 @@ export const ProjectProvider = ({ children }) => {
         };
       }
 
-      console.log(updateProjectPage)
+      console.log(updatedProjectData)
 
       const str = JSON.stringify(convertObjectKeysToSnakeCase(updatedProjectData));
       console.log({ message: "DEBUG - Updating Page: ", activePage, prevPage: active, updatedPageData, payload: str });

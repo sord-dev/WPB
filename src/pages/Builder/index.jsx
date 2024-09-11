@@ -15,8 +15,7 @@ export default function Builder() {
     filePath,
     pageControls: { setActivePage, createPage },
     templateControls: { addComponent, updateComponent, addContainer, deleteComponent },
-    getPageData,
-    pageTestData
+    getPageData
   } = usePageContext();
   
   const { tabs } = useTabContext()
@@ -144,6 +143,7 @@ export default function Builder() {
 
       if (previousPage !== JSON.stringify(activePageData) && !filePath) {
         previousPage = JSON.stringify(pages[activePage]);
+        console.log(filePath)
         console.error("Save to new file");
       }
 
