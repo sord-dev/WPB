@@ -24,10 +24,15 @@ function CreateProjectModal({ createProject, openClose, addTab }) {
     openClose(false);
   };
 
-  const handleCreateProject = () => {
+  const handleCreateProject = async () => {
     if (projectName.trim() && pageName.trim()) {
-      const tabCreated = createProject(projectName, pageName);
-      
+      if (projectName.includes(' ') || projectName.match(/[\\/:*?\"<>|]/gi)) {
+        setErrorMessage("Project name cannot contain spaces or special characters"); 
+        return;
+      }
+
+      const tabCreated = await createProject(projectName, pageName);
+
       if (!tabCreated) {
         setErrorMessage("Project already exists");
         setTimeout(() => {
