@@ -1,6 +1,8 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use std::path::Path;
+
 use files::Project;
 mod files;
 
@@ -24,12 +26,18 @@ async fn update_project(project_path: String, updated_project_data: String) -> R
 
 #[tauri::command]
 async fn get_project(project_path: String) -> Result<Project, String> {
-  let project_file: &str = project_path.split("\\").last().unwrap();
-  println!("Getting project: {}", project_file);
+    // Extract the filename safely using the `Path` type
+    let project_file = Path::new(&project_path).file_name().unwrap().to_str().unwrap();
+    println!("Getting project: {}", project_file);
 
-  let project: Project = files::read_project_file(project_file).map_err(|e| e.to_string())?;
+    // Use `unwrap_or` to handle potential errors gracefully
+    let project_result = files::read_project_file(project_file).map_err(|e| {
+        eprintln!("Error reading project file: {}", e);
+        "Error reading project file".to_string()
+    })?;
 
-  Ok(project)
+    // Return the project or an error message
+    Ok(project_result)
 }
 
 #[tauri::command]

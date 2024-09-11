@@ -6,6 +6,7 @@ import { useTabContext } from "../TabContext";
 import { invoke } from "@tauri-apps/api";
 import { BaseDirectory, writeTextFile } from "@tauri-apps/api/fs";
 
+
 const ProjectContext = createContext({
   createProject: (projectName, pageName) => { },
   selectProject: (projectName) => { },
@@ -17,19 +18,21 @@ const ProjectContext = createContext({
 
 export const ProjectProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
-  const { setPageData, activePage } = usePageContext()
+  const { setPageData } = usePageContext()
   const { clearTabs, addTab, tabs } = useTabContext()
   const navigate = useNavigate();
   const [activeProject, setActiveProject] = useState("");
 
   const createProject = async (projectName, pageName) => {
-    if (projects.some((project) => project.projectName === projectName)) {
-      return false;
-    }
+    if (projectName.includes(' ') || projectName.match(/[\\/:*?\"<>|]/gi)) return false;
+
     clearTabs();
 
     const projectDir = await invoke("get_projects_directory");
     const filePath = `${projectDir}\\${projectName}.json`;
+
+    const projectExists = await invoke("get_project", { projectPath: filePath }).catch(e => false);
+    if (projectExists) return false;
 
     const newProject = {
       projectName: projectName,
@@ -50,9 +53,7 @@ export const ProjectProvider = ({ children }) => {
     setProjects([...projects, newProject]);
     setPageData(newProject)
     setActiveProject(projectName);
-
     await writeTextFile(filePath, JSON.stringify(convertObjectKeysToSnakeCase(newProject)));
-    
     navigate("/builder");
 
     return true;
@@ -66,7 +67,7 @@ export const ProjectProvider = ({ children }) => {
       console.log("DEBUG - Selected Project: ", project);
       clearTabs();
 
-      project.tabs.map((t) => addTab(t))     
+      project.tabs.map((t) => addTab(t))
       setActiveProject(project.projectName);
       setPageData(project)
       navigate("/builder");
@@ -80,7 +81,7 @@ export const ProjectProvider = ({ children }) => {
 
     try {
       const active = projects.find((project) => project.projectName === activeProject);
-      if(!active) throw new Error("No active project found");
+      if (!active) throw new Error("No active project found");
 
       let updatedProjectData = {};
       if (!active.pages[activePage]) {
