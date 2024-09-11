@@ -75,7 +75,6 @@ function BuilderTabs({
             tabs={tabs}
             createTab={createTab}
             addTab={handleAddExistingPage}
-            openClose={setOpenClose}
             pages={pages}
           />
         </Overlay>

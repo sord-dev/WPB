@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-import { usePageContext, useProjectContext } from "../../contexts";
+import { usePageContext, useProjectContext, useTabContext } from "../../contexts";
 import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer, BuilderComponentStateEditor, SystemNotificationPopUp } from "../../components";
 
 import styles from "./index.module.css";
@@ -14,9 +14,12 @@ export default function Builder() {
     pages,
     filePath,
     pageControls: { setActivePage, createPage },
-    templateControls: { addComponent, updateComponent, addContainer, deleteComponent }
+    templateControls: { addComponent, updateComponent, addContainer, deleteComponent },
+    getPageData,
+    pageTestData
   } = usePageContext();
-
+  
+  const { tabs } = useTabContext()
   const { updateProjectPage, activeProject } = useProjectContext();
   const activePageData = pages[activePage]?.content;
 
@@ -94,13 +97,22 @@ export default function Builder() {
   const handleTabClick = (templateIndex) => {
     setSelectedComponent(pages[templateIndex]?.content);
     setActivePage(templateIndex);
-  }
+  };
+
+  useEffect(() => {
+    if (getPageData().activePage !== null) {
+      const updatedPageData = getPageData();
+      setSelectedComponent(updatedPageData.pages[getPageData().activePage]?.content);
+    }
+  }, [getPageData().activePage]);
 
   const handleCreatePage = (name) => {
     const success = createPage(name);
 
+    console.log(success)
+
     if (success) {
-      
+      return true
     } else {
       setError({ message: "Page creation error: Page already exists" });
     }
@@ -135,10 +147,10 @@ export default function Builder() {
         console.error("Save to new file");
       }
 
-    }, 1000);
+    }, 500);
 
     return () => clearTimeout(debounce);
-  }, [activePageData, activePage, pages]);
+  }, [activePageData, activePage, filePath, pages, tabs]);
 
 
   return (

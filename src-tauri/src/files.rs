@@ -17,6 +17,7 @@ pub struct Project {
     pub page_index: Vec<Value>,
     pub active_page: String,
     pub file_path: String,
+    pub tabs: Vec<String>,
 }
 
 fn log_error(error: &serde_json::Error) {
@@ -110,6 +111,11 @@ pub fn scan_documents_directory() -> Result<Vec<Project>, Box<dyn Error>> {
                     .as_str()
                     .unwrap_or(&path.display().to_string())
                     .to_string(),
+                tabs: json_value["tabs"].as_array()
+                    .unwrap_or(&Vec::new())
+                    .iter()
+                    .filter_map(|v| v.as_str().map(|s| s.to_string()))
+                    .collect(),
             };
 
             json_objects.push(project);
@@ -144,6 +150,11 @@ pub fn read_project_file(file_name: &str) -> Result<Project, Box<dyn Error>> {
             .as_str()
             .unwrap_or(&file_path.display().to_string())
             .to_string(),
+        tabs: contents["tabs"].as_array()
+            .unwrap_or(&Vec::new())
+            .iter()
+            .filter_map(|v| v.as_str().map(|s| s.to_string()))
+            .collect(),
     };
 
     Ok(project)

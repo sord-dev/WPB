@@ -18,21 +18,28 @@ export const PageContextProvider = ({ children }) => {
 
 
   const createPage = (pageName) => {
+    console.log("PageData Before: ", pageData);
+
     if (pageData.pages[pageName]) return false;
 
-    setPageData({
-      ...pageData,
-      pages: {
-        ...pageData.pages,
-        [pageName]: {
-          content: {
-            type: "wrapper",
-            props: { id: generateComponentID("wrapper"), children: [] },
-          }
-        }
-      },
-      pageIndex: [...pageData.pageIndex, pageName],
-      activePage: pageName
+    setPageData((prevPageData) => {
+      const newPageData = {
+        ...prevPageData,
+        pages: {
+          ...prevPageData.pages,
+          [pageName]: {
+            content: {
+              type: "wrapper",
+              props: { id: generateComponentID("wrapper"), children: [] },
+            },
+          },
+        },
+        pageIndex: [...prevPageData.pageIndex, pageName],
+        activePage: pageName,
+      };
+
+      console.log("PageData After: ", newPageData);
+      return newPageData;
     });
 
     return true;
@@ -63,8 +70,15 @@ export const PageContextProvider = ({ children }) => {
     setPageData({ ...pageData, pages: { ...pageData.pages, [page]: { ...pageData.pages[page], content } } });
   };
 
+  const getPageData = () => {
+    return pageData
+  }
+
   const setActivePage = (page) => {
-    setPageData({ ...pageData, activePage: page });
+    setPageData((prevPageData) => ({
+      ...prevPageData,
+      activePage: page,
+    }));
   };
 
   const addComponent = (component, parentElement) => {
@@ -133,7 +147,7 @@ export const PageContextProvider = ({ children }) => {
   }, [pageData]);
 
   return (
-    <PageContext.Provider value={{ ...pageData, pageControls, templateControls, setPageData }}>
+    <PageContext.Provider value={{ ...pageData, pageControls, templateControls, setPageData, getPageData }}>
       {children}
     </PageContext.Provider>
   );

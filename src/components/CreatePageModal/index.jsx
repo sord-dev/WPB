@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
 import useShortcut from "../../hooks/useShortcut";
 
-function CreatePageModal({ tabs, pages, createTab, openClose, addTab }) {
+function CreatePageModal({ tabs, pages, createTab, addTab }) {
   const [tabName, setTabName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -16,16 +16,16 @@ function CreatePageModal({ tabs, pages, createTab, openClose, addTab }) {
 
   const openPage = (pageName) => {
     addTab(pageName);
-    openClose(false);
   };
 
   const handleCreateTab = () => {
+
     if (tabName.trim()) {
       const tabCreated = createTab(tabName);
 
       if (!tabCreated) {
         setErrorMessage("Page already exists");
-
+        
         setTimeout(() => {
           setErrorMessage("");
         }, 4000);

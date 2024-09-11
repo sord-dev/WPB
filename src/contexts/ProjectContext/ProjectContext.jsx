@@ -18,7 +18,7 @@ const ProjectContext = createContext({
 export const ProjectProvider = ({ children }) => {
   const [projects, setProjects] = useState([]);
   const { setPageData, activePage } = usePageContext()
-  const { clearTabs, addTab } = useTabContext()
+  const { clearTabs, addTab, tabs } = useTabContext()
   const navigate = useNavigate();
   const [activeProject, setActiveProject] = useState("");
 
@@ -26,6 +26,9 @@ export const ProjectProvider = ({ children }) => {
     if (projects.some((project) => project.projectName === projectName)) {
       return false;
     }
+
+    const projectDir = await invoke("get_projects_directory");
+    const filePath = `${projectDir}\\${projectName}.json`;
 
     const newProject = {
       projectName: projectName,
@@ -38,17 +41,15 @@ export const ProjectProvider = ({ children }) => {
         },
       },
       pageIndex: [pageName],
-      activePage: pageName
+      activePage: pageName,
+      // filePath: filePath,
+      tabs: [pageName]
     };
 
     clearTabs();
     setProjects([...projects, newProject]);
     setPageData(newProject)
 
-
-    const projectDir = await invoke("get_projects_directory");
-    const filePath = `${projectDir}/${projectName}.json`;
-    
     await writeTextFile(filePath, JSON.stringify(convertObjectKeysToSnakeCase(newProject)));
     
     navigate("/builder");
@@ -64,7 +65,7 @@ export const ProjectProvider = ({ children }) => {
       console.log("DEBUG - Selected Project: ", project);
       clearTabs();
 
-      addTab(project.activePage);
+      project.tabs.map((t) => addTab(t))     
       setActiveProject(project.projectName);
       setPageData(project)
       navigate("/builder");
@@ -82,6 +83,7 @@ export const ProjectProvider = ({ children }) => {
       let updatedProjectData = {};
       if (active.pages[activePage] === undefined) {
         console.log("Creating new page, ", activePage);
+
         updatedProjectData = {
           ...active,
           pages: {
@@ -91,7 +93,8 @@ export const ProjectProvider = ({ children }) => {
             }
           },
           activePage,
-          pageIndex: [...active.pageIndex, activePage]
+          pageIndex: [...active.pageIndex, activePage],
+          tabs
         }
       }
       else {
@@ -105,10 +108,12 @@ export const ProjectProvider = ({ children }) => {
             }
           },
           activePage,
-          pageIndex: active.pageIndex
+          pageIndex: active.pageIndex,
+          tabs,
         };
-
       }
+
+      console.log(updateProjectPage)
 
       const str = JSON.stringify(convertObjectKeysToSnakeCase(updatedProjectData));
       console.log({ message: "DEBUG - Updating Page: ", activePage, prevPage: active, updatedPageData, payload: str });

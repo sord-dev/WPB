@@ -15,7 +15,7 @@ export const TabProvider = ({ children }) => {
   const addTab = (newTab) => {
     setTabs(prevTabs => [...prevTabs, newTab]);
 
-    // setActivePage(newTab);
+    console.log("Adding Tab: ", newTab)
   };
 
   const removeTab = (tabName) => {
