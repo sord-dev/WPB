@@ -1,0 +1,92 @@
+.export-project {
+    padding: 20px;
+    background: white;
+    width: 420px;
+    border-radius: 8px;
+    animation: fade-in 0.25s ease forwards;
+
+    z-index: 999;
+}
+
+.export-project h1 {
+    color: #222222;
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+
+.error-message>* {
+    color: red;
+    font-size: .8em;
+}
+
+.submit {
+    width: 100%;
+    background: #222222;
+    margin-top: 24px;
+    padding: 0 24px;
+    font-size: 16px;
+    height: 48px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.1s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+
+.input-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-field span {
+    color: #000000;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.input-field input {
+    padding: 0 12px;
+    font-size: 16px;
+    height: 48px;
+    color: #222222;
+    font-weight: 500;
+}
+
+.input-field input:focus {
+    border: 1px solid black !important;
+    border-radius: 8px;
+}
+
+.checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-field input {
+    margin: 0;
+    margin-right: 8px;
+}
+
+.checkbox-field span {
+    color: #000000;
+    font-size: 12px;
+}
+
+
+@keyframes fade-in {
+    from {
+        scale: 0.8;
+        opacity: 0;
+    }
+
+    to {
+        scale: 1;
+        opacity: 1;
+    }
+}
