@@ -1,10 +1,7 @@
-import TypeMap from './type-map.js';
+import { convertInputValueToKebabCase } from '../../../index.js';
 
-const deduceType = (node) => {
-    const { type } = node;
-    if (type) return TypeMap[type];
-    return 'text';
-}
+import TypeMap from '../type-maps/inline-type-map.js';
+import { deduceType } from '../utils/index.js';
 
 export default function htmlInlineCss(jsonData) {
     const processNode = (node) => {
@@ -12,11 +9,11 @@ export default function htmlInlineCss(jsonData) {
         const { children = [], content = "", style = {} } = props;
 
         let htmlTag;
-        deduceType(node) ? htmlTag = deduceType(node) : htmlTag = 'div';
+        deduceType(node, TypeMap) ? htmlTag = deduceType(node, TypeMap) : htmlTag = 'div';
 
         // Convert the style object to an inline style string
         const styleString = Object.entries(style)
-            .map(([key, value]) => `${key}: ${value}`)
+            .map(([key, value]) => `${convertInputValueToKebabCase(key)}: ${value}`)
             .join("; ");
 
         // Generate HTML with inline styles
@@ -36,5 +33,24 @@ export default function htmlInlineCss(jsonData) {
         return html;
     };
 
-    return processNode(jsonData.content);
+    console.log(jsonData);
+
+    return generateBaseHTML(processNode(jsonData.content), jsonData?.tab || null);
+}
+
+const generateBaseHTML = (html, title = "Untitled") => {
+    return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${title}</title>
+    </head>
+    <body>
+        ${html}
+    </body>
+    </html>
+    `;
 }

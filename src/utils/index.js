@@ -30,23 +30,36 @@ export const generateComponentID = (componentName) => {
     return `${componentName}-${nanoid(8)}`;
 };
 
+export const convertInputValueToCamelCase = (value) => value.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
 export const convertObjectKeysToCamelCase = (obj) => {
     const newObj = {};
     for (let key in obj) {
-        const newKey = key.replace(/_([a-z])/g, (g) => g[1].toUpperCase());
+        const newKey = convertInputValueToCamelCase(key);
         newObj[newKey] = obj[key];
     }
 
     return newObj;
 };
 
+export const convertInputValueToSnakeCase = (value) => value.replace(/([A-Z])/g, (g) => `_${g.toLowerCase()}`);
 export const convertObjectKeysToSnakeCase = (obj) => {
     const newObj = {};
     for (let key in obj) {
-        const newKey = key.replace(/([A-Z])/g, (g) => `_${g.toLowerCase()}`);
+        const newKey = convertInputValueToSnakeCase(key);
         newObj[newKey] = obj[key];
     }
 
     return newObj;
 };
 
+
+export const convertInputValueToKebabCase = (value) => value.replace(/([A-Z])/g, (g) => `-${g.toLowerCase()}`);
+export const convertObjectKeysToKebabCase = (obj) => {
+    const newObj = {};
+    for (let key in obj) {
+        const newKey = convertInputValueToKebabCase(key);
+        newObj[newKey] = obj[key];
+    }
+
+    return newObj;
+}

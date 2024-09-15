@@ -1,6 +1,6 @@
 export default  {
-    'wrapper': 'div',
-    'container': 'div',
+    'wrapper': 'main',
+    'container': 'section',
     'text': 'p',
     'image': 'img',
     'button': 'button',

@@ -14,14 +14,14 @@ export const PageContextProvider = ({ children }) => {
   const exportProject = (exportType, tab = null) => {
     const { pages, projectName } = pageData;
 
-    if(!tab) {
+    if (!tab) {
       console.log(`DEBUG - Exporting ${projectName} as:`, exportType);
       console.log("DEBUG - Project data:", pages);
-    }else {
+    } else {
       console.log(`DEBUG - Exporting ${projectName}'s ${tab} tab, as:`, exportType);
       console.log("DEBUG - Project data:", pages[tab]);
 
-      const html = JsonRenderer(pages[tab], exportType);
+      const html = JsonRenderer({ ...pages[tab], tab, projectName }, exportType);
       console.log("DEBUG - Exported HTML:", html);
     }
   };

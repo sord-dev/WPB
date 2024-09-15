@@ -7,8 +7,8 @@ import { withInteractionHandler } from '../HOCs';
 
 const defaultComponents = {
     text: ({ content, style }) => <p className={styles['component']} style={{ ...style }} >{content || 'No content'}</p>, // temporary default just so we can see something
-    container: ({ children, style }) => <section style={{ ...style }} className={styles['container']} >{children}</section>,
-    wrapper: ({ children }) => <main className={styles['wrapper']} >{children}</main>
+    container: ({ children, style }) => <section style={{ minHeight: "400px", height: "400px", display: "block", width: "100%", ...style }} className={styles['container']} >{children}</section>,
+    wrapper: ({ children }) => <main style={{ minHeight: "600px", height: "100%", display: "block", width: "100%" }} className={styles['wrapper']} >{children}</main>
 };
 
 function BuilderEditor({ registery, template, getAllComponents, setSelectedComponent, selectedComponent }) {

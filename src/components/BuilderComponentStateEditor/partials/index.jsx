@@ -158,7 +158,7 @@ export const ContainerStylingEditor = ({ handleAlignmentChange, handleAlignmentC
         <span>Padding</span>
         <div className={styles['styling-inputs']}>
           {paddingSizes.map((size, index) => {
-            const active = containerStyle?.padding || defaultContainerStyles.padding === size.value;
+            const active = containerStyle.padding === size.value;
 
             return (
               <StylingButton
