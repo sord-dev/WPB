@@ -35,8 +35,9 @@ export const ButtonStylingEditor = ({ handleAlignmentUpdate, buttonStyles, style
       <StyleField title="Align" options={styleTypes.textAlignmentOptions} activeValue={style.textAlign} onChange={(val) => handleStyleChange("textAlign", val)} />
       <StyleField title="Font Size" options={styleTypes.fontSizeOptions} activeValue={style.fontSize} onChange={(val) => handleStyleChange("fontSize", val)} />
       <StyleField title="Text Transform" options={styleTypes.textTransformOptions} activeValue={style.textTransform} onChange={(val) => handleStyleChange("textTransform", val)} />
-      <StyleField title="Text Decoration" options={styleTypes.textDecorationOptions} activeValue={style.textDecorations} onChange={(val) => handleStyleChange("textDecoration", val)} />
+      <StyleField title="Text Decoration" options={styleTypes.textDecorationOptions} activeValue={style.textDecoration} onChange={(val) => handleStyleChange("textDecoration", val)} />
       <StyleField title="Font Weight" options={styleTypes.fontWeightOptions} activeValue={style.fontWeight} onChange={(val) => handleStyleChange("fontWeight", val)} />
+      <PaddingField paddingSizes={styleTypes.paddingSizes} activePadding={style} onChange={handleStyleChange} />
       <ColorField label='Background Color' color={style.backgroundColor} onChange={(value) => handleStyleChange('backgroundColor', value)} />
       <ColorField color={style.color} onChange={(value) => handleStyleChange('color', value)} />
     </div>

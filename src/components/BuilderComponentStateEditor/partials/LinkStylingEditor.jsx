@@ -1,9 +1,11 @@
-import { useStyle } from '../../../hooks/useStyle';
 import styles from '../index.module.css'
 import { ColorField, PaddingField, StyleField } from '../components';
+import { useStyle } from '../../../hooks/useStyle';
 import { clearPadding } from '../../../utils';
 
-const defaultTextStyles = {
+const defaultLinkStyles = {
+  margin: "0px",
+  backgroundColor: "transparent",
   color: "#C0C0C0",
   fontSize: "16px",
   textAlign: "left",
@@ -13,8 +15,8 @@ const defaultTextStyles = {
   fontWeight: "unset",
 };
 
-const TextStylingEditor = ({ componentStyles, handleAlignmentUpdate, styleTypes }) => {
-  const [style, updateStyle] = useStyle(componentStyles, defaultTextStyles);
+export const LinkStylingEditor = ({ handleAlignmentUpdate, linkStyles, styleTypes }) => {
+  const [style, updateStyle] = useStyle(linkStyles, defaultLinkStyles);
 
   const handleStyleChange = (styleKey, value) => {
     const newStyle = { ...style, [styleKey]: value };
@@ -28,8 +30,6 @@ const TextStylingEditor = ({ componentStyles, handleAlignmentUpdate, styleTypes 
     }
   };
 
-  //textTransformOptions, textDecorationOptions, fontWeightOptions
-  
   return (
     <div className={styles['styling-editor']}>
       <StyleField title="Align" options={styleTypes.textAlignmentOptions} activeValue={style.textAlign} onChange={(val) => handleStyleChange("textAlign", val)} />
@@ -38,9 +38,9 @@ const TextStylingEditor = ({ componentStyles, handleAlignmentUpdate, styleTypes 
       <StyleField title="Text Decoration" options={styleTypes.textDecorationOptions} activeValue={style.textDecoration} onChange={(val) => handleStyleChange("textDecoration", val)} />
       <StyleField title="Font Weight" options={styleTypes.fontWeightOptions} activeValue={style.fontWeight} onChange={(val) => handleStyleChange("fontWeight", val)} />
       <PaddingField paddingSizes={styleTypes.paddingSizes} activePadding={style} onChange={handleStyleChange} />
-      <ColorField color={style.color} onChange={(val) => handleStyleChange("color", val)} />
+      <ColorField color={style.color} onChange={(value) => handleStyleChange('color', value)} />
     </div>
   );
-}
+};
 
-export default TextStylingEditor
+export default LinkStylingEditor

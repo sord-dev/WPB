@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './index.module.css'
 
 import { fontSizeOptions, textAlignmentOptions, paddingSizes, textTransformOptions, textDecorationOptions, fontWeightOptions } from './config';
-import { PropertyEditor, ContainerStylingEditor, TextStylingEditor, ButtonStylingEditor } from './partials';
+import { PropertyEditor, ContainerStylingEditor, TextStylingEditor, ButtonStylingEditor, LinkStylingEditor } from './partials';
 
 function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => { }, deleteComponent = (selectedComponent) => { } }) {
     if (!selectedComponent) return null;
@@ -29,6 +29,7 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
             {componentType == "text" && <TextStylingEditor {...{ componentStyles: componentProps.style, handleAlignmentUpdate, styleTypes: {...getEditorProps("text")} }} />}
             {componentType == "container" && <ContainerStylingEditor {...{ containerStyles: componentProps.style, handleAlignmentUpdate, styleTypes: {...getEditorProps("container")} }} />}
             {componentType == "button" && <ButtonStylingEditor {...{ buttonStyles: componentProps.style, handleAlignmentUpdate, styleTypes: {...getEditorProps("button")} }} />}
+            {componentType == "link" && <LinkStylingEditor {...{ linkStyles: componentProps.style, handleAlignmentUpdate, styleTypes: {...getEditorProps("link")} }} />}
             {componentType != "wrapper" && <ComponentGeneralControls {...{ deleteComponent: () => deleteComponent(selectedComponent) }} />}
         </>
     )
