@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './index.module.css'
 
-import { TextStylingEditor, PropertyEditor, ContainerStylingEditor } from './partials';
-import { fontSizeOptions, textAlignmentOptions, paddingSizes } from './config';
+import { fontSizeOptions, textAlignmentOptions, paddingSizes, textTransformOptions, textDecorationOptions, fontWeightOptions } from './config';
+import { PropertyEditor, ContainerStylingEditor, TextStylingEditor, ButtonStylingEditor } from './partials';
 
 function BuilderComponentStateEditor({ selectedComponent = null, updateComponent = (selectedComponent, updatedProps) => { }, deleteComponent = (selectedComponent) => { } }) {
     if (!selectedComponent) return null;
@@ -14,21 +14,21 @@ function BuilderComponentStateEditor({ selectedComponent = null, updateComponent
         updateComponent(selectedComponent, { [propName]: propValue });
     };
 
-    const handleAlignmentChange = (type, value) => { // change the style of a component/container
-        console.log('handleAlignmentChange', { type, value });
-        const newStyle = { ...selectedComponent.props.style, [type]: value };
-        handlePropChange('style', newStyle);
+    const handleAlignmentUpdate = (newStyles, isBulkUpdate = false) => {
+        if (isBulkUpdate) {
+            handlePropChange('style', newStyles);
+        } else {
+            const updatedStyle = { ...selectedComponent.props.style, ...newStyles };
+            handlePropChange('style', updatedStyle);
+        }
     };
-
-    const handleAlignmentChanges = (newStyle) => { // mass update the style of a container, make sure to pass the new style object with all the previous styles
-        handlePropChange('style', newStyle);
-    }
 
     return (
         <>
             <PropertyEditor {...{ componentProps, handlePropChange }} />
-            {componentType == "text" && <TextStylingEditor {...{ componentStyles: componentProps.style, handleAlignmentChange, fontSizeOptions, textAlignmentOptions, paddingSizes }} />}
-            {componentType == "container" && <ContainerStylingEditor {...{ containerStyles: componentProps.style, paddingSizes, handleAlignmentChanges, handleAlignmentChange }} />}
+            {componentType == "text" && <TextStylingEditor {...{ componentStyles: componentProps.style, handleAlignmentUpdate, styleTypes: {...getEditorProps("text")} }} />}
+            {componentType == "container" && <ContainerStylingEditor {...{ containerStyles: componentProps.style, handleAlignmentUpdate, styleTypes: {...getEditorProps("container")} }} />}
+            {componentType == "button" && <ButtonStylingEditor {...{ buttonStyles: componentProps.style, handleAlignmentUpdate, styleTypes: {...getEditorProps("button")} }} />}
             {componentType != "wrapper" && <ComponentGeneralControls {...{ deleteComponent: () => deleteComponent(selectedComponent) }} />}
         </>
     )
@@ -39,5 +39,18 @@ const ComponentGeneralControls = ({ deleteComponent }) => {
         <button className={styles['delete-btn']} onClick={() => deleteComponent()}>Delete Component</button>
     )
 }
+
+const getEditorProps = (componentType) => {
+    switch (componentType) {
+        case "text":
+        case "link":
+        case "button":
+            return { fontSizeOptions, textAlignmentOptions, paddingSizes, textTransformOptions, textDecorationOptions, fontWeightOptions };
+        case 'container':
+            return { paddingSizes }
+        default:
+        return {};
+    }
+};
 
 export default BuilderComponentStateEditor;

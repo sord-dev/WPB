@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { appendElement, deleteElement, updateElement } from './PageBuilder';
-import { generateComponentID } from '../../utils';
+import { generateComponentID, JsonRenderer } from '../../utils';
 
 import { useNavigate } from 'react-router-dom';
 import { defaultPageContext } from './default';
@@ -8,7 +8,27 @@ const PageContext = createContext(defaultPageContext);
 
 export const PageContextProvider = ({ children }) => {
   const [pageData, setPageData] = useState({ pages: {}, pageIndex: [], activePage: null, projectName: null, filePath: "" }); // TODO - we need to make this connect to the project context, so that we can have multiple projects
+  const [exporting, setExporting] = useState(false);
   const navigate = useNavigate()
+
+  const exportProject = (exportType, tab = null) => {
+    const { pages, projectName } = pageData;
+
+    if (!tab) {
+      console.log(`DEBUG - Exporting ${projectName} as:`, exportType);
+      console.log("DEBUG - Project data:", pages);
+    } else {
+      console.log(`DEBUG - Exporting ${projectName}'s ${tab} tab, as:`, exportType);
+      console.log("DEBUG - Project data:", pages[tab]);
+
+      const html = JsonRenderer({ ...pages[tab], tab, projectName }, exportType);
+      console.log("DEBUG - Exported HTML:", html);
+    }
+  };
+
+  const cancelExport = () => {
+    setExporting(false);
+  };
 
   useEffect(() => {
     if (Object.keys(pageData.pages).length === 0) {
@@ -138,12 +158,18 @@ export const PageContextProvider = ({ children }) => {
     deleteComponent,
   };
 
+  const exportControls = {
+    exportProject,
+    setExporting,
+    cancelExport,
+  };
+
   useEffect(() => {
     console.log("DEBUG - PageContext Template State:", { template: pageData.pages[pageData.activePage], page: pageData.activePage });
   }, [pageData]);
 
   return (
-    <PageContext.Provider value={{ ...pageData, pageControls, templateControls, setPageData, getPageData }}>
+    <PageContext.Provider value={{ ...pageData, exporting, exportControls, pageControls, templateControls, setPageData, getPageData }}>
       {children}
     </PageContext.Provider>
   );

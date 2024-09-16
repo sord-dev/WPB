@@ -160,7 +160,7 @@ pub fn read_project_file(file_name: &str) -> Result<Project, Box<dyn Error>> {
     Ok(project)
 }
 
-// update a JSON object in a file (BROKEN ATM)
+// update a JSON object in a file
 pub fn update_json_in_file(file_name: &str, project: &String) -> Result<Project, Box<dyn Error>> {
     // Get the user's documents directory path
     let documents_dir: PathBuf = dirs::document_dir().ok_or("Unable to find user's documents directory")?;

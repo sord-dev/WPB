@@ -4,11 +4,14 @@ import styles from './index.module.css'
 import { GridColumn } from '../Grid';
 
 import { withInteractionHandler } from '../HOCs';
+import { Button, Container, Link, Text, Wrapper } from './components';
 
 const defaultComponents = {
-    text: ({ content, style }) => <p className={styles['component']} style={{ ...style }} >{content || 'No content'}</p>, // temporary default just so we can see something
-    container: ({ children, style }) => <section style={{ ...style }} className={styles['container']} >{children}</section>,
-    wrapper: ({ children }) => <main className={styles['wrapper']} >{children}</main>
+    text: Text,
+    container: Container,
+    wrapper: Wrapper,
+    button: Button,
+    link: Link
 };
 
 function BuilderEditor({ registery, template, getAllComponents, setSelectedComponent, selectedComponent }) {

@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 
 import { usePageContext, useProjectContext, useTabContext } from "../../contexts";
-import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer, BuilderComponentStateEditor, SystemNotificationPopUp } from "../../components";
+import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer, BuilderComponentStateEditor, SystemNotificationPopUp, ExportPageModal, Overlay } from "../../components";
 
 import styles from "./index.module.css";
 import { convertParamsToObject } from "../../utils";
@@ -15,6 +15,8 @@ export default function Builder() {
     filePath,
     pageControls: { setActivePage, createPage },
     templateControls: { addComponent, updateComponent, addContainer, deleteComponent },
+    exportControls: { exportProject, setExporting },
+    exporting,
     getPageData
   } = usePageContext();
   
@@ -27,7 +29,6 @@ export default function Builder() {
   const getAllComponents = components => setAvailableComponents(components); // This is a callback function that will be passed to the BuilderEditor component
 
   const [error, setError] = React.useState(null);
-
 
   const [history, setHistory] = React.useState({ [activePage]: [activePageData] });
   const historySnapshot = () => {
@@ -96,7 +97,7 @@ export default function Builder() {
   const handleTabClick = (templateIndex) => {
     setSelectedComponent(pages[templateIndex]?.content);
     setActivePage(templateIndex);
-  };
+  }; 
 
   useEffect(() => {
     if (getPageData().activePage !== null) {
@@ -139,12 +140,8 @@ export default function Builder() {
         // save pageData to file system
         console.log("DEBUG - Saving page data to file system:", pages[activePage]);
         updateProjectPage(filePath, pages[activePage], activePage);
-      }
 
-      if (previousPage !== JSON.stringify(activePageData) && !filePath) {
-        previousPage = JSON.stringify(pages[activePage]);
-        console.log(filePath)
-        console.error("Save to new file");
+        // TODO - Add a notification to the user that the file has been saved, and also add a lastUpdated timestamp to the project
       }
 
     }, 500);
@@ -154,6 +151,7 @@ export default function Builder() {
 
 
   return (
+   <>
     <section>
       <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: handleCreatePage }} />
       <BuilderToolBar screensize={{ scale: 100, width: 1440 }} projectTitle={projectName} tabName={activePage} />
@@ -184,6 +182,14 @@ export default function Builder() {
 
       </div>
     </section>
+
+    {exporting && (
+      <Overlay openClose={() => setExporting(!exporting)}>
+        <ExportPageModal  {...{ exportProject, tabs }} />
+      </Overlay>
+    )}
+
+   </>
   );
 }
 
