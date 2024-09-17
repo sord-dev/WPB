@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { usePageContext } from "../PageContext";
 import { useTabContext } from "../TabContext";
 import { invoke } from "@tauri-apps/api";
-import { BaseDirectory, writeTextFile } from "@tauri-apps/api/fs";
+import { BaseDirectory, removeFile, renameFile, writeTextFile } from "@tauri-apps/api/fs";
 
 
 const ProjectContext = createContext({
@@ -153,12 +153,23 @@ export const ProjectProvider = ({ children }) => {
     }
   }
 
+  const deleteProject = async (filePath) => {
+    await removeFile(filePath)
+    setProjects((prevProjects) => {
+      return prevProjects.filter(project => project.filePath !== filePath);
+    });
+  }
+
+  const renameProject = async (filePath, newProjectName) => {
+    // rename project logic
+  }
+
   useEffect(() => {
     console.log("DEBUG - Project State: ", projects);
   }, [projects]);
 
   return (
-    <ProjectContext.Provider value={{ createProject, projects, setProjects, selectProject, updateProjectPage, retrieveProjects }}>
+    <ProjectContext.Provider value={{ createProject, projects, setProjects, selectProject, updateProjectPage, retrieveProjects, deleteProject, renameProject }}>
       {children}
     </ProjectContext.Provider>
   );

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
 import { FaPlus } from "react-icons/fa6";
-import { Card } from './partials';
+import { Card, ProjectCard } from './partials';
 import { CreateProjectModal, Overlay } from '../../components';
-import { useProjectContext, useTabContext } from '../../contexts';
+import { ContextMenuProvider, useProjectContext, useTabContext } from '../../contexts';
 import useShortcut from '../../hooks/useShortcut';
 import useRetrieveProjects from '../../hooks/useRetrieveProjects';
 
@@ -29,15 +29,18 @@ export default function Dashboard() {
 
         <div className={styles['projects-section']}>
           {error && <div>{error}</div>}
-          {projects.map((project, index) => {
-            const amountOfPages = Object.keys(project.pages).length;
-            return <Card
-              key={index}
-              title={project.projectName}
-              action={() => selectProject(project.filePath)}
-              subTitle={`${amountOfPages} ${amountOfPages > 1 ? "pages" : "page"}`}
-            />
-          })}
+          <ContextMenuProvider>
+            {projects.map((project, index) => {
+              const amountOfPages = Object.keys(project.pages).length;
+              return <ProjectCard
+                key={index}
+                title={project.projectName}
+                filePath={project.filePath}
+                subTitle={`${amountOfPages} ${amountOfPages > 1 ? "pages" : "page"}`}
+                id={index}
+              />
+            })}
+          </ContextMenuProvider>
         </div>
 
       </section>
