@@ -61,7 +61,7 @@ function RenameProjectModal({ renameProject, openClose, prevProject }) {
           </div>
         )}
         <button className={styles["submit"]} onClick={handleRenameProject}>
-          Create Project
+          Rename Project
         </button>
       </div>
     </>
