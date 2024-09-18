@@ -1,15 +1,22 @@
 import { convertInputValueToKebabCase } from '../../../index.js';
 
 import TypeMap from '../type-maps/inline-type-map.js';
-import { deduceType } from '../utils/index.js';
+import { deduceType, processNodeProps } from '../utils/index.js';
 
 export default function htmlInlineCss(jsonData) {
     const processNode = (node) => {
         const { props = {} } = node;
-        const { children = [], content = "", style = {} } = props;
+        const { children = [], style = {} } = props;
 
         let htmlTag;
-        deduceType(node, TypeMap) ? htmlTag = deduceType(node, TypeMap) : htmlTag = 'div';
+        let nodeParams;
+
+        let styleObject;
+        let content;
+
+        ({ elem: htmlTag, params: nodeParams } = deduceType(node, TypeMap));
+        ({ style: styleObject, content: content } = processNodeProps(node, TypeMap));
+
 
         // Convert the style object to an inline style string
         const styleString = Object.entries(style)
@@ -17,7 +24,11 @@ export default function htmlInlineCss(jsonData) {
             .join("; ");
 
         // Generate HTML with inline styles
-        let html = `<${htmlTag} id="${props.id || ""}" style="${styleString}">`;
+        let html = `<${htmlTag} 
+        id="${props.id || ""}" 
+        ${htmlTag == "a" ? `href=${props.href}` : ''}
+        ${htmlTag == "img" ? `src=${props.src}` : ''}
+        style="${styleString}">`;
 
         if (content) {
             html += content;

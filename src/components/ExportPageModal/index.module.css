@@ -78,6 +78,10 @@
     font-size: 12px;
 }
 
+.checkbox-fields {
+    display: flex;
+    justify-content: space-between;
+}
 
 @keyframes fade-in {
     from {

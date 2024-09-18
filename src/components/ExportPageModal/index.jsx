@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
 
-function CreateProjectModal({ exportProject, tabs = [] }) {
+function CreateProjectModal({ exportProject, tabs = [], display = () => {} }) {
     const [exportFormat, setExportFormat] = useState("html-inline-css");
     const [tabToExport, setTabToExport] = useState(tabs[0] || "");
     const [fullProject, setFullProject] = useState(false);
+    const [preview, setPreview] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleExportProject = () => {
@@ -21,7 +22,11 @@ function CreateProjectModal({ exportProject, tabs = [] }) {
         }
 
         setErrorMessage("");
-        fullProject ? exportProject(exportFormat) : exportProject(exportFormat, tabToExport);
+        if(fullProject) {
+            preview ? display(exportProject(exportFormat), exportFormat) : exportProject(exportFormat);
+        } else {
+            preview ? display(exportProject(exportFormat, tabToExport), exportFormat) : exportProject(exportFormat, tabToExport);
+        }
     }
 
     return (
@@ -51,10 +56,18 @@ function CreateProjectModal({ exportProject, tabs = [] }) {
                     </div>
 
 
-                    <div className={styles['checkbox-field']} value={fullProject} onChange={() => setFullProject(prev => !prev)}>
-                        <span>Export full project</span>
-                        <input type="checkbox" />
+                    <div className={styles["checkbox-fields"]}>
+                        <div className={styles['checkbox-field']} value={fullProject} onChange={() => setFullProject(prev => !prev)}>
+                            <span>Export full project</span>
+                            <input type="checkbox" />
+                        </div>
+
+                        <div className={styles['checkbox-field']} value={fullProject} onChange={() => setPreview(prev => !prev)}>
+                            <span>Preview Export</span>
+                            <input type="checkbox" />
+                        </div>
                     </div>
+
 
 
                 </div>
