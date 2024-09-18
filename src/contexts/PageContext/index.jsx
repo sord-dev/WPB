@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { appendElement, deleteElement, updateElement } from './PageBuilder';
-import { generateComponentID, JsonRenderer } from '../../utils';
+import { generateComponentID, JsonRenderer, renderMultiple } from '../../utils';
 
 import { useNavigate } from 'react-router-dom';
 import { defaultPageContext } from './default';
@@ -17,6 +17,10 @@ export const PageContextProvider = ({ children }) => {
     if (!tab) {
       console.log(`DEBUG - Exporting ${projectName} as:`, exportType);
       console.log("DEBUG - Project data:", pages);
+      
+      const htmlArr = renderMultiple(Object.keys(pages).map(tab => ({ ...pages[tab], tab, projectName })), exportType);
+      console.log(htmlArr)
+      return htmlArr;
     } else {
       console.log(`DEBUG - Exporting ${projectName}'s ${tab} tab, as:`, exportType);
       console.log("DEBUG - Project data:", pages[tab]);

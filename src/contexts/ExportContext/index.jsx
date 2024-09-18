@@ -17,6 +17,8 @@ export const ExportContextProvider = ({ children }) => {
     navigate('/testing');
   };
 
+  console.log("Export Context - Exported Data:", exportedData);
+
   return (
     <ExportContext.Provider value={{ exportedData, display }}>
       {children}

@@ -1,30 +1,56 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useExportContext } from '../../contexts/ExportContext';
 
 import styles from './index.module.css'
-import { useProjectContext } from '../../contexts/ProjectContext';
-import { usePageContext } from '../../contexts/PageContext';
 
 function ExportTestingGround() {
   const [showCode, setShowCode] = React.useState(false);
   const { exportedData } = useExportContext();
-  const {  activePage, pageIndex } = usePageContext()
-
+  const isArr = Array.isArray(exportedData.dat);
 
   return (
     <div className={styles["container"]}>
 
       <div className={styles["meta-data"]}>
-        <h3>Tab Name: {activePage}</h3>
-        <p>Pages {pageIndex.length}</p>
         <p>Export Type: {exportedData.type}</p>
+        <p>Pages {isArr ? exportedData.dat.length : 1}</p>
         <button onClick={() => setShowCode(!showCode)}>Toggle Code</button>
       </div>
 
       <main>
-        {showCode ? <pre>{exportedData.dat}</pre> : <div dangerouslySetInnerHTML={{ __html: exportedData.dat }} />}
+        <PagePreview showCode={showCode} data={exportedData.dat} />
       </main>
     </div>
+  )
+}
+
+const PagePreview = ({ showCode, data }) => {
+  const CodeView = (code) => {
+    if(Array.isArray(code)){
+      return code.map((c, i) => 
+        <div>
+          <h3>Page {i + 1}</h3>
+          <pre key={i}>{c}</pre>
+        </div>
+      )
+    }
+
+    return <pre>{code}</pre>
+  }
+
+  const PageRender = (html) => {
+    if(Array.isArray(html)){
+      return html.map((h, i) => <div key={i} dangerouslySetInnerHTML={{ __html: h }} />)
+    }
+
+    return <div dangerouslySetInnerHTML={{ __html: html }} />
+  }
+
+
+  return (
+    <>
+    {showCode ? CodeView(data) : PageRender(data)}
+    </>
   )
 }
 
