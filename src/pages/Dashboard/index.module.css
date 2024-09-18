@@ -15,6 +15,7 @@
   width: inherit;
   align-items: center;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  width: 400px;
 }
 
 .card:nth-child(1) .card-icon {
@@ -63,6 +64,10 @@
 
 .project-card {
   width: 100%;
+}
+
+.project-card > .card {
+  width: inherit;
 }
 
 .context-menu {

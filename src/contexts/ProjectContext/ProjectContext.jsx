@@ -161,8 +161,42 @@ export const ProjectProvider = ({ children }) => {
   }
 
   const renameProject = async (filePath, newProjectName) => {
-    // rename project logic
-  }
+    try {
+      const projectDir = await invoke("get_projects_directory");
+      const newFilePath = `${projectDir}\\${newProjectName}.json`;
+  
+      const project = projects.find((project) => project.filePath === filePath);
+      if (!project) throw new Error("Project not found");
+  
+      const updatedProjectData = {
+        ...project,
+        projectName: newProjectName,
+        filePath: newFilePath,
+      };
+  
+      const str = JSON.stringify(convertObjectKeysToSnakeCase(updatedProjectData));
+  
+      const updated = await invoke("update_project", {
+        projectPath: filePath,
+        updatedProjectData: str,
+      });
+  
+      const parsed = JSON.parse(updated);
+  
+      const newProjects = projects.map((project) =>
+        project.filePath === filePath ? parsed : project
+      );
+  
+      await renameFile(filePath, newFilePath);
+  
+      setProjects(newProjects);
+      return true;
+    } catch (error) {
+      console.error("Error renaming project:", error);
+      return false;
+    }
+  };
+  
 
   useEffect(() => {
     console.log("DEBUG - Project State: ", projects);

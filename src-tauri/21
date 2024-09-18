@@ -1,0 +1,22 @@
+{
+  "project_name": "21",
+  "pages": {
+    "12": {
+      "content": {
+        "type": "wrapper",
+        "props": {
+          "id": "wrapper-d2YprIM7",
+          "children": []
+        }
+      }
+    }
+  },
+  "page_index": [
+    "12"
+  ],
+  "active_page": "12",
+  "file_path": "C:\\Users\\CosgunPC\\Documents\\wpb-projects\\213.json",
+  "tabs": [
+    "12"
+  ]
+}

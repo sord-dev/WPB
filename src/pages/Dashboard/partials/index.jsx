@@ -113,7 +113,7 @@ export const ProjectCard = ({ icon, title, subTitle, filePath, id }) => {
               <RenameProjectModal
                 renameProject={renameProject}
                 openClose={setOpenClose}
-                prevProject={filePath}
+                filePath={filePath}
               />
             </Overlay>
           )}

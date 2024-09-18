@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
 import useShortcut from "../../hooks/useShortcut";
 
-function RenameProjectModal({ renameProject, openClose, prevProject }) {
+function RenameProjectModal({ renameProject, openClose, filePath }) {
   const [newProjectName, setNewProjectName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -21,7 +21,9 @@ function RenameProjectModal({ renameProject, openClose, prevProject }) {
         return;
       }
 
-      const renamedProject = await renameProject(prevProject, newProjectName);
+      const renamedProject = await renameProject(filePath, newProjectName);
+
+      console.log(renamedProject)
 
       if (!renamedProject) {
         setErrorMessage("Project already exists or could not rename project");
