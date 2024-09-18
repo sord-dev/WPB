@@ -23,6 +23,7 @@ export const PageContextProvider = ({ children }) => {
 
       const html = JsonRenderer({ ...pages[tab], tab, projectName }, exportType);
       console.log("DEBUG - Exported HTML:", html);
+      return html;
     }
   };
 

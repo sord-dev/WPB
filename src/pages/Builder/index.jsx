@@ -5,6 +5,7 @@ import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, Gr
 
 import styles from "./index.module.css";
 import { convertParamsToObject } from "../../utils";
+import { useExportContext } from "../../contexts/ExportContext";
 
 export default function Builder() {
   const {
@@ -23,6 +24,8 @@ export default function Builder() {
   const { tabs } = useTabContext()
   const { updateProjectPage, activeProject } = useProjectContext();
   const activePageData = pages[activePage]?.content;
+
+  const { display } = useExportContext()
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
   const [selectedComponent, setSelectedComponent] = React.useState(null);
@@ -58,8 +61,8 @@ export default function Builder() {
       props: convertParamsToObject(component.parameters)
     };
 
-    if (obj.type.toLowerCase() === 'text' && selectedComponent.type.toLowerCase() === "wrapper") { // is this a text component being made at the top level?
-      setError({ message: "Text components must be inside a container" });
+    if (obj.type.toLowerCase() !== 'container' && selectedComponent.type.toLowerCase() === "wrapper") { // is this a text component being made at the top level?
+      setError({ message: "All components must be inside a container" });
     }
 
     if (obj.type.toLowerCase() === "container") { // Is this a container?
@@ -185,7 +188,7 @@ export default function Builder() {
 
     {exporting && (
       <Overlay openClose={() => setExporting(!exporting)}>
-        <ExportPageModal  {...{ exportProject, tabs }} />
+        <ExportPageModal  {...{ exportProject, tabs, display: (html, type) => {setExporting(false); display(html, type)} }} />
       </Overlay>
     )}
 
