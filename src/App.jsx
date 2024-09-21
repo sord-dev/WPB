@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { SideNavbar, Wrapper } from "./layouts";
-import { Builder, Dashboard, ExportTestingGround } from "./pages";
+import { Builder, Dashboard, ExportTestingGround, Handlers } from "./pages";
 
 function App() {
 
@@ -10,6 +10,7 @@ function App() {
         <Route element={<Wrapper />}>
           <Route index element={<Dashboard />} />
           <Route path="/builder" element={<Builder />} />
+          <Route path="/handlers" element={<Handlers />} />
           <Route path="/testing" element={<ExportTestingGround />} />
         </Route>
       </Route>
