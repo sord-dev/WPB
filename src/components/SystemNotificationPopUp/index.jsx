@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styles from './index.module.css'
 
-const SystemNotificationPopUp = ({ message, timeout, onClose }) => {
+const SystemNotificationPopUp = ({ message, timeout = 1500, onClose }) => {
     const [isVisible, setIsVisible] = useState(message ? true : false);
 
     useEffect(() => {

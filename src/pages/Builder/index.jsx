@@ -1,11 +1,23 @@
 import React, { useEffect } from "react";
 
 import { usePageContext, useProjectContext, useTabContext } from "../../contexts";
-import { BuilderTabs, BuilderToolBar, BuilderEditor, BuilderComponentManager, GridContainer, BuilderComponentStateEditor, SystemNotificationPopUp, ExportPageModal, Overlay } from "../../components";
+
+import {
+  BuilderTabs,
+  BuilderToolBar,
+  BuilderEditor,
+  BuilderComponentManager,
+  GridContainer,
+  BuilderComponentStateEditor,
+  SystemNotificationPopUp,
+  ExportPageModal,
+  Overlay
+} from "../../components";
 
 import styles from "./index.module.css";
 import { convertParamsToObject } from "../../utils";
 import { useExportContext } from "../../contexts/ExportContext";
+import { disallowedPropsFunctionality } from "../../components/BuilderComponentStateEditor/config/prop-editor-disallowed-props";
 
 export default function Builder() {
   const {
@@ -20,20 +32,23 @@ export default function Builder() {
     exporting,
     getPageData
   } = usePageContext();
-  
+
   const { tabs } = useTabContext()
-  const { updateProjectPage, activeProject } = useProjectContext();
+  const { updateProjectPage } = useProjectContext();
   const activePageData = pages[activePage]?.content;
 
   const { display } = useExportContext()
 
   const [availableComponents, setAvailableComponents] = React.useState([]);
   const [selectedComponent, setSelectedComponent] = React.useState(null);
-  const getAllComponents = components => setAvailableComponents(components); // This is a callback function that will be passed to the BuilderEditor component
+  const getAllComponents = components => setAvailableComponents(components);
+  const hasFunctionalityProps = Object.keys(selectedComponent?.props || {}).some(prop => !disallowedPropsFunctionality.includes(prop)) || false;
 
-  const [error, setError] = React.useState(null);
+  const [notification, setNotification] = React.useState(null);
+  const [propertyStylingState, setPropertyStylingState] = React.useState({ editing: "styling" });
+  const changePropertyStylingState = (state) => setPropertyStylingState({ editing: state });
 
-  const [history, setHistory] = React.useState({ [activePage]: [activePageData] });
+  const [history, setHistory] = React.useState({ [activePage]: [activePageData] }); // TODO - Fix this:
   const historySnapshot = () => {
     const pageHistory = history[activePage]; // TODO - Fix this: 
     // page history is an array of snapshots
@@ -54,7 +69,7 @@ export default function Builder() {
   }
 
   const appendComponent = (component) => {
-    if (!selectedComponent) return setError({ message: "Please select a container to add the component to" });
+    if (!selectedComponent) return setNotification({ message: "Please select a container to add the component to" });
 
     const obj = {
       type: component.name,
@@ -62,7 +77,7 @@ export default function Builder() {
     };
 
     if (obj.type.toLowerCase() !== 'container' && selectedComponent.type.toLowerCase() === "wrapper") { // is this a text component being made at the top level?
-      setError({ message: "All components must be inside a container" });
+      setNotification({ message: "All components must be inside a container" });
     }
 
     if (obj.type.toLowerCase() === "container") { // Is this a container?
@@ -100,7 +115,7 @@ export default function Builder() {
   const handleTabClick = (templateIndex) => {
     setSelectedComponent(pages[templateIndex]?.content);
     setActivePage(templateIndex);
-  }; 
+  };
 
   useEffect(() => {
     if (getPageData().activePage !== null) {
@@ -117,7 +132,7 @@ export default function Builder() {
     if (success) {
       return true
     } else {
-      setError({ message: "Page creation error: Page already exists" });
+      setNotification({ message: "Page creation error: Page already exists" });
     }
   }
 
@@ -144,7 +159,9 @@ export default function Builder() {
         console.log("DEBUG - Saving page data to file system:", pages[activePage]);
         updateProjectPage(filePath, pages[activePage], activePage);
 
-        // TODO - Add a notification to the user that the file has been saved, and also add a lastUpdated timestamp to the project
+        // TODO - Add a lastUpdated timestamp to the project
+        //const timestamp = new Date().toLocaleTimeString();
+        // setNotification({ message: `File Saved @ ${timestamp}`, timeout: 600 }); - this works btw
       }
 
     }, 500);
@@ -154,51 +171,82 @@ export default function Builder() {
 
 
   return (
-   <>
-    <section>
-      <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: handleCreatePage }} />
-      <BuilderToolBar screensize={{ scale: 100, width: 1440 }} projectTitle={projectName} tabName={activePage} />
+    <>
+      <section>
+        <BuilderTabs {...{ pages: pageIndex, activeTab: activePage, handleTabClick, createTab: handleCreatePage }} />
+        <BuilderToolBar screensize={{ scale: 100, width: 1440 }} projectTitle={projectName} tabName={activePage} />
 
-      <div className={styles['builder']}>
-        <div className={styles['editor']}>
-          <div className={styles['editor-header']}>
-            {selectedComponent && <ComponentID id={selectedComponent.props.id} type={selectedComponent.type} />}
+        <div className={styles['builder']}>
+          <div className={styles['editor']}>
+
+            <div className={styles['editor-header']}>
+              {selectedComponent && <BuilderComponentPropsEditorTabs
+                activeTab={propertyStylingState.editing}
+                componentType={selectedComponent.type}
+                handleTabClick={changePropertyStylingState}
+                hasFunctionalityProps={hasFunctionalityProps}
+              />}
+              {selectedComponent && <ComponentID id={selectedComponent.props.id} type={selectedComponent.type} />}
+            </div>
+
+            <div className={styles['editor-content']}>
+              {selectedComponent && <BuilderComponentStateEditor {...{
+                selectedComponent,
+                updateComponent: updateAndSelectComponent,
+                deleteComponent: removeComponent,
+                ...propertyStylingState
+              }} />}
+            </div>
           </div>
 
-          <div className={styles['editor-content']}>
-            {selectedComponent && <BuilderComponentStateEditor {...{ selectedComponent, updateComponent: updateAndSelectComponent, deleteComponent: removeComponent }} />}
+          <div className={styles['constructor-parent']}>
+            <GridContainer columns={12}>
+              <BuilderEditor template={activePageData} {...{ getAllComponents, setSelectedComponent, selectedComponent }} />
+            </GridContainer>
           </div>
+
+          <div className={styles['components']}>
+            <BuilderComponentManager components={availableComponents} handleComponentClick={appendComponent} />
+          </div>
+
+          {notification && <SystemNotificationPopUp {...{ ...notification, onClose: () => setNotification(null) }} />}
+
         </div>
+      </section>
 
-        {/* This should be where we export from */}
-        <div className={styles['constructor-parent']}>
-          <GridContainer columns={12}>
-            <BuilderEditor template={activePageData} {...{ getAllComponents, setSelectedComponent, selectedComponent }} />
-          </GridContainer>
-        </div>
+      {exporting && (
+        <Overlay openClose={() => setExporting(!exporting)}>
+          <ExportPageModal  {...{ exportProject, tabs, display: (html, type) => { setExporting(false); display(html, type) } }} />
+        </Overlay>
+      )}
 
-        <div className={styles['components']}>
-          <BuilderComponentManager components={availableComponents} handleComponentClick={appendComponent} />
-        </div>
-
-        {error && <SystemNotificationPopUp {...{ ...error, timeout: 1500, onClose: () => setError(null) }} />}
-
-      </div>
-    </section>
-
-    {exporting && (
-      <Overlay openClose={() => setExporting(!exporting)}>
-        <ExportPageModal  {...{ exportProject, tabs, display: (html, type) => {setExporting(false); display(html, type)} }} />
-      </Overlay>
-    )}
-
-   </>
+    </>
   );
 }
 
-const ComponentID = ({ id, type }) => (
-  <div style={{ display: "flex", gap: "4px", alignItems: "center", justifyContent: "space-between", fontSize: ".8em" }}>
-    <h3>{type}</h3>
-    <p style={{ fontSize: ".9em", opacity: ".7" }}><code>{id}</code></p>
-  </div>
-);
+const BuilderComponentPropsEditorTabs = ({ activeTab = "styling", handleTabClick, componentType, hasFunctionalityProps }) => {
+  if (componentType === "wrapper") return null;
+  const functionalityClasses = hasFunctionalityProps ? activeTab == "functionality" && styles['active'] : styles['disabled'];
+  return (
+    <div className={styles['editor-tabs']}>
+      <div className={activeTab == "styling" && styles['active']} onClick={() => handleTabClick("styling")}>
+        <p>Styling</p>
+      </div>
+
+      <div className={functionalityClasses} onClick={() => handleTabClick("functionality")}>
+        <p>Functionality</p>
+      </div>
+    </div>
+  )
+}
+
+const ComponentID = ({ id, type }) => {
+  if (!id) return null;
+  if (type === "wrapper") return null;
+  return (
+    <div style={{ display: "flex", gap: "4px", alignItems: "center", justifyContent: "space-between", fontSize: ".8em", padding: "0 12px" }}>
+      <h3>{type}</h3>
+      <p style={{ fontSize: ".9em", opacity: ".7" }}><code>{id}</code></p>
+    </div>
+  );
+}
