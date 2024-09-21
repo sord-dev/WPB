@@ -5,7 +5,7 @@ import styles from './index.module.css'
 function Handlers() {
 
   return (
-    <div className={styles["container"]}>
+    <div>
       <h1>Handlers</h1>
     </div>
   )
