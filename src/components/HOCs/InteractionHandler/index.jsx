@@ -22,9 +22,8 @@ const withInteractionHandler = (WrappedComponent, setSelectedComponent, selected
         event.stopPropagation(); // Prevent the event from bubbling up, so that the parent element is not selected simultaneously
         if (type === "wrapper") return; // Prevent the type tag from showing on the wrapper element
         
-        // if (!depth) setHovered(true); // Add this line if you want to see the type tag ONLY on elements with no children
         const depth = determineDepth(props); // Get the number of children
-        setHovered(true); // comment this line if you want to see the type tag ONLY on elements with no children
+        setHovered(true); // Show the type tag`
     };
 
     const handleMouseOut = () => {
