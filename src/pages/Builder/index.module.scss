@@ -14,6 +14,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 0px 20px;
+  padding-bottom: 12px;
 }
 
 .editor,
@@ -21,6 +23,41 @@
   width: 300px;
   background: #1c1c1c99;
   padding: 20px;
+}
+
+.editor {
+  padding: 0;
+}
+
+.editor-tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.editor-tabs div {
+  padding: 10px 24px;
+  color: var(--text-primary);
+  font-size: .8em;
+  cursor: pointer;
+  border-bottom: 1px solid var(--text-primary);;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+}
+
+
+.editor-tabs div:hover,
+.editor-tabs div.active {
+  color: var(--text-accent) !important;
+  border-bottom: 1px solid  var(--text-accent);
+}
+
+.editor-tabs div.disabled {
+  color: #6f6f6f;
+  opacity: .5;
+  pointer-events: none;
 }
 
 .constructor-parent {
@@ -34,7 +71,7 @@
 }
 
 .constructor-parent::-webkit-scrollbar-thumb {
-  background: var(--text-primary) 
+  background: var(--text-primary)
 }
 
 
@@ -43,7 +80,7 @@
   flex-direction: column;
   border-right: 3px solid #6f6f6f1a;
   overflow-y: auto;
-  
+
   &::-webkit-scrollbar {
     display: none;
   }

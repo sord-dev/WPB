@@ -1,12 +1,19 @@
 import React from 'react'
 import styles from './index.module.css'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { SystemContextMenu } from '../../components'
 import { usePageContext } from '../../contexts';
 
 export default function SideNavbar() {
   const { pathname } = useLocation();
-  const {exportControls: { setExporting }} = usePageContext();
+  const navigate = useNavigate();
+  const { exportControls: { setExporting } } = usePageContext();
+
+  const showBuilderMenu = ['/builder', '/handlers'].some(v => v == pathname);
+  const showExportProjectModal = () => {
+    navigate('/builder')
+    setExporting(true);
+  }
 
   return (
     <>
@@ -14,10 +21,12 @@ export default function SideNavbar() {
         <SystemContextMenu />
         <div className={styles["spacer"]} />
 
-        {pathname === '/builder' && (
-            <div className={styles["builder-menu"]}>
-               <img src="/download.svg" alt="Export Page" onClick={() => setExporting(true)}/>
-            </div>
+        {showBuilderMenu && (
+          <div className={styles["builder-menu"]}>
+            <img src="/code.svg" alt="Handlers Page" onClick={() => navigate('/handlers')} />
+
+            <img src="/download.svg" alt="Export Project" onClick={() => showExportProjectModal()} />
+          </div>
         )}
 
       </aside>

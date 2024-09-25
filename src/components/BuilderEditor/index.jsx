@@ -48,7 +48,7 @@ function BuilderEditor({ registery, template, getAllComponents, setSelectedCompo
 
     useEffect(() => {
         const componentParameters = Object.entries(mergedRegistry).map(([name, component]) => ({
-            name,
+            name: name.split(":")[0] || name,
             parameters: extractComponentParameters(component),
         }));
 

@@ -11,7 +11,7 @@ export const extractComponentParameters = (componentFunction) => {
 
     if (parameterMatch) {
         const parametersString = parameterMatch[1];
-        const parameters = parametersString.split(',').map((param) => complextrim(param));
+        const parameters = parametersString.split(',').map((param) => (complextrim(param)).split(":")[0].trim());
         return parameters;
     }
 
