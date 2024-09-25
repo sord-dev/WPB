@@ -24,12 +24,23 @@ const TextState = ({ propName, propValue, onChange }) => {
     setValue(propValue);
   }, [propValue]);
 
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    onChange(propName, newValue);
+  };
+
   return (
     <div className={styles["text-state"]}>
       <span>{propName}</span>
-      <input type="text" value={value} onChange={(e) => onChange(propName, e.target.value)} />
+      <input
+        type="text"
+        value={value}
+        onChange={handleChange}
+      />
     </div>
-  )
+  );
 };
+
 
 export default PropertyEditor
