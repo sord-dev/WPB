@@ -165,6 +165,11 @@ export const ProjectProvider = ({ children }) => {
       const projectDir = await invoke("get_projects_directory");
       const newFilePath = `${projectDir}\\${newProjectName}.json`;
   
+      const projectExists = projects.some((project) => project.filePath === newFilePath);
+      if (projectExists) {
+        throw new Error("A project with this name already exists.");
+      }
+
       const project = projects.find((project) => project.filePath === filePath);
       if (!project) throw new Error("Project not found");
   
@@ -181,15 +186,18 @@ export const ProjectProvider = ({ children }) => {
         updatedProjectData: str,
       });
   
-      const parsed = JSON.parse(updated);
-  
-      const newProjects = projects.map((project) =>
-        project.filePath === filePath ? parsed : project
-      );
+      const parsed = convertObjectKeysToCamelCase(JSON.parse(updated));
+
+      console.log("Projects: ", projects)
   
       await renameFile(filePath, newFilePath);
   
+      const newProjects = projects.map((proj) =>
+        proj.filePath === filePath ? parsed : proj
+      );
+  
       setProjects(newProjects);
+      
       return true;
     } catch (error) {
       console.error("Error renaming project:", error);

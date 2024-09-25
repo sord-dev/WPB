@@ -6,8 +6,9 @@ function RenameProjectModal({ renameProject, openClose, filePath }) {
   const [newProjectName, setNewProjectName] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+
   useShortcut([
-    { keyCombo: { key: "Enter" }, action: () => handleCreateProject() },
+    { keyCombo: { key: "Enter" }, action: () => handleRenameProject() },
   ]);
 
   const handleNewProjectNameChange = (event) => {
@@ -22,8 +23,6 @@ function RenameProjectModal({ renameProject, openClose, filePath }) {
       }
 
       const renamedProject = await renameProject(filePath, newProjectName);
-
-      console.log(renamedProject)
 
       if (!renamedProject) {
         setErrorMessage("Project already exists or could not rename project");
