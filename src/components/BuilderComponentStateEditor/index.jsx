@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './index.module.css'
 
 import { fontSizeOptions, textAlignmentOptions, paddingSizes, textTransformOptions, textDecorationOptions, fontWeightOptions } from './config';
@@ -9,7 +9,7 @@ function BuilderComponentStateEditor({
     selectedComponent = null,
     updateComponent = (selectedComponent, updatedProps) => { },
     deleteComponent = (selectedComponent) => { },
-    editing = "functionality"
+    editing = "styling"
 }) {
     if (!selectedComponent) return null;
     if (!selectedComponent.props) throw new Error("Selected component does not have props");
@@ -39,11 +39,7 @@ function BuilderComponentStateEditor({
                 </>
             )}
 
-            {editing == "functionality" && (
-                <>
-                    <FunctionalityEditor {...{ componentProps, handlePropChange }} />
-                </>
-            )}
+            {editing == "functionality" && <FunctionalityEditor {...{ componentProps, handlePropChange }} />}
 
             <ComponentGeneralControls {...{ componentType, deleteComponent: () => deleteComponent(selectedComponent) }} />
         </>

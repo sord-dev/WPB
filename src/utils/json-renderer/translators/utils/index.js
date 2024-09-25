@@ -4,27 +4,27 @@ export const deduceType = (node, TypeMap) => {
     
     const { type } = node;
     if (type) return TypeMap[type];
-    return null;
+    else throw new Error(`Type not found for node: ${JSON.stringify(node)}`);
 }
 
 export const processNodeProps = (node, TypeMap) => {
-  const { params } = deduceType(node, TypeMap);
-  const { props } = node;
+  const { params } = deduceType(node, TypeMap); // extract the parameters for the node type
+  const { props } = node; // extract the props for the node
 
   const processed = {};
 
-  params.forEach(param => {
-    if (props[param] === undefined) {
+  params.forEach(param => { // for each parameter in the node type
+    if (props[param] === undefined) { // if the parameter is missing from the props
       console.error(`Parameter "${param}" missing for node: ${JSON.stringify(node)}`);
     }
 
-    if (props[param] && param == "style") {
+    if (props[param] && param == "style") { // if the parameter is style
       processed[param] = JSON.stringify(props[param])
-        .replace(/"([^"]+)":/g, '$1:') // Remove quotes around keys for JSX format
-        .replace(/"/g, "'");           // Use single quotes for values in JSX;
+        .replace(/"([^"]+)":/g, '$1:') 
+        .replace(/"/g, "'");
     }
 
-    if (props[param] && param == "content") {
+    if (props[param] && param == "content") { // if the parameter is content - IMPORTANT - TEXT ONLY WORKS WITH THIS VALUE
       processed[param] = props[param];
     }
   });

@@ -3,6 +3,8 @@ import { nanoid } from "nanoid";
 export { default as JsonRenderer } from "./json-renderer";
 export * from './json-renderer';
 
+export { default as formatCode } from './code-formatter';
+
 export const extractComponentParameters = (componentFunction) => {
     const functionString = componentFunction.toString();
     const parameterRegex = /\(([^)]*)\)/;

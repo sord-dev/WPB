@@ -23,4 +23,5 @@ export const disallowedProps = [
     "style",
     "content",
     "children",
+    "href"
   ];

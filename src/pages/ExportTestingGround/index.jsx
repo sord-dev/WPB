@@ -1,6 +1,8 @@
 import React from 'react'
 import { useExportContext } from '../../contexts/ExportContext';
 
+import { formatCode } from '../../utils';
+
 import styles from './index.module.css'
 
 function ExportTestingGround() {
@@ -26,20 +28,24 @@ function ExportTestingGround() {
 
 const PagePreview = ({ showCode, data }) => {
   const CodeView = (code) => {
-    if(Array.isArray(code)){
-      return code.map((c, i) => 
-        <div>
-          <h3>Page {i + 1}</h3>
-          <pre key={i}>{c}</pre>
-        </div>
-      )
+    if (Array.isArray(code)) {
+
+      return code.map((c, i) => {
+        return (
+          <div>
+            <h3>Page {i + 1}</h3>
+            <pre key={i}>{c}</pre>
+          </div>
+        )
+      })
+
     }
 
     return <pre>{code}</pre>
   }
 
   const PageRender = (html) => {
-    if(Array.isArray(html)){
+    if (Array.isArray(html)) {
       return html.map((h, i) => <div key={i} dangerouslySetInnerHTML={{ __html: h }} />)
     }
 
@@ -49,7 +55,7 @@ const PagePreview = ({ showCode, data }) => {
 
   return (
     <>
-    {showCode ? CodeView(data) : PageRender(data)}
+      {showCode ? CodeView(data) : PageRender(data)}
     </>
   )
 }

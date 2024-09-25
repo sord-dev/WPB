@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { extractComponentParameters, generateComponentID } from '../../utils'
-import styles from './index.module.css'
 import { GridColumn } from '../Grid';
 
 import { withInteractionHandler } from '../HOCs';

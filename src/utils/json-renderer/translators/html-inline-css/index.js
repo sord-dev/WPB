@@ -3,19 +3,27 @@ import { convertInputValueToKebabCase } from '../../../index.js';
 import TypeMap from '../type-maps/inline-type-map.js';
 import { deduceType, processNodeProps } from '../utils/index.js';
 
+const generateHTMLArg = (key, value) => {
+    return `${key}="${value}";`;
+}
+
+const S_TAGS = {
+    "a": "href",
+    "img": "src"
+}
+
 export default function htmlInlineCss(jsonData) {
     const processNode = (node) => {
         const { props = {} } = node;
         const { children = [], style = {} } = props;
 
         let htmlTag;
-        let nodeParams;
 
         let styleObject;
         let content;
 
-        ({ elem: htmlTag, params: nodeParams } = deduceType(node, TypeMap));
-        ({ style: styleObject, content: content } = processNodeProps(node, TypeMap));
+        ({ elem: htmlTag } = deduceType(node, TypeMap));
+        ({ style: styleObject, content: content } = processNodeProps(node, TypeMap)); // extracting the style and content keys from the node
 
 
         // Convert the style object to an inline style string
@@ -24,11 +32,9 @@ export default function htmlInlineCss(jsonData) {
             .join("; ");
 
         // Generate HTML with inline styles
-        let html = `<${htmlTag} 
-        id="${props.id || ""}" 
-        ${htmlTag == "a" ? `href=${props.href}` : ''}
-        ${htmlTag == "img" ? `src=${props.src}` : ''}
-        style="${styleString}">`;
+        const sTag = S_TAGS[htmlTag]; // special tag
+        let html = `<${htmlTag} ${generateHTMLArg("id", props.id || "")} ${sTag ? generateHTMLArg(sTag, props[sTag]) : ""} ${styleString ? generateHTMLArg("style", styleString) : ""}>
+        `;
 
         if (content) {
             html += content;
@@ -39,14 +45,15 @@ export default function htmlInlineCss(jsonData) {
             html += processNode(child);
         });
 
-        html += `</${htmlTag}>`;
+        html += `</${htmlTag}>
+        `; // newline for other tags
 
         return html;
     };
 
     console.log(jsonData);
 
-    return generateBaseHTML(processNode(jsonData.content), jsonData?.tab || null);
+    return generateBaseHTML(processNode(jsonData.content), jsonData?.tab || "Untitled");
 }
 
 const generateBaseHTML = (html, title = "Untitled") => {
