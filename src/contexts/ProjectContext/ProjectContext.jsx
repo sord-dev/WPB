@@ -5,6 +5,7 @@ import { usePageContext } from "../PageContext";
 import { useTabContext } from "../TabContext";
 import { invoke } from "@tauri-apps/api";
 import { BaseDirectory, removeFile, renameFile, writeTextFile } from "@tauri-apps/api/fs";
+import { open } from "@tauri-apps/api/shell";
 
 
 const ProjectContext = createContext({
@@ -153,6 +154,16 @@ export const ProjectProvider = ({ children }) => {
     }
   }
 
+  const openProjectDirectory = async (filePath) => {
+    try {
+      const projectDir = filePath.substring(0, filePath.lastIndexOf('\\'));
+      await open(`file://${projectDir}`);
+      console.log(`Opened directory: ${projectDir}`);
+    } catch (error) {
+      console.error("Error opening project directory:", error);
+    }
+  };
+  
   const deleteProject = async (filePath) => {
     await removeFile(filePath)
     setProjects((prevProjects) => {
@@ -211,7 +222,7 @@ export const ProjectProvider = ({ children }) => {
   }, [projects]);
 
   return (
-    <ProjectContext.Provider value={{ createProject, projects, setProjects, selectProject, updateProjectPage, retrieveProjects, deleteProject, renameProject }}>
+    <ProjectContext.Provider value={{ createProject, projects, setProjects, selectProject, updateProjectPage, retrieveProjects, deleteProject, renameProject, openProjectDirectory }}>
       {children}
     </ProjectContext.Provider>
   );

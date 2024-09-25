@@ -16,6 +16,12 @@
       "fs": {
         "all": true,
         "scope": ["**"]
+      },
+      "shell": {
+        "all": true
+      },
+      "dialog": {
+        "all": true
       }
     },
     "bundle": {

@@ -19,7 +19,7 @@ export const Card = ({ icon, title, subTitle, action }) => {
 export const ProjectCard = ({ icon, title, subTitle, filePath, id }) => {
 
   const { activeCard, setActiveCard, points, setPoints } = useContextMenu();
-  const { selectProject, deleteProject, renameProject } = useProjectContext();
+  const { selectProject, deleteProject, renameProject, openProjectDirectory } = useProjectContext();
 
   const [openClose, setOpenClose] = useState(false);
 
@@ -33,7 +33,7 @@ export const ProjectCard = ({ icon, title, subTitle, filePath, id }) => {
         { label: "Open", action: () => selectProject(filePath) },
         {
           label: "Open directory",
-          action: () => console.log("Open directory clicked"),
+          action: () => openProjectDirectory(filePath),
         },
       ],
     },
