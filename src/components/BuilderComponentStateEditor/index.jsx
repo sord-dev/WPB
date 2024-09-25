@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './index.module.css'
 
 import { fontSizeOptions, textAlignmentOptions, paddingSizes, textTransformOptions, textDecorationOptions, fontWeightOptions } from './config';
+import { backgroundPositionOptions, backgroundRepeatOptions, backgroundSizeOptions } from './config/backgroundImage';
 import { PropertyEditor, ContainerStylingEditor, TextStylingEditor, ButtonStylingEditor, LinkStylingEditor, FunctionalityEditor } from './partials';
 import { disallowedPropsFunctionality } from './config/prop-editor-disallowed-props';
 
@@ -73,7 +74,7 @@ const getEditorProps = (componentType) => {
         case "button":
             return { fontSizeOptions, textAlignmentOptions, paddingSizes, textTransformOptions, textDecorationOptions, fontWeightOptions };
         case 'container':
-            return { paddingSizes }
+            return { paddingSizes, backgroundPositionOptions, backgroundRepeatOptions, backgroundSizeOptions }
         default:
             return {};
     }

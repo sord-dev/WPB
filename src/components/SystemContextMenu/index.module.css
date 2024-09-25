@@ -12,24 +12,31 @@
     width: max-content;
     min-width: 160px;
 
-    background: #111111;
-    color: white;
+    background: var(--bg-secondary);
 
-    border: 1px solid #6f6f6f;
-    font-size: small;
+    border: 1px solid #333333;
     z-index: 999;
+
+    padding: 5px 0;
+}
+
+.context-menu ul:not(:first-child) {
+    padding-top: 5px;
+}
+
+.context-menu ul:not(:last-child) {
+    border-bottom: 1px solid #333333;
+    padding-bottom: 5px;
 }
 
 .context-menu-item {
     width: 100%;
-    padding: 3px 6px;
+    padding: 2px 20px;
     text-align: left;
-    background: none;
-    border: none;
-    color: white;
     cursor: pointer;
+    font-size: 13px;
 }
 
 .context-menu-item:hover {
-    background: #6f6f6f;
+    background: #1E90FF;
 }
