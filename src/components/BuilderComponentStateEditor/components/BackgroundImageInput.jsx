@@ -1,11 +1,11 @@
-import { useRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
 import styles from "../index.module.css";
 import StylingInput from "./StylingInput";
 
 const BackgroundImageInput = ({ label = "Background Image", value = "", onChange, readOnly = false }) => {
   const [imageSource, setImageSource] = useState(value);
   const [fileUploaded, setFileUploaded] = useState(false);
-  const fileInputRef = useRef(null)
+  const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];

@@ -13,7 +13,7 @@
 }
 
 .navigation img {
-  width: 42px;
+  width: 36px;
   cursor: pointer;
 }
 
@@ -28,6 +28,5 @@
   flex-direction: column;
   align-items: center;
   margin-top: 8px;
-
   gap: 12px;
 }/*# sourceMappingURL=index.module.css.map */

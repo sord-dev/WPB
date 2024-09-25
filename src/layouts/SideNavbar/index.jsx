@@ -23,8 +23,8 @@ export default function SideNavbar() {
 
         {showBuilderMenu && (
           <div className={styles["builder-menu"]}>
+            <img src="/builder.svg" alt="Builder Page" onClick={() => navigate('/builder')} />
             <img src="/code.svg" alt="Handlers Page" onClick={() => navigate('/handlers')} />
-
             <img src="/download.svg" alt="Export Project" onClick={() => showExportProjectModal()} />
           </div>
         )}
