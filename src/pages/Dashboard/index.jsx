@@ -6,10 +6,12 @@ import { CreateProjectModal, Overlay } from '../../components';
 import { ContextMenuProvider, useProjectContext, useTabContext } from '../../contexts';
 import useShortcut from '../../hooks/useShortcut';
 import useRetrieveProjects from '../../hooks/useRetrieveProjects';
+import { useNavigate } from 'react-router-dom';
 
 export default function Dashboard() {
   const [openClose, setOpenClose] = useState(false);
   const { addTab } = useTabContext()
+  const navigate = useNavigate()
 
   const { projects, error } = useRetrieveProjects()
   const { createProject, selectProject } = useProjectContext()
@@ -24,7 +26,7 @@ export default function Dashboard() {
       <section>
         <div className={styles['top-section']}>
           <Card icon={<FaPlus />} title={"New page build"} subTitle={"Start building a new page"} action={() => setOpenClose(true)} />
-          <Card icon={<FaPlus />} title={"New component"} subTitle={"Design and create a new component"} />
+          <Card icon={<FaPlus />} title={"New component"} subTitle={"Design and create a new component"} action={() => navigate('/component-builder')} />
         </div>
 
         <div className={styles['projects-section']}>

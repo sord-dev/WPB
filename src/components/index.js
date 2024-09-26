@@ -24,4 +24,4 @@ export * from './HOCs';
 
 // TODO - Debate locating user components here or in a separate folder
 // All Page Builder Client Components
-// export * from './user';
+export * from './user';

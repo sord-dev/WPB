@@ -214,7 +214,7 @@ export default function Builder() {
       </section>
 
       {exporting && (
-        <Overlay openClose={() => setExporting(!exporting)}>
+        <Overlay openClose={(val) => setExporting(val)}>
           <ExportPageModal  {...{ exportProject, tabs, display: (html, type) => { setExporting(false); display(html, type) } }} />
         </Overlay>
       )}

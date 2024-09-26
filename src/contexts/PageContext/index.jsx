@@ -35,12 +35,6 @@ export const PageContextProvider = ({ children }) => {
     setExporting(false);
   };
 
-  useEffect(() => {
-    if (Object.keys(pageData.pages).length === 0) {
-      navigate('/');
-    }
-  }, [pageData, navigate]);
-
 
   const createPage = (pageName) => {
     if (pageData.pages[pageName]) return false;

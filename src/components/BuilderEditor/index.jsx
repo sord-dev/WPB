@@ -3,9 +3,9 @@ import { extractComponentParameters, generateComponentID } from '../../utils'
 import { GridColumn } from '../Grid';
 
 import { withInteractionHandler } from '../HOCs';
-import { Button, Container, Link, Text, Wrapper } from './components';
+import { Button, Container, Link, Text, Wrapper } from '../user';
 
-const defaultComponents = {
+const defaultComponents = { // TODO - Figure out how to move this to a place in which it can be shared between different pages (BuilderEditor and ComponentBuilder)
     text: Text,
     container: Container,
     wrapper: Wrapper,
