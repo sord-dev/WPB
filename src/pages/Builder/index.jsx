@@ -18,6 +18,7 @@ import styles from "./index.module.css";
 import { convertParamsToObject } from "../../utils";
 import { useExportContext } from "../../contexts/ExportContext";
 import { disallowedPropsFunctionality } from "../../components/BuilderComponentStateEditor/config/prop-editor-disallowed-props";
+import { useComponentContext } from "../../contexts/ComponentContext";
 
 export default function Builder() {
   const {
@@ -39,9 +40,10 @@ export default function Builder() {
 
   const { display } = useExportContext()
 
-  const [availableComponents, setAvailableComponents] = React.useState([]);
+  const { getComponents } = useComponentContext();
+  const { arr: components, obj: registery } = getComponents();
+
   const [selectedComponent, setSelectedComponent] = React.useState(null);
-  const getAllComponents = components => setAvailableComponents(components);
   const hasFunctionalityProps = Object.keys(selectedComponent?.props || {}).some(prop => !disallowedPropsFunctionality.includes(prop)) || false;
 
   const [notification, setNotification] = React.useState(null);
@@ -200,12 +202,12 @@ export default function Builder() {
 
           <div className={styles['constructor-parent']}>
             <GridContainer columns={12}>
-              <BuilderEditor template={activePageData} {...{ getAllComponents, setSelectedComponent, selectedComponent }} />
+              <BuilderEditor template={activePageData} {...{ registery, setSelectedComponent, selectedComponent }} />
             </GridContainer>
           </div>
 
           <div className={styles['components']}>
-            <BuilderComponentManager components={availableComponents} handleComponentClick={appendComponent} />
+            <BuilderComponentManager components={components} handleComponentClick={appendComponent} />
           </div>
 
           {notification && <SystemNotificationPopUp {...{ ...notification, onClose: () => setNotification(null) }} />}

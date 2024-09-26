@@ -3,11 +3,14 @@ import React from "react";
 import { BuilderComponentManager, Overlay, SystemNotificationPopUp } from "../../components";
 
 import styles from "./index.module.css";
+import { useComponentContext } from "../../contexts/ComponentContext";
 
 
 export default function ComponentBuilder() {
   const [notification, setNotification] = React.useState({ message: null });
-  const [availableComponents, setAvailableComponents] = React.useState([]);
+  
+  const { getComponents } = useComponentContext();
+  const { arr: components, obj: registery } = getComponents();
 
   const [componentData, setComponentData] = React.useState(null)
   const [componentHasData, setComponentHasData] = React.useState(componentData !== null);
@@ -38,20 +41,10 @@ export default function ComponentBuilder() {
           </div>
 
           <div className={styles['components']}>
-            <BuilderComponentManager components={availableComponents} handleComponentClick={() => { }} />
+            <BuilderComponentManager components={components} handleComponentClick={() => { }} />
           </div>
 
           {notification && <SystemNotificationPopUp {...{ ...notification }} />}
-
-          {!componentHasData && (
-            <Overlay openClose={(val) => setComponentHasData(val)}>
-              <div>
-                What kind of component would you like to create?
-
-                [Component List]
-              </div>
-            </Overlay>
-          )}
 
         </div>
       </section>
